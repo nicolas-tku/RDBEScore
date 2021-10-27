@@ -14,7 +14,7 @@
 icesRDBES
 =========
 
-icesRDBES Provides functions to work with the Regional DataBase
+icesRDBES Provides functions to work with the Regional DataBase and
 Estimation System (RDBES)
 
 icesRDBES is implemented as an [R](https://www.r-project.org) package and
