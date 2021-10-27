@@ -18,8 +18,7 @@ icesRDBES Provides functions to work with the Regional DataBase
 Estimation System (RDBES)
 
 icesRDBES is implemented as an [R](https://www.r-project.org) package and
-available on
-<!-- [CRAN](https://cran.r-project.org/package=icesRDBES) -->
+available on <!-- [CRAN](https://cran.r-project.org/package=icesRDBES) --> 
 [GitHub](https://github.com/ices-tools-dev/icesRDBES)
 
 Installation
