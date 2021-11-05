@@ -18,7 +18,7 @@
 #' @param CL Data table of RDBES DE data or null
 #' @param CE Data table of RDBES DE data or null
 #'
-#' @return
+#' @return a named list
 #' @export
 #'
 newRDBESRawObject <- function(DE = NULL,

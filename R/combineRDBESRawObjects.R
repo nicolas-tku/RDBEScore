@@ -1,10 +1,12 @@
-#' combineRDBESRawObjects combines 2 rdbesRawObjects into a single
-#' rdbesRawObject
+#' Combine Two RDBES Raw Objects
+#' combines 2 rdbesRawObjects into a single rdbesRawObject by merging individual
+#' tables one by one
 #'
 #' @param rdbesRawObject1 The first object to combine
 #' @param rdbesRawObject2 The second object to combine
 #'
-#' @return
+#' @return the combination of \code{rdbesRawObject1} and  \code{rdbesRawObject2}
+#' @seealso  \link[data.table]{rbindlist}
 #' @export
 #'
 #' @examples

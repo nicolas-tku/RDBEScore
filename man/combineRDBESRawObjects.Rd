@@ -2,8 +2,9 @@
 % Please edit documentation in R/combineRDBESRawObjects.R
 \name{combineRDBESRawObjects}
 \alias{combineRDBESRawObjects}
-\title{combineRDBESRawObjects combines 2 rdbesRawObjects into a single
-rdbesRawObject}
+\title{Combine Two RDBES Raw Objects
+combines 2 rdbesRawObjects into a single rdbesRawObject by merging individual
+tables one by one}
 \usage{
 combineRDBESRawObjects(rdbesRawObject1, rdbesRawObject2)
 }
@@ -13,11 +14,12 @@ combineRDBESRawObjects(rdbesRawObject1, rdbesRawObject2)
 \item{rdbesRawObject2}{The second object to combine}
 }
 \value{
-
+the combination of \code{rdbesRawObject1} and  \code{rdbesRawObject2}
 }
 \description{
-combineRDBESRawObjects combines 2 rdbesRawObjects into a single
-rdbesRawObject
+Combine Two RDBES Raw Objects
+combines 2 rdbesRawObjects into a single rdbesRawObject by merging individual
+tables one by one
 }
 \examples{
 \dontrun{
@@ -30,4 +32,7 @@ myH5RawObject <-
 myCombinedRawObject <- combineRDBESRawObjects(rdbesRawObject1=myH1RawObject,
                                              rdbesRawObject2=myH5RawObject)
 }
+}
+\seealso{
+\link[data.table]{rbindlist}
 }

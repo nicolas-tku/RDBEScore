@@ -2,7 +2,8 @@
 % Please edit documentation in R/validateRDBESRawObjectContent.R
 \name{validateRDBESRawObjectContent}
 \alias{validateRDBESRawObjectContent}
-\title{checkRDBESRawObjectContent Private function to do some basic checks on
+\title{check RDBES Raw Object Content
+ Private function to do some basic checks on
 the content of the rdbesRawObject (e.g. all required field names are
 present).  Function is only used by checkRDBESRawObject and should only
 be passed a list of non-null objects}
@@ -13,10 +14,11 @@ validateRDBESRawObjectContent(objectToCheck)
 \item{objectToCheck}{- rdbesRawObject i.e. a list of data.tables}
 }
 \value{
-
+list with  first element as the object and the second the warnings
 }
 \description{
-checkRDBESRawObjectContent Private function to do some basic checks on
+check RDBES Raw Object Content
+ Private function to do some basic checks on
 the content of the rdbesRawObject (e.g. all required field names are
 present).  Function is only used by checkRDBESRawObject and should only
 be passed a list of non-null objects

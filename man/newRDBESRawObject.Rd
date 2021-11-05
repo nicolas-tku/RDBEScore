@@ -60,7 +60,7 @@ newRDBESRawObject(
 \item{CE}{Data table of RDBES DE data or null}
 }
 \value{
-
+a named list
 }
 \description{
 Constructor for RDBESRawObject class

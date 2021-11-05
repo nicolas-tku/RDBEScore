@@ -17,7 +17,8 @@ filterRDBESRawObject(rdbesRawObjectToFilter, fieldsToFilter, valuesToFilter)
 \item{valuesToFilter}{A vector of the field values you wish to filter for}
 }
 \value{
-
+the filtered input object of the same class  as
+\code{rdbesRawObjectToFilter}
 }
 \description{
 filterRDBESRawObject Filter an RDBESRawObject - the returned object will

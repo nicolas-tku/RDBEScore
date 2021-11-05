@@ -7,7 +7,8 @@
 #' @param fieldsToFilter A vector of the field names you wish to check
 #' @param valuesToFilter A vector of the field values you wish to filter for
 #'
-#' @return
+#' @return the filtered input object of the same class  as
+#' \code{rdbesRawObjectToFilter}
 #' @export
 #'
 #' @examples

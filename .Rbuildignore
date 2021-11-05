@@ -5,3 +5,4 @@
 ^WGRDBES-EST$
 ^.pre-commit-config.yaml$
 ^codecov.yml$
+^travis.yml$

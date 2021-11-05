@@ -1,11 +1,12 @@
-#' checkRDBESRawObjectContent Private function to do some basic checks on
+#' check RDBES Raw Object Content
+#'  Private function to do some basic checks on
 #' the content of the rdbesRawObject (e.g. all required field names are
 #' present).  Function is only used by checkRDBESRawObject and should only
 #' be passed a list of non-null objects
 #'
 #' @param objectToCheck - rdbesRawObject i.e. a list of data.tables
 #'
-#' @return
+#' @return list with  first element as the object and the second the warnings
 #'
 validateRDBESRawObjectContent <- function(objectToCheck) {
   validRDBESRawObject <- TRUE
