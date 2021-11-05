@@ -1,8 +1,10 @@
-<!--
+
 [![Build Status](https://travis-ci.org/ices-tools-prod/icesRDBES.svg?branch=master)](https://travis-ci.org/ices-tools-prod/icesRDBES)
 [![codecov](https://codecov.io/gh/ices-tools-prod/icesRDBES/branch/master/graph/badge.svg)](https://codecov.io/gh/ices-tools-prod/icesRDBES)
-[![GitHub release](https://img.shields.io/github/release/ices-tools-prod/icesRDBES.svg?maxAge=2592001)]()
+
 [![CRAN Status](http://www.r-pkg.org/badges/version/icesRDBES)](https://cran.r-project.org/package=icesRDBES)
+<!--
+[![GitHub release](https://img.shields.io/github/release/ices-tools-prod/icesRDBES.svg?maxAge=2592001)]()
 [![CRAN Monthly](http://cranlogs.r-pkg.org/badges/icesRDBES)](https://cran.r-project.org/package=icesRDBES)
 [![CRAN Total](http://cranlogs.r-pkg.org/badges/grand-total/icesRDBES)](https://cran.r-project.org/package=icesRDBES)
 -->
