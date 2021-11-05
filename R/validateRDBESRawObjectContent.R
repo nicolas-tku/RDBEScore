@@ -66,7 +66,7 @@ validateRDBESRawObjectContent <- function(objectToCheck) {
           # Assume the first field name accurately gives us the table name
           tableName <- substring(names(x)[1], 1, 2)
           idFieldName <- paste0(tableName, "id")
-          returnValue <- any(duplicated(x[, ..idFieldName]))
+          returnValue <- any(duplicated(x[, idFieldName, with=FALSE]))
           returnValue
         })
       ]
