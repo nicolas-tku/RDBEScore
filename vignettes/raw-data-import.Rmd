@@ -2,7 +2,7 @@
 title: "Raw Data Import"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{raw-data-import}
+  %\VignetteIndexEntry{Raw Data Import}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -26,7 +26,7 @@ library(icesRDBES)
 
 ```{r}
 #directory holding the files
-ddir <- "./tests/testthat/h1_v_1_19/"
+ddir <- "../tests/testthat/h1_v_1_19/"
 
 #the files to import
 zipFiles <- c("H1_2021_000_example.zip",
@@ -69,18 +69,22 @@ importedTables <- importRDBESDownloadData(zipFiles)
 names(importedTables[!unlist(lapply(importedTables, is.null))])
 ```
 
+## Object class
+
+It should be noted that the objects created are of the S3 class "RDBESRawObject"
+
+```{r}
+importedTables <- importRDBESDownloadData(zipFiles)
+class(importedTables)
+```
 
 
+RDBESRawObject structure can be validated using the validateRDBESRawObject() function.
 
-
-
-
-
-
-
-
-
-
+```{r}
+importedTables <- importRDBESDownloadData(zipFiles)
+validateRDBESRawObject(importedTables, verbose = FALSE)
+```
 
 
 ```{r}
