@@ -2,7 +2,7 @@
 % Please edit documentation in R/filterRDBESRawObject.R
 \name{filterRDBESRawObject}
 \alias{filterRDBESRawObject}
-\title{filterRDBESRawObject Filter an RDBESRawObject - the returned object will
+\title{Filter an RDBESRawObject - the returned object will
 include all rows which either: a) do not included any of the field names in
 fieldsToFilter, or b) do include the field names and have one of the allowed
 values in valuesToFilter}
@@ -21,7 +21,7 @@ the filtered input object of the same class  as
 \code{rdbesRawObjectToFilter}
 }
 \description{
-filterRDBESRawObject Filter an RDBESRawObject - the returned object will
+Filter an RDBESRawObject - the returned object will
 include all rows which either: a) do not included any of the field names in
 fieldsToFilter, or b) do include the field names and have one of the allowed
 values in valuesToFilter

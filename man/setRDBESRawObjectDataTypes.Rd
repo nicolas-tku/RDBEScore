@@ -2,7 +2,7 @@
 % Please edit documentation in R/setRDBESRawObjectDataTypes.R
 \name{setRDBESRawObjectDataTypes}
 \alias{setRDBESRawObjectDataTypes}
-\title{setRDBESRawObjectDataTypes For a given rdbesRawObject convert the required
+\title{For a given rdbesRawObject convert the required
 columns to the correct data types.  (This function can cause an error if we
 have data in the columns that can't be cast to the desired data type.)}
 \usage{
@@ -16,7 +16,7 @@ An rdbesRawObject with the correct date types for the required
 fields
 }
 \description{
-setRDBESRawObjectDataTypes For a given rdbesRawObject convert the required
+For a given rdbesRawObject convert the required
 columns to the correct data types.  (This function can cause an error if we
 have data in the columns that can't be cast to the desired data type.)
 }

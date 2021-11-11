@@ -2,7 +2,7 @@
 % Please edit documentation in R/validateRDBESRawObjectDataTypes.R
 \name{validateRDBESRawObjectDataTypes}
 \alias{validateRDBESRawObjectDataTypes}
-\title{checkRDBESRawObjectDataTypes Checks the data types of the columns in an
+\title{Checks the data types of the columns in an
 rdbesRawObject against an expected list of data types.  Any differences
 are returned}
 \usage{
@@ -16,7 +16,7 @@ A data frame containing any data type differences (an empty data
 frame if there are no differences)
 }
 \description{
-checkRDBESRawObjectDataTypes Checks the data types of the columns in an
+Checks the data types of the columns in an
 rdbesRawObject against an expected list of data types.  Any differences
 are returned
 }
