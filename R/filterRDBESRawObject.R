@@ -1,4 +1,4 @@
-#' filterRDBESRawObject Filter an RDBESRawObject - the returned object will
+#' Filter an RDBESRawObject - the returned object will
 #' include all rows which either: a) do not included any of the field names in
 #' fieldsToFilter, or b) do include the field names and have one of the allowed
 #' values in valuesToFilter
@@ -27,6 +27,14 @@
 filterRDBESRawObject <- function(rdbesRawObjectToFilter,
                                  fieldsToFilter,
                                  valuesToFilter){
+
+  # Check we have a valid RDBESRawObject before doing anything else
+  if (!validateRDBESRawObject(rdbesRawObjectToFilter, verbose = FALSE)) {
+    stop(paste0(
+      "rdbesRawObjectToFilter is not valid ",
+      "- filterRDBESRawObject will not proceed"
+    ))
+  }
 
   alteredObject <- lapply(rdbesRawObjectToFilter, function(x) {
         foundNames <- names(x)[which(names(x) %in% fieldsToFilter)]

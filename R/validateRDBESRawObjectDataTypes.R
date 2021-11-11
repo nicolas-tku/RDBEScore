@@ -1,4 +1,4 @@
-#' checkRDBESRawObjectDataTypes Checks the data types of the columns in an
+#' Checks the data types of the columns in an
 #' rdbesRawObject against an expected list of data types.  Any differences
 #' are returned
 #'

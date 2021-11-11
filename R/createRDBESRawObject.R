@@ -126,7 +126,7 @@ createRDBESRawObject <- function(rdbesExtractPath = NA,
   }
 
   # Create an rdbesRawObject using the constructor
-  myRDBESRawObject <- newRDBESRawObject(DE = myList[["DE"]],
+  myRDBESRawObject <- icesRDBES::newRDBESRawObject(DE = myList[["DE"]],
                                         SD = myList[["SD"]],
                                         VS = myList[["VS"]],
                                         FT = myList[["FT"]],
