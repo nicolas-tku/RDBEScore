@@ -75,15 +75,6 @@ findOrphansByTable <- function(tableToCheck,
       apply(myOrphanResults[, ..myColNames], 1, function(x) (all(!x)))
 
 
-    # Check each row for orphans
-    # (a row is an orphan if none of the foreign keys exist)
-    # orphanCheckRows <- sapply(seq_along(myOrphanResults$pk),
-    #                           function(i) {
-    #                             myOrphanRow <- myOrphanResults[i,..myColNames]
-    #                             all(sapply(myOrphanRow, isFALSE))
-    #                           }
-    # )
-
     # Update the orphan results
     if (nrow(myOrphanResults[orphanCheckRows, ]) > 0) {
       myOrphanResults[orphanCheckRows, "isOrphan"] <- TRUE
