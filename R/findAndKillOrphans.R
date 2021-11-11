@@ -1,0 +1,129 @@
+#' This function finds and removed any orphan records in an
+#' RDBESRawObject.  Normally data that has been downloaded from the RDBES
+#' will not contain orphan records - however if the data is subsequently
+#' filtered it is possible to introduce orphan records.
+#'
+#' @param objectToCheck an RDBESRawObject.
+#' @param verbose (Optional) If set to TRUE more detailed text will be printed
+#' out by the function.  Default is TRUE.
+#'
+#' @return an RDBESRawObject with any orphan records removed
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'
+#' myH1RawObject <-
+#' createRDBESRawObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
+#' myFields <- c("SDctry","VDctry","VDflgCtry","FTarvLoc")
+#' myValues <- c("ZW","ZWBZH","ZWVFA" )
+#' myFilteredObject <- filterRDBESRawObject(myH1RawObject,
+#'                                         fieldsToFilter = myFields,
+#'                                         valuesToFilter = myValues )
+#' myObjectNoOrphans <- findAndKillOrphans(objectToCheck = myFilteredObject,
+#'                                        verbose = FALSE)
+#' }
+findAndKillOrphans <- function(objectToCheck, verbose = TRUE) {
+
+  # Check we have a valid RDBESRawObject before doing anything else
+  if (!validateRDBESRawObject(objectToCheck, verbose = FALSE)) {
+    stop(paste0(
+      "objectToCheck is not valid ",
+      "- findAndKillOrphans will not proceed"
+    ))
+  }
+
+  # Get all the XXid fields and SAparSequNum
+  myIds <- icesRDBES::mapColNamesFieldR[
+    grepl("^..id$", icesRDBES::mapColNamesFieldR$R.Name),
+    c("Table.Prefix", "R.Name")]
+
+  # Get rid of the primary key ids from each table
+  myForeignKeyIds <- myIds[!sapply(seq_along(myIds$Table.Prefix),
+                        function(i)
+                         grepl(myIds$Table.Prefix[i],
+                               myIds$R.Name[i],
+                               fixed = TRUE)
+                        ), ]
+
+  # TODO Need to handle VDid and SLid checks differenty...so also get rid of
+  # them for now
+  myForeignKeyIds <- myForeignKeyIds[
+    !(myForeignKeyIds$R.Name == "VDid" | myForeignKeyIds$R.Name == "SLid"), ]
+
+  # Special case for SA - need to add in the parent sequence number field
+  myParSeqNum <- icesRDBES::mapColNamesFieldR[
+    grepl("^SAparSequNum$", icesRDBES::mapColNamesFieldR$R.Name),
+    c("Table.Prefix", "R.Name")]
+
+  myForeignKeyIds <- rbind(myForeignKeyIds, myParSeqNum)
+
+  print("Number of rows in non-null tables before killing orphans")
+  print(unlist(lapply(objectToCheck, nrow)))
+
+  nonNullEntries <- names(objectToCheck[sapply(objectToCheck, Negate(is.null))])
+
+  # Don't bother checking CE and CL - they are big and can't have orphans anyway
+  nonNullEntries <- nonNullEntries[
+    !(nonNullEntries == "CE" | nonNullEntries == "CL")]
+
+  orphanCheckNumber <- 1
+
+  print("Starting to hunt down the orphans")
+
+  # Removing orphans can then have the knock-on effect of creating more
+  # orphans lower in the hierarchy so we will keep need to check for orphans
+  # until we don't find any.
+  while (1 == 1) {
+
+    # Sanity check to stop infinite loops
+    if (orphanCheckNumber > 20) {
+      errorMessage <- paste0("Checking for orphans is taking too long",
+      "- there might be a problem - please check your data")
+      stop(errorMessage)
+    }
+
+    if (verbose) {
+      print(paste0("Orphan check round number ", orphanCheckNumber))
+    }
+
+    # Ok, now let's search for orphans
+    myResults <- lapply(nonNullEntries,
+                        findOrphansByTable,
+                        objectToCheck = objectToCheck,
+                        foreignKeyIds = myForeignKeyIds,
+                        verbose = verbose)
+
+    myResults <- do.call("rbind", myResults)
+
+    # Work out how many orphans were found (need to allow for the case
+    # where all tables were NULL though)
+    if (length(is.null(myResults)) == 1 & is.null(myResults)){
+      numberOfOrphansFound <- 0
+    } else {
+      numberOfOrphansFound <- nrow(myResults)
+    }
+
+    if (verbose) {
+      print(paste0("Total number of orphans found: ", numberOfOrphansFound))
+    }
+
+    if (numberOfOrphansFound > 0) {
+      objectToCheck <- killOrphans(objectToCheck = objectToCheck,
+                                   orphansToRemove = myResults)
+    }
+
+    # If we didn't find any orphans this time we can stop looking
+    if (numberOfOrphansFound == 0) {
+      print("All orphans have been killed")
+      break
+    }
+
+    orphanCheckNumber <- orphanCheckNumber + 1
+  }
+
+  print("Number of rows in non-null tables after killing orphans")
+  print(unlist(lapply(objectToCheck, nrow)))
+
+  objectToCheck
+}
