@@ -73,6 +73,8 @@ RDBESRawObjects can be filtered using the filterRDBESRawObject() function - this
 
 It is important to note that filtering is likely to result in "orphan" rows being produced so it is usual to also apply the findAndKillOrphans() function to the filtered data to remove these records.
 
+You can also remove any records that are not linking to a row in the VesselDetails (VD) table using the removeBrokenVesselLinks() function.
+
 
 ```{r filter}
 myH1RawObject <-
@@ -91,6 +93,16 @@ myFilteredObject <- filterRDBESRawObject(myH1RawObject,
 
 myFilteredObjectNoOrphans <- findAndKillOrphans(objectToCheck = myFilteredObject,
                                         verbose = FALSE)
+
+myFields <- c("VDlenCat")
+myValues <- c("18-<24" )
+myFilteredObject <- filterRDBESRawObject(myFilteredObjectNoOrphans,
+                                         fieldsToFilter = myFields,
+                                         valuesToFilter = myValues )
+
+myFilteredObjectValidVesselLinks <- removeBrokenVesselLinks(
+                                  objectToCheck = myFilteredObject,
+                                  verbose = FALSE)
 
 validateRDBESRawObject(myFilteredObjectNoOrphans, verbose = FALSE)
 ```
