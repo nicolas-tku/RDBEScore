@@ -47,7 +47,8 @@ findAndKillOrphans <- function(objectToCheck, verbose = TRUE) {
                         ), ]
 
   # Checking for invalid vessel links is handled by removeBrokenVesselLinks()
-  ## TODO check for invalid species list
+  # Checking for invalid species list links is handled by
+  # removeBrokenSpeciesListLinks()
   myForeignKeyIds <- myForeignKeyIds[
     !(myForeignKeyIds$R.Name == "VDid" | myForeignKeyIds$R.Name == "SLid"), ]
 
