@@ -1,11 +1,13 @@
-#' Remove rows which are not pointing to a valid VesselDetails (VD) records i.e.
-#' those rows which have a value of VDid that does not exist in the VD table.
+#' Remove rows which are not pointing to a valid SpecliestListDetails (SL)
+#' records i.e.those rows which have a value of SpeciesListName that does not
+#' exist in the SL table.
 #'
 #' @param objectToCheck an RDBESRawObject.
 #' @param verbose (Optional) If set to TRUE more detailed text will be printed
 #' out by the function.  Default is TRUE.
 #'
-#' @return an RDBESRawObject with any records with an invalid VDid removed
+#' @return an RDBESRawObject with any records with an invalid SpeciesListName
+#' rows removed
 #' @export
 #'
 #' @examples
@@ -13,71 +15,66 @@
 #'
 #' myH1RawObject <-
 #'   createRDBESRawObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
-#' myFields <- c("VDlenCat")
-#' myValues <- c("18-<24")
+#' myFields <- c("SLspeclistName")
+#' myValues <- c("WGRDBES-EST TEST 5 - sprat data")
 #' myFilteredObject <- filterRDBESRawObject(myH1RawObject,
 #'   fieldsToFilter = myFields,
 #'   valuesToFilter = myValues
 #' )
-#' myObjectValidVesselLinks <- removeBrokenVesselLinks(
+#' myObjectValidSpeciesListLinks <- removeBrokenSpeciesListLinks(
 #'   objectToCheck = myFilteredObject,
 #'   verbose = FALSE
 #' )
 #' }
-removeBrokenVesselLinks <- function(objectToCheck, verbose = TRUE) {
+removeBrokenSpeciesListLinks <- function(objectToCheck, verbose = TRUE) {
 
   # for testing - to be removed
   # myH1RawObject <-
   #  createRDBESRawObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
   # verbose <- TRUE
-  # myFields <- c("VDlenCat")
-  # myValues <- c("18-<24" )
+  # myFields <- c("SLspeclistName")
+  # myValues <- c("WGRDBES-EST TEST 5 - sprat data" )
   # objectToCheck <- filterRDBESRawObject(myH1RawObject,
   #                                         fieldsToFilter = myFields,
-  #                                         valuesToFilter = myValues )
+  #                                          valuesToFilter = myValues )
+  # objectToCheck[["SL"]] <- NULL
+
 
   # Check we have a valid RDBESRawObject before doing anything else
   if (!validateRDBESRawObject(objectToCheck, verbose = FALSE)) {
     stop(paste0(
       "objectToCheck is not valid ",
-      "- removeBrokenVesselLinks will not proceed"
+      "- removeBrokenSpeciesListLinks will not proceed"
     ))
   }
 
-  # Get all the VDid fields
-  myIds <- icesRDBES::mapColNamesFieldR[
-    grepl("^VDid$", icesRDBES::mapColNamesFieldR$R.Name),
-    c("Table.Prefix", "R.Name")
-  ]
-
-  # Don't need to check the VD table - VDid is a primary key there
-  myIds <- myIds[!myIds$Table.Prefix == "VD", ]
-
   # Just check the non-null entries
   nonNullEntries <- names(objectToCheck[sapply(objectToCheck, Negate(is.null))])
-  vDtables <- unique(myIds$Table.Prefix)
-  nonNullTablesToCheck <- vDtables[vDtables %in% nonNullEntries]
 
-  if (!"VD" %in% nonNullEntries){
-    stop(paste0("The VD entry in in objectToCheck is null - ",
-    "cannot check for broken vessel details links"))
+  if (!"SL" %in% nonNullEntries){
+    stop(paste0("The SL entry in in objectToCheck is null - ",
+                   "cannot check for broken species list links"))
   }
 
-  print(paste0(
-    "Number of rows in relevent non-null tables before removing ",
-    "broken vessel links"
-  ))
-  print(unlist(lapply(objectToCheck[vDtables], nrow)))
+  # Only SS links to the species list table
+  tableToCheck <- "SS"
 
   # Check any non-null tables
-  for (tableToCheck in nonNullTablesToCheck) {
+  if (tableToCheck %in% nonNullEntries) {
+
+    print(paste0(
+      "Number of rows in relevent non-null tables before removing ",
+      "broken species list links"
+    ))
+    print(unlist(lapply(objectToCheck[tableToCheck], nrow)))
+
     myTable <- objectToCheck[[tableToCheck]]
 
     # if we have the possibility of orphans - let's check for them
     if (nrow(myTable) > 0) {
       if (verbose) {
         print(paste0(
-          "Checking for broken vessel links in table ",
+          "Checking for broken species list links in table ",
           tableToCheck
         ))
       }
@@ -87,12 +84,12 @@ removeBrokenVesselLinks <- function(objectToCheck, verbose = TRUE) {
       names(myOrphanResults) <- c("pk")
       myOrphanResults$Table <- tableToCheck
       # Default to link not existing
-      myOrphanResults[, "vdExists"] <- FALSE
+      myOrphanResults[, "slExists"] <- FALSE
 
-      # Inner join to the VD table
+      # Inner join to the SL table
       joinedTables <- dplyr::inner_join(myTable,
-        objectToCheck[["VD"]],
-        by = "VDid"
+                                    objectToCheck[["SL"]],
+                                    by = c("SSspecListName" = "SLspeclistName")
       )
 
       # Update the results for any matches we found
@@ -101,18 +98,18 @@ removeBrokenVesselLinks <- function(objectToCheck, verbose = TRUE) {
         # Find which PKs are in the joined table - these are matches
         myOrphanResults[
           myOrphanResults[[1]] %in% joinedTables[[1]],
-          "vdExists"
+          "slExists"
         ] <- TRUE
       }
 
       # We want to remove any rows where the record did not exist in VD
-      rowsToRemove <- myOrphanResults[!myOrphanResults$vdExists, 1]
+      rowsToRemove <- myOrphanResults[!myOrphanResults$slExists, 1]
       rowsToRemove <- rowsToRemove[[1]]
 
       if (verbose) {
         print(paste0(
           "Found ", length(rowsToRemove),
-          " records with broken vessel links"
+          " records with broken species list links"
         ))
       }
 
@@ -124,16 +121,16 @@ removeBrokenVesselLinks <- function(objectToCheck, verbose = TRUE) {
       objectToCheck[[tableToCheck]] <- objectToAlter
 
       if (verbose) {
-        print(paste0("Records with broken vessel links have been removed"))
+        print(paste0("Records with broken species list links have been removed"))
       }
     }
   }
 
   print(paste0(
     "Number of rows in relevent non-null tables after removing ",
-    "broken vessel links"
+    "broken species list links"
   ))
-  print(unlist(lapply(objectToCheck[vDtables], nrow)))
+  print(unlist(lapply(objectToCheck[tableToCheck], nrow)))
 
   objectToCheck
 }

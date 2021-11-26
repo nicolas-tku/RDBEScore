@@ -24,14 +24,16 @@ those rows which have a value of VDid that does not exist in the VD table.
 \dontrun{
 
 myH1RawObject <-
-createRDBESRawObject(rdbesExtractPath = "tests\\\\testthat\\\\h1_v_1_19")
+  createRDBESRawObject(rdbesExtractPath = "tests\\\\testthat\\\\h1_v_1_19")
 myFields <- c("VDlenCat")
-myValues <- c("18-<24" )
+myValues <- c("18-<24")
 myFilteredObject <- filterRDBESRawObject(myH1RawObject,
-                                        fieldsToFilter = myFields,
-                                        valuesToFilter = myValues )
+  fieldsToFilter = myFields,
+  valuesToFilter = myValues
+)
 myObjectValidVesselLinks <- removeBrokenVesselLinks(
-                                 objectToCheck = myFilteredObject,
-                                 verbose = FALSE)
+  objectToCheck = myFilteredObject,
+  verbose = FALSE
+)
 }
 }
