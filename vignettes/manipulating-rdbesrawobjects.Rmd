@@ -25,7 +25,7 @@ library(icesRDBES)
 
 ## Prerequisites
 
-First we'll load some example data from the RDBES and check it's valid.  It's a good tip to check your RDBESRawObjects are valid after any manipulations you perform.
+First we'll load some example data from the RDBES and check it's valid.  It's a good idea to check your RDBESRawObjects are valid after any manipulations you perform.
 
 ```{r load}
 
