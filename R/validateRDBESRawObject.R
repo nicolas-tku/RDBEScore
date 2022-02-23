@@ -50,7 +50,7 @@ validateRDBESRawObject <- function(objectToCheck,
     validRDBESRawObject <- FALSE
     print(paste(names(objectToCheck), collapse = ","))
     warningText <- paste("objectToCheck is a list but does not contain ",
-      "all the required names",
+      "all the required names ",
       paste(names(objectToCheck), collapse = ","),
       sep = ""
     )
