@@ -1,0 +1,92 @@
+---
+title: "SelectionMethodSummary"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Example of functions to highlight sources of potential bias
+
+```{r loadFunctions, message=FALSE, warning=FALSE}
+# Load our functions
+library(dplyr)
+library(icesRDBES)
+source("summariseSelectionMethods.R")
+library(kableExtra)
+```
+
+```{r loadData, echo=FALSE}
+
+# IMPORTANT: Hack to stop write.csv changing numbers to scientific notation
+options(scipen=500) # big number of digits
+
+## STEP 1) LOAD OUR DATA
+
+myRDBESData <- createRDBESRawObject("..\\..\\..\\tests\\testthat\\h1_v_1_19")
+
+
+
+```
+
+## Selection methods
+
+The first function highlights non-probabilistic selection methods, and the number of units that were intended to be sampled but weren't - these are both potentially sources of bias.
+
+```{r selectionMethods, results='asis'}
+
+
+myResult <- summariseSelectionMethods(objectToSummarise = myRDBESData,
+                                      yearToUse = 1965,
+                                      country = 'ZW',
+                                      hierarchyToSummarise = 'H1')
+
+
+for (myTable in names(myResult$selectionMethodSummary)){
+
+# This is the data we'll print - after soem small formatting changes
+myDataToPrint <- myResult$selectionMethodSummary[[myTable]]
+# change NA to blanks
+myDataToPrint[is.na(myDataToPrint)] <- ""
+# get the "non caculated" column numbers - we'll format these differently
+myNonCalcColumns <- which(names(myDataToPrint) %in% names(myDataToPrint)[grepl('^..numberNotSampledCalc$',names(myDataToPrint))])
+
+
+# Print the selection methid summary
+p <- myDataToPrint %>% 
+    mutate_all(~cell_spec(
+        .x,
+        background = ifelse(.x %in% c('NPCLQS-O', 'NPCLQS-T', 'NPCS', 'NPJS', 'NPQSRSWOR', 'NPQSRSWR', 'NPQSYSS'), 'red','white'),
+        color = ifelse(.x %in% c('NPCLQS-O', 'NPCLQS-T', 'NPCS', 'NPJS', 'NPQSRSWOR', 'NPQSRSWR', 'NPQSYSS'), 'white','black'))) %>%
+  kbl(escape = F, caption = myTable) %>%
+  column_spec(myNonCalcColumns, bold=T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+
+print(p)
+
+}
+
+
+# This is the data we'll print - after soem small formatting changes
+dataToPrint <- myResult$summaryDataJoined
+# change NA to blanks
+dataToPrint[is.na(dataToPrint)] <- ""
+# get the "non caculated" column numbers - we'll format these differently
+myNonCalcColumns <- which(names(dataToPrint) %in% names(dataToPrint)[grepl('^..numberNotSampledCalc$',names(dataToPrint))])
+
+# Print the more detailed infromation by stratum
+dataToPrint %>% 
+    mutate_all(~cell_spec(
+        .x,
+        background = ifelse(.x %in% c('NPCLQS-O', 'NPCLQS-T', 'NPCS', 'NPJS', 'NPQSRSWOR', 'NPQSRSWR', 'NPQSYSS'), 'red','white'),
+        color = ifelse(.x %in% c('NPCLQS-O', 'NPCLQS-T', 'NPCS', 'NPJS', 'NPQSRSWOR', 'NPQSRSWR', 'NPQSYSS'), 'white','black'))) %>%
+  kbl(escape = F) %>%
+  column_spec(myNonCalcColumns, bold=T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+
+```
+
+
