@@ -91,8 +91,8 @@ mcVarianceEstimator <- function(y){
       Enknl <- mcGetExpectedValueKL(y,k,l,selectionMethod)
       #part1 <-  abs(Enknl - (Enk * Enl)) / Enknl
       part1 <-  (Enknl - (Enk * Enl)) / Enknl
-      part2 <- y[k,'numberSampled'] / Enk
-      part3 <- y[l,'numberSampled'] / Enl
+      part2 <- y[k,'studyVariable'] / Enk
+      part3 <- y[l,'studyVariable'] / Enl
       varEstimate_kl <- part1 * part2 * part3
       if (is.na(varEstimate)){
         varEstimate <- varEstimate_kl
