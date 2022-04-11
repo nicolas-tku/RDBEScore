@@ -14,21 +14,23 @@ knitr::opts_chunk$set(echo = TRUE)
 This file contains some ongoing work and testing of approaches to use in the package. Do not expect to understand what is going on or me to explain it.
 
 ```{r}
-here<-paste0(getwd(), "/WGRDBES-EST/personal/Richard/")
+rDir<-paste0(getwd(), "/R/")
+```
+
+```{r}
+for(fname in list.files(rDir, full.names = TRUE)){source(fname)}
 ```
 
 
 ## Data Import
 
-```{r}
-source(paste0(here,"R/test01.R"))
-```
+
 
 
 ```{r}
 ## SRSWOR
 # Sample the data using single stage simple random sampling without replacement (srswor)
-numberOfSamples <- 50
+numberOfSamples <- 90
 y_srswor <- myTestData[sample(nrow(myTestData),numberOfSamples, replace = FALSE),]
 y_srswor$SAselectionMethod <- 'SRSWOR'
 y_srswor$SAnumberSampled <- numberOfSamples
@@ -39,7 +41,10 @@ y_srswor$numberSampled <- y_srswor$SAnumberSampled
 y_srswor$numberTotal <- y_srswor$SAnumberTotal
 
 # Use our functions to make a univariate estimate of the total discards
+```
 
+
+```{r}
 # Estimte the total discards
 mcPopulationEstimator(y_srswor)
 
@@ -47,8 +52,33 @@ mcPopulationEstimator(y_srswor)
 sum(myTestData$discardedWeight)
 
 # Calculate the variance of our estimate - 0 if I sample everything
-mcVarianceEstimator(y_srswor)
+var <- mcVarianceEstimator(y_srswor)
+var
+sqrt(var)
 ```
+```{r}
+var/(100*100)
+```
+
+
+```{r}
+N<-nrow(myTestData)
+y<-y_srswor$studyVariable
+pk <- y_srswor$numberSampled/y_srswor$SAnumberTotal
+PI <- sampling::UPtillepi2(pk)[1:numberOfSamples, 1:numberOfSamples]
+```
+
+
+```{r}
+htestimate(y,N,PI=PI, method = "ht")
+```
+
+
+
+
+
+
+
 ```{r}
 ## SRSWOR
 # Sample the data using single stage simple random sampling without replacement (srswor)

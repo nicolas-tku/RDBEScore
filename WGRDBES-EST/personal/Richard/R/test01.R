@@ -25,7 +25,6 @@ mcGetExpectedValueKL <- function(y,k,l,selectionMethod){
       (y[k,'numberTotal'] * (y[k,'numberTotal'] - 1))
 
   } else if (selectionMethod == "SRSWR"){
-    warning("selection probabilities of unit k and l needed?" )
     Enknl <- (y[k,'numberSampled'] * (y[k,'numberSampled'] - 1)) /
       (y[k,'numberTotal'] * y[k,'numberTotal'])
   }
@@ -82,18 +81,20 @@ mcVarianceEstimator <- function(y){
 
   # There's probably a more efficient way to do this in R but I wanted to
   # stay close to how the equations are written to start with
+
   for (k in 1:nrow(y)){
     #print(k)
+    Enk <- mcGetExpectedValueK(y,k,selectionMethod)
+    part2 <- y[k,'studyVariable'] / Enk
     for (l in 1:nrow(y)){
       #print(l)
-      Enk <- mcGetExpectedValueK(y,k,selectionMethod)
       Enl <- mcGetExpectedValueK(y,l,selectionMethod)
       Enknl <- mcGetExpectedValueKL(y,k,l,selectionMethod)
+      if(k!=l){part1 <-  (Enknl - (Enk * Enl)) / Enknl}
+      if(k==l){part1 <- (Enk - Enk*Enl) / (Enk)}
       #part1 <-  abs(Enknl - (Enk * Enl)) / Enknl
-      part1 <-  (Enknl - (Enk * Enl)) / Enknl
-      part2 <- y[k,'studyVariable'] / Enk
       part3 <- y[l,'studyVariable'] / Enl
-      varEstimate_kl <- part1 * part2 * part3
+      varEstimate_kl <- (part1 * part2 * part3)
       if (is.na(varEstimate)){
         varEstimate <- varEstimate_kl
       } else {
