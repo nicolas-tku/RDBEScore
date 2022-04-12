@@ -90,15 +90,25 @@ test_that(paste("unequal probality sampling is not implemented"), {
   items <- c(3, 4, 4, 5)
   elems <- length(items)
   expect_error(estimMC(items, rep(elems, elems), rep(tot, elems),
-                       method = "UPSWOR"))
+    method = "UPSWOR"
+  ))
   expect_error(estimMC(items, rep(elems, elems), rep(tot, elems),
-                       method = "UPSWR"))
+    method = "UPSWR"
+  ))
 })
 
-test_that(paste("all imputs must have same length"), {
+test_that(paste("all inputs must have same length"), {
   tot <- 4
   items <- c(3, 4, 4, 5)
   elems <- length(items)
   expect_error(estimMC(items, elems, rep(tot, elems)))
   expect_error(estimMC(items, rep(elems, elems), tot))
+})
+
+test_that(paste("all inputs must be numeric"), {
+  tot <- 4
+  items <- letters[1:5]
+  elems <- length(items)
+  expect_error(estimMC(items, rep(elems, elems), rep(tot, elems)))
+  expect_error(estimMC(1:5, rep(elems, elems), rep("4", elems)))
 })

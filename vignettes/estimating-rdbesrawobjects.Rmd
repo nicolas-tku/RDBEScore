@@ -1,0 +1,50 @@
+---
+title: "Estimating Population parameters from RDBESRawObjects"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Estimating RDBESRawObjects}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction 
+
+The aim of this document is to illustrate how population parameters like total and mean can be estimated using the **estimMC(...)** function.
+
+```{r}
+library(icesRDBES)
+```
+
+## Prerequisites
+
+First we'll load some example data from the RDBES and check it's valid.  It's a good idea to check your RDBESRawObjects are valid after any manipulations you perform.
+
+```{r load}
+h1d <- createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19")
+h1dValid <- validateRDBESRawObject(h1d, verbose = FALSE)
+
+```
+
+## Multiple Count Estimator
+
+For lower hierarchy tables the number of sampled and measured total 
+```{r}
+tbl <- h1d$BV[h1d$BV$FMid == "254505",]
+tbl$BVvalueMeas <-as.numeric(tbl$BVvalueMeas)
+estimMC(tbl$BVvalueMeas, sampled = tbl$BVnumSamp, total = tbl$BVnumTotal)
+```
+
+
+
+```{r}
+#END
+```
+

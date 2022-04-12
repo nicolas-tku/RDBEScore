@@ -1,9 +1,9 @@
 #' Multiple Count Estimator for Population Total
 #'
-#' @param y variable to be estimated
-#' @param sampled total number of units sampled
-#' @param total total number of units int the population
-#' @param method selection method code e.g SRSWOR
+#' @param y numeric variable to be estimated
+#' @param sampled numeric total number of units sampled
+#' @param total numeric total number of units int the population
+#' @param method character selection method code e.g SRSWOR
 #'
 #' @return list of 5 elements including the population mean, total
 #' (and their variance) and the I order inclusion probabilities
@@ -22,6 +22,9 @@ estimMC <- function(y, sampled, total, method = "SRSWOR") {
   }
 
   n <- length(y)
+  if (!all(sapply(c(y, sampled, total), is.numeric))) {
+    stop("y, sampled and total must, be numeric vectors!")
+  }
 
   if (any(length(sampled) != n, length(total) != n)) {
     stop("y, sampled and total must, be vectors of same length!")
