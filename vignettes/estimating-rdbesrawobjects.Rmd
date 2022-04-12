@@ -43,19 +43,47 @@ BV <- h1d$BV[h1d$BV$FMid == FMidSel,]
 
 
 ```{r}
-BV$BVvalueMeas <-as.numeric(BV$BVvalueMeas)
-estimMC(BV$BVvalueMeas, sampled = BV$BVnumSamp, total = BV$BVnumTotal)
+estimTables <- tablesInRDBESHierarchies$H1[3:9]
+estimTables
 ```
 
 ```{r}
-SAidSel <- h1d$FM[h1d$FM$FMid == FMidSel,][["SAid"]]
-SA <- h1d$SA[h1d$SA$SAid == SAidSel,]
+head(h1d[[estimTables[1]]])
 ```
+
+```{r}
+getColnames <- function(tblName){
+  idCol <- paste0(tblName,"id")
+  numSampledCol <- paste0(tblName,"numSamp")
+  numTotalCol <- paste0(tblName,"numTotal")
+  selMethodCol <- paste0(tblName,"selectMeth")
+  c(idCol = idCol, numSampledCol=numSampledCol,  numTotalCol=numTotalCol)
+}
+estimate<-function(tbl, target){
+  tblName <- unique(tbl[[colnames(tbl)[grepl("recType$", colnames(tbl))]]])
+  if(length(tblName)>1){stop("Mixed table")}
+  cols <- getColnames(tblName)
+  missingCols <- setdiff(cols, colnames(tbl))
+  missingCols
+  
+}
+gatherData<-function(tbls, ids, target){
+  if(length(tbls) == 0) return(NULL)
+  tbl <- tbls[[1]]
+  tbls[[1]]<-NULL
+  if(target %in% colnames(tbl)) return(estimate(tbl, target))
+  gatherData(tbls ,ids, target)
+}
+```
+
+```{r}
+gatherData(tbls=h1d[estimTables], ids=c(4874), target = "BVvalueMeas")
+```
+
 
 ```{r}
 
 ```
-
 
 
 ```{r}
