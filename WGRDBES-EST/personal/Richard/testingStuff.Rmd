@@ -133,14 +133,6 @@ htestimate(y,N,pk=pk, PI=PI, method = "ht")
 ```{r}
 htestimate(y,N,pk=pk, PI=PI, method = "hh")
 ```
-```{r}
-estimMC(y_srswor$studyVariable, y_srswor$numberSampled,y_srswor$SAnumberTotal )
-```
-```{r}
-e<-estimMC(y_srswr$studyVariable, y_srswr$numberSampled,y_srswr$SAnumberTotal, method = "SRSWOR")
-e
-```
-
 
 ```{r}
 e<-estimMC(y_srswr$studyVariable, y_srswr$numberSampled,y_srswr$SAnumberTotal, method = "SRSWR")
@@ -150,9 +142,11 @@ e
 sqrt(e$var.total)
 ```
 ```{r}
-x<-estimMC(c(1,1,1,1),c(4,4,4,4),c(8,8,8,8))
-x
-sum(1/diag(x$PI))
+tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
+  x
 ```
 
 ```{r}

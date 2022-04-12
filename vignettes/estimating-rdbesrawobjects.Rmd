@@ -37,9 +37,23 @@ h1dValid <- validateRDBESRawObject(h1d, verbose = FALSE)
 
 For lower hierarchy tables the number of sampled and measured total 
 ```{r}
-tbl <- h1d$BV[h1d$BV$FMid == "254505",]
-tbl$BVvalueMeas <-as.numeric(tbl$BVvalueMeas)
-estimMC(tbl$BVvalueMeas, sampled = tbl$BVnumSamp, total = tbl$BVnumTotal)
+FMidSel <- "254505"
+BV <- h1d$BV[h1d$BV$FMid == FMidSel,]
+```
+
+
+```{r}
+BV$BVvalueMeas <-as.numeric(BV$BVvalueMeas)
+estimMC(BV$BVvalueMeas, sampled = BV$BVnumSamp, total = BV$BVnumTotal)
+```
+
+```{r}
+SAidSel <- h1d$FM[h1d$FM$FMid == FMidSel,][["SAid"]]
+SA <- h1d$SA[h1d$SA$SAid == SAidSel,]
+```
+
+```{r}
+
 ```
 
 

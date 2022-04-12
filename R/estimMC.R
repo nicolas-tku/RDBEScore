@@ -29,7 +29,7 @@ estimMC <- function(y, sampled, total, method = "SRSWOR") {
   if (any(length(sampled) != n, length(total) != n)) {
     stop("y, sampled and total must, be vectors of same length!")
   }
-  if (any(grepl(method, implementedMethods))) {
+  if (method == "SRSWOR") {
     pk <- sampled / total
     PI <- matrix(sampled / total * (sampled - 1) / (total - 1),
       nrow = length(pk),
@@ -43,28 +43,26 @@ estimMC <- function(y, sampled, total, method = "SRSWOR") {
     var.total <- sum(A)
 
     mean.est <- sum(y / pk / total)
-    var.mean <- sum(A / total)
+    var.mean <- sum(A / (total^2))
   }
-  # #TODO Is this SRSWR necessary?  This is just a simplification of SRSWOR
-  # if(method == "SRSWR") {
-  #   pk <- 1/total
-  #   mean.est <-  (1/n) * sum(y/pk/total)
-  #   total.est <- (1/n) * sum(y/pk)
-  #   A <- (y/pk - total.est)^2
-  #
-  #   var.total <- (1/(n-1))*sum(A/total)
-  #   var.mean <- (1/(n-1))*sum(A/(total^2))
-  #   pk<-pk*n
-  # }
-  # #TODO Is CENSUS necessary?  This is just a simplification of SRSWOR at n=N
-  # if(method == "CENSUS") {
-  #   total.est <- sum(y)
-  #   var.total <- 0
-  #   mean.est <- sum(y)/n
-  #   var.mean <- 0
-  #   pk <- rep(1,n)
-  #
-  # }
+
+  if (method == "SRSWR") {
+    pk <- 1 / total
+    mean.est <- (1 / n) * sum(y / pk / total)
+    total.est <- (1 / n) * sum(y / pk)
+    A <- (y / pk - total.est)^2
+    var.total <- sum(A) / (n * (n - 1))
+    var.mean <- sum(A / (total^2)) / (n * (n - 1))
+    PI <- matrix(pk %*% t(pk), nrow = n, ncol = n)
+  }
+  # TODO Is CENSUS necessary?  This is just a simplification of SRSWOR at n=N
+  if (method == "CENSUS") {
+    total.est <- sum(y)
+    var.total <- 0
+    mean.est <- sum(y) / n
+    var.mean <- 0
+    PI <- matrix(1, nrow = n, ncol = n)
+  }
 
   return(list(
     est.total = total.est,

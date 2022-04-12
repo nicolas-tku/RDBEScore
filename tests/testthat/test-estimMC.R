@@ -1,4 +1,4 @@
-
+## ------------SRSWOR-----------------------------
 ### --------- all elements in sample-------------
 testMain <- "all elements in sample"
 test_that(paste0("total variance is 0 if", testMain), {
@@ -56,7 +56,7 @@ test_that(paste("mean variance is correct if", testMain), {
   items <- c(3, 4, 4, 5)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
-  expect_equal(x$var.mean, 2 / 3)
+  expect_equal(x$var.mean, 1 / 12)
 })
 
 test_that(paste("correct total if", testMain), {
@@ -80,6 +80,92 @@ test_that(paste("correct mean if", testMain), {
 
   items <- c(3, 1, 4, 2)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
+  expect_equal(x$est.mean, sum(items) / elems)
+})
+
+## ------------SRSWR-----------------------------
+### --------- all elements in sample-------------
+testMain <- "all elements in sample"
+test_that(paste0("total variance if", testMain), {
+  tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
+  expect_equal(x$var.total, 2 + 2 / 3)
+})
+
+test_that(paste("mean variance if", testMain), {
+  tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
+  expect_equal(x$var.mean, 1 / 6)
+})
+
+test_that(paste("correct total if", testMain), {
+  tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
+  expect_equal(x$est.total, sum(items))
+
+  items <- c(3, 1, 4, 2)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
+  expect_equal(x$est.total, sum(items))
+})
+
+test_that(paste("correct mean if", testMain), {
+  tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
+  expect_equal(x$est.mean, mean(items))
+
+  items <- c(3, 1, 4, 2)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
+  expect_equal(x$est.mean, sum(items) / elems)
+})
+
+### --------- half of elements in sample-------------
+testMain <- "half of elements in sample"
+test_that(paste("total variance is correct if", testMain), {
+  tot <- 8
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
+
+  expect_equal(x$var.total, 10 + 2 / 3)
+})
+
+test_that(paste("mean variance is correct if", testMain), {
+  tot <- 8
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
+  expect_equal(x$var.mean, 1 / 6)
+})
+
+test_that(paste("correct total if", testMain), {
+  tot <- 8
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
+  expect_equal(x$est.total, sum(items) * 2)
+
+  items <- c(3, 1, 4, 2)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
+  expect_equal(x$est.total, sum(items) * 2)
+})
+
+test_that(paste("correct mean if", testMain), {
+  tot <- 8
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
+  expect_equal(x$est.mean, mean(items))
+
+  items <- c(3, 1, 4, 2)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
   expect_equal(x$est.mean, sum(items) / elems)
 })
 
