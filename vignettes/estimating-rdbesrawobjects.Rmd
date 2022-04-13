@@ -28,10 +28,12 @@ library(icesRDBES)
 First we'll load some example data from the RDBES and check it's valid.  It's a good idea to check your RDBESRawObjects are valid after any manipulations you perform.
 
 ```{r load}
-h1d <- createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19")
+h1d <- createRDBESRawObject(rdbesExtractPath = ".\\tests\\testthat\\h1_v_1_19")
 h1dValid <- validateRDBESRawObject(h1d, verbose = FALSE)
 
 ```
+
+
 
 ## Multiple Count Estimator
 
@@ -52,37 +54,128 @@ head(h1d[[estimTables[1]]])
 ```
 
 ```{r}
+#fixBVtype for value measured
+#h1d$BV$BVvalueMeas <- as.numeric(h1d$BV$BVvalueMeas)
+```
+
+Let's first estimate the last level values for a single VSid so that estimation is done for each top level record (i.e. as the data is)
+
+```{r}
+#TODO the big question is how to aggregate these estimations into one  especcialy PI
+aggLevelEstimations <- function(estims){
+  if(length(estims)<2){
+    return(estims[[1]])
+  }
+  return(list(
+  est.total = sum(sapply(estims, function(x){x$est.total})),
+  est.mean = mean(sapply(estims, function(x){x$est.mean})),
+  var.total = sum(sapply(estims, function(x){x$var.total})),
+  var.mean = sum(sapply(estims, function(x){x$var.mean})),
+  PI = mean(sapply(estims, function(x){x$PI}))
+  ))
+}
+
+
 getColnames <- function(tblName){
   idCol <- paste0(tblName,"id")
   numSampledCol <- paste0(tblName,"numSamp")
   numTotalCol <- paste0(tblName,"numTotal")
   selMethodCol <- paste0(tblName,"selectMeth")
-  c(idCol = idCol, numSampledCol=numSampledCol,  numTotalCol=numTotalCol)
+  stratumCol <- paste0(tblName,"stratumName")
+  c(idCol = idCol,
+    numSampledCol=numSampledCol,
+    numTotalCol=numTotalCol,
+    selMethodCol = selMethodCol,
+    stratumCol = stratumCol)
 }
-estimate<-function(tbl, target){
+estimate<-function(tbl, estimRes, target){
+  parentIdCol <- estimRes$parentIdCol
+  ids <- estimRes$ids
   tblName <- unique(tbl[[colnames(tbl)[grepl("recType$", colnames(tbl))]]])
   if(length(tblName)>1){stop("Mixed table")}
   cols <- getColnames(tblName)
   missingCols <- setdiff(cols, colnames(tbl))
-  missingCols
+  isTarget  <- length(setdiff(target, colnames(tbl))) == 0
+  data <- tbl[get(parentIdCol) %in% ids,]
+  data$dummy <- 1
+  estim <- NA
+  method<-NA
+  if(length(missingCols) == 0){
+     #TODO stratification
+     #TODO type of measure should also be selected for sample data is all "Age"
+     stratums <- unique(data[,get(cols["stratumCol"])])
+     data <- data[get(cols["stratumCol"]) %in% stratums[1],]
+    if(isTarget){cols <- c(cols,y=target)}
+    if(!isTarget){cols <- c(cols, y="dummy")}
+    if(!is.numeric(data[, get(cols["y"])])){
+        warning("Target is not numeric! converting!")
+        data[, cols["y"] := as.numeric(data[, get(cols["y"])])]
+    }
+    estims <- lapply(ids, function(id, data, cols, parentIdCol){
+      data <- data[get(parentIdCol) == id, ]
+      y <- data[, get(cols["y"])]
+      sampled <-data[, get(cols["numSampledCol"])]
+      total <- data[, get(cols["numTotalCol"])]
+      
+      selMethod <- unique(data[, get(cols["selMethodCol"])])
+      if(length(selMethod)!=1){
+        stop(paste("Can't deal with multiple selection methods.",tblName, 
+                   "has methods:", paste0(selMethod,collapse = ", ")))
+        }
+      estim <- estimMC(y, sampled, total, selMethod)
+      estim
+    }, data = data, cols = cols, parentIdCol = parentIdCol)
+    estim<-aggLevelEstimations(estims)
+  }
+  return(list(parentIdCol=cols["idCol"],
+              ids=data[, get(cols["idCol"])],
+              tbl=tblName,
+              estim=estim, prevStage=estimRes ))
   
 }
-gatherData<-function(tbls, ids, target){
+gatherEstimates<-function(tbls, estimRes, target){
   if(length(tbls) == 0) return(NULL)
   tbl <- tbls[[1]]
   tbls[[1]]<-NULL
-  if(target %in% colnames(tbl)) return(estimate(tbl, target))
-  gatherData(tbls ,ids, target)
+  if(target %in% colnames(tbl)) return(estimate(tbl, estimRes, target))
+  estimRes <- estimate(tbl, estimRes, target)
+  gatherEstimates(tbls,estimRes, target)
 }
 ```
 
+
 ```{r}
-gatherData(tbls=h1d[estimTables], ids=c(4874), target = "BVvalueMeas")
+startEstim <- list(parentIdCol = "VSid", ids=c(4874))
+res<-gatherEstimates(tbls=h1d[estimTables], startEstim, target = "BVvalueMeas")
+
+warning("this is not corrected for the upper levels")
+res$estim$est.mean
+res$estim$var.mean
+res$estim$est.total
+res$estim$var.total
 ```
 
+As we have sampled all items in this level we can see what the mean looks like in the actual data
+```{r}
+mean(as.numeric(h1d$BV[BVid %in% res$ids, BVvalueMeas]))
+var(as.numeric(h1d$BV[BVid %in% res$ids, BVvalueMeas]))
+sum(as.numeric(h1d$BV[BVid %in% res$ids, BVvalueMeas]))
+```
+
+In any case all of the previous stages are included hierarchically in the result. What is needed is the probability matrix for variance and total estimation at the last level. For the 2. level the PI is:
+```{r}
+res$prevStage$prevStage$prevStage$prevStage$prevStage$tbl
+res$prevStage$prevStage$prevStage$prevStage$prevStage$estim$PI
+
+```
+It seems that for SRS the PI is homogeneous so can be converted to single number (both for SRSWR and SRSWOR) Let's see also the table as it looks at second level
 
 ```{r}
-
+ids <- res$prevStage$prevStage$prevStage$prevStage$prevStage$ids
+tblID <- res$prevStage$prevStage$prevStage$prevStage$prevStage$tbl
+idCol <- res$prevStage$prevStage$prevStage$prevStage$prevStage$parentIdCol
+tbl<-h1d[[tblID]]
+tbl[get(idCol) %in% ids,]
 ```
 
 
