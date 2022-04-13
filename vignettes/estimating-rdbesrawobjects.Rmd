@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
+
 ## Introduction 
 
 The aim of this document is to illustrate how population parameters like total and mean can be estimated using the **estimMC(...)** function.
@@ -28,52 +29,29 @@ library(icesRDBES)
 First we'll load some example data from the RDBES and check it's valid.  It's a good idea to check your RDBESRawObjects are valid after any manipulations you perform.
 
 ```{r load}
-h1d <- createRDBESRawObject(rdbesExtractPath = ".\\tests\\testthat\\h1_v_1_19")
+h1d <- createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19")
 h1dValid <- validateRDBESRawObject(h1d, verbose = FALSE)
 
 ```
 
 
+## Functions
 
-## Multiple Count Estimator
-
-For lower hierarchy tables the number of sampled and measured total 
+Functions for demonstrating multi-level design 
 ```{r}
-FMidSel <- "254505"
-BV <- h1d$BV[h1d$BV$FMid == FMidSel,]
-```
-
-
-```{r}
-estimTables <- tablesInRDBESHierarchies$H1[3:9]
-estimTables
-```
-
-```{r}
-head(h1d[[estimTables[1]]])
-```
-
-```{r}
-#fixBVtype for value measured
-#h1d$BV$BVvalueMeas <- as.numeric(h1d$BV$BVvalueMeas)
-```
-
-Let's first estimate the last level values for a single VSid so that estimation is done for each top level record (i.e. as the data is)
-
-```{r}
-#TODO the big question is how to aggregate these estimations into one  especcialy PI
+#TODO the big question is how to aggregate these estimations into one  especially PI
 aggLevelEstimations <- function(estims){
   if(length(estims)<2){
     estims[[1]]$tHat.total <- sum(1/estims[[1]]$PI)
-    estims[[1]]$tHat.mean <- mean(1/estims[[1]]$PI)
+    estims[[1]]$tHat.mean <- sum(1/estims[[1]]$PI)
     return(estims[[1]])
   }
   return(list(
   est.total = sum(sapply(estims, function(x){x$est.total})),
   est.mean = mean(sapply(estims, function(x){x$est.mean})),
   var.total = sum(sapply(estims, function(x){x$var.total})),
-  var.mean = sum(sapply(estims, function(x){x$var.mean})),
-  PI = mean(sapply(estims, function(x){x$PI})),
+  var.mean = mean(sapply(estims, function(x){x$var.mean})),
+  PI = sum(sapply(estims, function(x){x$PI})),
   tHat.total = sum(sapply(estims, function(x){sum(1/x$PI)})),
   tHat.mean = mean(sapply(estims, function(x){sum(1/x$PI)}))
   ))
@@ -116,6 +94,16 @@ getEstim<-function(id, data, cols, parentIdCol){
 
 
 ```{r}
+getLastEstimRes<-function(estimRes){
+  if(is.null(estimRes$prevStage))stop("no estim found")
+  if(is.list(estimRes$estim)) return(estimRes$estim)
+  getLastEstimRes(estimRes$prevStage)
+  
+}
+```
+
+
+```{r}
 estimate<-function(tbl, estimRes, target){
   parentIdCol <- estimRes$parentIdCol
   ids <- estimRes$ids
@@ -141,9 +129,12 @@ estimate<-function(tbl, estimRes, target){
     }
     estims <- lapply(ids, getEstim, data = data, cols = cols, parentIdCol = parentIdCol)
     estim<-aggLevelEstimations(estims)
-    browser()
-    estim$est.total <- estimRes$estim$tHat.total * estim$est.total 
-    estim$est.mean <- estimRes$estim$tHat.mean * estim$est.mean 
+    if(!is.null(estimRes$prevStage)){
+      lastEstim <- getLastEstimRes(estimRes)
+      estim$est.total <- lastEstim$tHat.total * estim$est.total
+      estim$est.mean <- lastEstim$tHat.mean  * estim$est.mean / nrow(data)
+    }
+    
   } 
   return(list(parentIdCol=cols["idCol"],
               ids=data[, get(cols["idCol"])],
@@ -166,11 +157,43 @@ gatherEstimates<-function(tbls, estimRes, target){
 ```
 
 
+## Single level Multiple Count Estimator
+
+Let's first estimate the last level values for a single VSid so that estimation is done for each top level record (i.e. as the data is)
+```{r}
+FMidSel <- "254505"
+BV <- h1d$BV[h1d$BV$FMid == FMidSel,]
+
+estimMC(as.numeric(BV$BVvalueMeas),
+        BV$BVnumSamp,
+        BV$BVnumTotal, 
+        method=unique(BV$BVselectMeth))
+```
+
+## Multi-level Multiple Count Estimator
+
+For lower hierarchy tables the number of sampled and measured total 
+```{r}
+estimTables <- tablesInRDBESHierarchies$H1[3:9]
+estimTables
+```
+
+```{r}
+head(h1d[[estimTables[1]]])
+```
+
+```{r}
+#fixBVtype for value measured
+#h1d$BV$BVvalueMeas <- as.numeric(h1d$BV$BVvalueMeas)
+```
+
+So we are estimating for a single Vessel the "BVvalueMeas" 
+
 ```{r}
 startEstim <- list(parentIdCol = "VSid", ids=c(4874))
 res<-gatherEstimates(tbls=h1d[estimTables], startEstim, target = "BVvalueMeas")
 
-warning("this is not corrected for  upper levels for variance")
+warning("Variance is not corrected for  upper levels for variance")
 res$estim$est.mean
 res$estim$var.mean
 res$estim$est.total
