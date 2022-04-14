@@ -172,6 +172,60 @@ estimMC(as.numeric(BV$BVvalueMeas),
 
 ## Multi-level Multiple Count Estimator
 
+### Simulated data
+
+#### CENSUS
+
+```{r}
+makeTbl <- function(tblName, prevTbls = list(), rows=4,
+                    method="CENSUS", stratum="U", mean=5){
+  cols <- getColnames(tblName)
+  prevTbl <- NULL
+  times<-rows
+  if(length(prevTbls)>0){prevTbl <- prevTbls[[length(prevTbls)]]}
+  if(!is.null(prevTbl)){
+    times<- rows*nrow(prevTbl)
+    cols <- c(cols, grep("id$", colnames(prevTbl), value = TRUE))
+  }
+  data <- list(1:times,
+               rep(rows, times),
+               rep(rows, times),
+               rep(method,times),
+               rep(stratum,times)
+               )
+  if(!is.null(prevTbl)){
+    ids <- prevTbl[,get(cols[length(cols)])]
+    data[[length(cols)]] <- rep(ids, each=rows)
+    }
+  names(data)<-cols
+  data[[paste0(tblName,"y")]] <- rnorm(times, mean=mean)
+  data.table::as.data.table(data)
+}
+makeTbls<-function(tbls, prevTbls=list(), ...){
+  tbl<-makeTbl(tbls[1], prevTbls)
+  prevTbls[[tbls[1]]] <- tbl
+  if(length(tbls)==1){return(prevTbls)}
+  tbls<-tbls[tbls != tbls[1]]
+  makeTbls(tbls, prevTbls)
+}
+
+tbls <- paste0("lvl", c("I", "II", "III"))
+hd<-makeTbls(tbls)
+```
+
+```{r}
+hd
+```
+
+
+#### SRSWOR
+
+#### SRSWR
+
+
+### Actual data
+
+
 For lower hierarchy tables the number of sampled and measured total 
 ```{r}
 estimTables <- tablesInRDBESHierarchies$H1[3:9]
