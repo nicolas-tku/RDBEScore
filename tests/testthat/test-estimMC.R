@@ -1,6 +1,6 @@
 ## ------------SRSWOR-----------------------------
 ### --------- all elements in sample-------------
-testMain <- "all elements in sample"
+testMain <- "SRSWOR all elements in sample"
 test_that(paste0("total variance is 0 if", testMain), {
   tot <- 4
   items <- c(3, 4, 4, 5)
@@ -41,8 +41,20 @@ test_that(paste("correct mean if", testMain), {
   expect_equal(x$est.mean, sum(items) / elems)
 })
 
+test_that(paste("correct PI if", testMain), {
+  tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWOR")
+  expect_equal(sum(x$PI)/tot, tot)
+
+  items <- c(3, 1, 4, 2)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWOR")
+  expect_equal(sum(x$PI)/tot, tot)
+})
+
 ### --------- half of elements in sample-------------
-testMain <- "half of elements in sample"
+testMain <- "SRSWOR half of elements in sample"
 test_that(paste("total variance is correct if", testMain), {
   tot <- 8
   items <- c(3, 4, 4, 5)
@@ -82,10 +94,20 @@ test_that(paste("correct mean if", testMain), {
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
   expect_equal(x$est.mean, sum(items) / elems)
 })
+test_that(paste("correct PI if", testMain), {
+  tot <- 8
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWOR")
+  expect_equal(sum(diag(x$PI)), 2)
+  items <- c(3, 1, 4, 2)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWOR")
+  expect_equal(sum(diag(x$PI)), 2)
+})
 
-## ------------SRSWR-----------------------------
-### --------- all elements in sample-------------
-testMain <- "all elements in sample"
+########------------SRSWR----------------------------######
+########--------- all elements in sample-------------######
+testMain <- "SRSWR all elements in sample"
 test_that(paste0("total variance if", testMain), {
   tot <- 4
   items <- c(3, 4, 4, 5)
@@ -126,8 +148,11 @@ test_that(paste("correct mean if", testMain), {
   expect_equal(x$est.mean, sum(items) / elems)
 })
 
+
+###
+
 ### --------- half of elements in sample-------------
-testMain <- "half of elements in sample"
+testMain <- "SRSWR half of elements in sample"
 test_that(paste("total variance is correct if", testMain), {
   tot <- 8
   items <- c(3, 4, 4, 5)
@@ -167,6 +192,60 @@ test_that(paste("correct mean if", testMain), {
   items <- c(3, 1, 4, 2)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
   expect_equal(x$est.mean, sum(items) / elems)
+})
+
+## ------------CENSUS-----------------------------
+testMain <- "CENSUS all  elements in sample"
+test_that(paste0("total variance if", testMain), {
+  tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "CENSUS")
+  expect_equal(x$var.total, 0)
+})
+
+test_that(paste("mean variance if", testMain), {
+  tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "CENSUS")
+  expect_equal(x$var.mean, 0)
+})
+
+test_that(paste("correct total if", testMain), {
+  tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "CENSUS")
+  expect_equal(x$est.total, sum(items))
+
+  items <- c(3, 1, 4, 2)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "CENSUS")
+  expect_equal(x$est.total, sum(items))
+})
+
+test_that(paste("correct mean if", testMain), {
+  tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "CENSUS")
+  expect_equal(x$est.mean, mean(items))
+
+  items <- c(3, 1, 4, 2)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "CENSUS")
+  expect_equal(x$est.mean, sum(items) / elems)
+})
+
+test_that(paste("correct PI if", testMain), {
+  tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "CENSUS")
+  expect_equal(sum(x$PI)/tot, tot)
+
+  items <- c(3, 1, 4, 2)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "CENSUS")
+  expect_equal(sum(x$PI)/tot, tot)
 })
 
 ### --------- errors-------------
