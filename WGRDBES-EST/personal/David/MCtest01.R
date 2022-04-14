@@ -2,8 +2,9 @@
 # Compare these implmentations of generalised functions against
 # the implementation in estimMC
 
+library(icesRDBES)
 # Get the estimMC function for comparison
-source("R/estimMC.R")
+#source("R/estimMC.R")
 
 # Get the expected value E(nk) for the MC estimator
 mcGetExpectedValueK <- function(y,k,selectionMethod){
@@ -129,7 +130,7 @@ myTestData$discardedWeight <- discards
 
 ## SRSWOR
 # Sample the data using single stage simple random sampling without replacement (srswor)
-numberOfSamples <- 33
+numberOfSamples <- 1
 y_srswor <- myTestData[sample(nrow(myTestData),numberOfSamples, replace = FALSE),]
 y_srswor$SAselectionMethod <- 'SRSWOR'
 y_srswor$SAnumberSampled <- numberOfSamples
@@ -158,7 +159,7 @@ estimReturn$var.total
 
 ## SRSWR
 # Sample the data using single stage simple random sampling with replacement (SRSWR)
-numberOfSamples <- 30
+numberOfSamples <- 1
 y_srswr <- myTestData[sample(nrow(myTestData),numberOfSamples, replace = TRUE),]
 y_srswr$SAselectionMethod <- 'SRSWR'
 y_srswr$SAnumberSampled <- numberOfSamples
