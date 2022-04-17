@@ -38,25 +38,7 @@ h1dValid <- validateRDBESRawObject(h1d, verbose = FALSE)
 ## Functions
 
 Functions for demonstrating multi-level design 
-```{r}
-#TODO the big question is how to aggregate these estimations into one  especially PI
-aggLevelEstimations <- function(estims){
-  if(length(estims)<2){
-    estims[[1]]$tHat.total <- sum(1/estims[[1]]$PI)
-    estims[[1]]$tHat.mean <- sum(1/estims[[1]]$PI)
-    return(estims[[1]])
-  }
-  return(list(
-  est.total = sum(sapply(estims, function(x){x$est.total})),
-  est.mean = mean(sapply(estims, function(x){x$est.mean})),
-  var.total = sum(sapply(estims, function(x){x$var.total})),
-  var.mean = mean(sapply(estims, function(x){x$var.mean})),
-  PI = sum(sapply(estims, function(x){x$PI})),
-  tHat.total = sum(sapply(estims, function(x){sum(1/x$PI)})),
-  tHat.mean = mean(sapply(estims, function(x){sum(1/x$PI)}))
-  ))
-}
-```
+
 
 
 ```{r}
@@ -132,7 +114,7 @@ estimate<-function(tbl, estimRes, target){
     if(!is.null(estimRes$prevStage)){
       lastEstim <- getLastEstimRes(estimRes)
       estim$est.total <- lastEstim$tHat.total * estim$est.total
-      estim$est.mean <- lastEstim$tHat.mean  * estim$est.mean / nrow(data)
+      estim$est.mean <- lastEstim$tHat.mean  * estim$est.mean
     }
     
   } 
@@ -177,6 +159,25 @@ estimMC(as.numeric(BV$BVvalueMeas),
 #### CENSUS
 
 ```{r}
+check<-function(x,e, digits=2, show=F){
+  if(show){
+    if(x != e){
+      warning(paste("Expected:", round(e, digits), "!=", round(x, digits)),
+              call. = F)
+    }else{
+      cat(paste("Expected:", round(e, digits), "==", round(x, digits), "\n"))
+    }
+  }else{
+    if(x != e){
+      warning(paste("Expected:", round(e, digits), "!=", round(x, digits)),
+              call. = T)
+    }
+  }
+}
+```
+
+
+```{r}
 makeTbl <- function(tblName, prevTbls = list(), rows=4,
                     method="CENSUS", stratum="U", mean=5){
   cols <- getColnames(tblName)
@@ -185,7 +186,8 @@ makeTbl <- function(tblName, prevTbls = list(), rows=4,
   if(length(prevTbls)>0){prevTbl <- prevTbls[[length(prevTbls)]]}
   if(!is.null(prevTbl)){
     times<- rows*nrow(prevTbl)
-    cols <- c(cols, grep("id$", colnames(prevTbl), value = TRUE))
+    #take the first id column
+    cols <- c(cols, grep("id$", colnames(prevTbl), value = TRUE)[1])
   }
   data <- list(1:times,
                rep(rows, times),
@@ -199,6 +201,7 @@ makeTbl <- function(tblName, prevTbls = list(), rows=4,
     }
   names(data)<-cols
   data[[paste0(tblName,"y")]] <- rnorm(times, mean=mean)
+  data[[paste0(tblName,"recType")]] <- tblName
   data.table::as.data.table(data)
 }
 makeTbls<-function(tbls, prevTbls=list(), ...){
@@ -209,14 +212,84 @@ makeTbls<-function(tbls, prevTbls=list(), ...){
   makeTbls(tbls, prevTbls)
 }
 
-tbls <- paste0("lvl", c("I", "II", "III"))
-hd<-makeTbls(tbls)
+#tbls <- paste0("lvl", c("I", "II", "III"))
+set.seed(1234)
+hd<-makeTbls(LETTERS[1:5])
 ```
 
 ```{r}
-hd
+#TODO the big question is how to aggregate these estimations into one  especially PI
+aggLevelEstimations <- function(estims){
+  if(length(estims)<2){
+    estims[[1]]$tHat.total <- mean(1/estims[[1]]$PI)
+    estims[[1]]$tHat.mean <- mean(1/estims[[1]]$PI)
+    estims[[1]]$PI <- mean(1/estims[[1]]$PI)
+    return(estims[[1]])
+  }
+  return(list(
+  est.total = sum(sapply(estims, function(x){x$est.total})),
+  est.mean = mean(sapply(estims, function(x){x$est.mean})),
+  var.total = sum(sapply(estims, function(x){x$var.total})),
+  var.mean = mean(sapply(estims, function(x){x$var.mean})),
+  PI = mean(sapply(estims, function(x){x$PI})),
+  tHat.total = mean(sapply(estims, function(x){mean(1/x$PI)})),
+  tHat.mean = mean(sapply(estims, function(x){mean(1/x$PI)}))
+  ))
+}
 ```
 
+
+
+```{r}
+startEstim <- list(parentIdCol = "Aid", ids=c(1))
+```
+
+
+```{r}
+res<-gatherEstimates(tbls=hd, startEstim, target = "By")
+b <- hd$B[hd$B$Aid == 1, ]
+
+check(res$estim$est.mean, mean(b$By))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, sum(b$By))
+check(res$estim$var.total, 0)
+nrow(b)
+```
+
+
+```{r}
+res<-gatherEstimates(tbls=hd, startEstim, target = "Cy")
+b <- hd$C[hd$C$Bid %in% c(1:4), ]
+check(res$estim$est.mean, mean(b$Cy))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, sum(b$Cy))
+check(res$estim$var.total, 0)
+nrow(b)
+```
+
+
+```{r}
+res<-gatherEstimates(tbls=hd, startEstim, target = "Dy")
+
+b <- hd$D[hd$D$Cid %in% c(1:16), ]
+check(res$estim$est.mean, mean(b$Dy))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, sum(b$Dy))
+check(res$estim$var.total, 0)
+nrow(b)
+```
+
+```{r}
+Ty <- "Ey"
+res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
+
+b <- hd$E[hd$E$Did %in% c(1:64), ]
+check(res$estim$est.mean, mean(b[[Ty]]))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, sum(b[[Ty]]))
+check(res$estim$var.total, 0)
+nrow(b)
+```
 
 #### SRSWOR
 
