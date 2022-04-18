@@ -69,6 +69,7 @@ getEstim<-function(id, data, cols, parentIdCol){
                    "has methods:", paste0(selMethod,collapse = ", ")))
         }
       estim <- estimMC(y, sampled, total, selMethod)
+      estim$Nn <- total/sampled
       estim
       
     }
@@ -113,8 +114,8 @@ estimate<-function(tbl, estimRes, target){
     estim<-aggLevelEstimations(estims)
     if(!is.null(estimRes$prevStage)){
       lastEstim <- getLastEstimRes(estimRes)
-      estim$est.total <- lastEstim$tHat.total * estim$est.total
-      estim$est.mean <- lastEstim$tHat.mean  * estim$est.mean
+      estim$est.total <- lastEstim$tHat * estim$est.total
+      estim$est.mean <- lastEstim$tHat  * estim$est.mean 
     }
     
   } 
@@ -159,7 +160,7 @@ estimMC(as.numeric(BV$BVvalueMeas),
 #### CENSUS
 
 ```{r}
-check<-function(x,e, digits=2, show=F){
+check<-function(x,e, digits=2, show=T){
   if(show){
     if(x != e){
       warning(paste("Expected:", round(e, digits), "!=", round(x, digits)),
@@ -178,11 +179,14 @@ check<-function(x,e, digits=2, show=F){
 
 
 ```{r}
-makeTbl <- function(tblName, prevTbls = list(), rows=4,
+makeTbl <- function(tblName, prevTbls = list(), rows=4, proportionSampled=0.5,
                     method="CENSUS", stratum="U", mean=5){
   cols <- getColnames(tblName)
   prevTbl <- NULL
   times<-rows
+  total<-rows/proportionSampled
+  if(method=="CENSUS"){total<-rows}
+  
   if(length(prevTbls)>0){prevTbl <- prevTbls[[length(prevTbls)]]}
   if(!is.null(prevTbl)){
     times<- rows*nrow(prevTbl)
@@ -191,7 +195,7 @@ makeTbl <- function(tblName, prevTbls = list(), rows=4,
   }
   data <- list(1:times,
                rep(rows, times),
-               rep(rows, times),
+               rep(total, times),
                rep(method,times),
                rep(stratum,times)
                )
@@ -205,35 +209,32 @@ makeTbl <- function(tblName, prevTbls = list(), rows=4,
   data.table::as.data.table(data)
 }
 makeTbls<-function(tbls, prevTbls=list(), ...){
-  tbl<-makeTbl(tbls[1], prevTbls)
+  tbl<-makeTbl(tbls[1], prevTbls, ...)
   prevTbls[[tbls[1]]] <- tbl
   if(length(tbls)==1){return(prevTbls)}
   tbls<-tbls[tbls != tbls[1]]
-  makeTbls(tbls, prevTbls)
+  makeTbls(tbls, prevTbls, ...)
 }
+```
 
+
+```{r}
 #tbls <- paste0("lvl", c("I", "II", "III"))
 set.seed(1234)
-hd<-makeTbls(LETTERS[1:5])
+hd<-makeTbls(LETTERS[1:5], method="SRSWOR", proportionSampled = 0.5)
 ```
 
 ```{r}
 #TODO the big question is how to aggregate these estimations into one  especially PI
 aggLevelEstimations <- function(estims){
-  if(length(estims)<2){
-    estims[[1]]$tHat.total <- mean(1/estims[[1]]$PI)
-    estims[[1]]$tHat.mean <- mean(1/estims[[1]]$PI)
-    estims[[1]]$PI <- mean(1/estims[[1]]$PI)
-    return(estims[[1]])
-  }
   return(list(
   est.total = sum(sapply(estims, function(x){x$est.total})),
   est.mean = mean(sapply(estims, function(x){x$est.mean})),
   var.total = sum(sapply(estims, function(x){x$var.total})),
   var.mean = mean(sapply(estims, function(x){x$var.mean})),
   PI = mean(sapply(estims, function(x){x$PI})),
-  tHat.total = mean(sapply(estims, function(x){mean(1/x$PI)})),
-  tHat.mean = mean(sapply(estims, function(x){mean(1/x$PI)}))
+  tHat = mean(sapply(estims, function(x){mean(1/x$PI/x$Nn/x$Nn )})),
+  Nn = mean(sapply(estims, function(x){mean(x$Nn)}))
   ))
 }
 ```
