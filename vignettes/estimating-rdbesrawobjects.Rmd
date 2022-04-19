@@ -29,7 +29,7 @@ library(icesRDBES)
 First we'll load some example data from the RDBES and check it's valid.  It's a good idea to check your RDBESRawObjects are valid after any manipulations you perform.
 
 ```{r load}
-h1d <- createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19")
+h1d <- createRDBESRawObject(rdbesExtractPath = ".\\tests\\testthat\\h1_v_1_19")
 h1dValid <- validateRDBESRawObject(h1d, verbose = FALSE)
 
 ```
@@ -69,7 +69,6 @@ getEstim<-function(id, data, cols, parentIdCol){
                    "has methods:", paste0(selMethod,collapse = ", ")))
         }
       estim <- estimMC(y, sampled, total, selMethod)
-      estim$Nn <- total/sampled
       estim
       
     }
@@ -86,7 +85,7 @@ getLastEstimRes<-function(estimRes){
 ```
 
 
-```{r}
+```{r estimate}
 estimate<-function(tbl, estimRes, target){
   parentIdCol <- estimRes$parentIdCol
   ids <- estimRes$ids
@@ -112,12 +111,7 @@ estimate<-function(tbl, estimRes, target){
     }
     estims <- lapply(ids, getEstim, data = data, cols = cols, parentIdCol = parentIdCol)
     estim<-aggLevelEstimations(estims)
-    if(!is.null(estimRes$prevStage)){
-      lastEstim <- getLastEstimRes(estimRes)
-      estim$est.total <- lastEstim$tHat * estim$est.total
-      estim$est.mean <- lastEstim$tHat  * estim$est.mean 
-    }
-    
+   
   } 
   return(list(parentIdCol=cols["idCol"],
               ids=data[, get(cols["idCol"])],
@@ -127,6 +121,19 @@ estimate<-function(tbl, estimRes, target){
   }
 ```
 
+
+```{r aggLevelEstimations}
+#TODO the big question is how to aggregate these estimations into one  especially PI
+aggLevelEstimations <- function(estims){
+  return(list(
+  est.total = sum(sapply(estims, function(x){x$est.total})),
+  est.mean = mean(sapply(estims, function(x){x$est.mean})),
+  var.total = sum(sapply(estims, function(x){x$var.total})),
+  var.mean = mean(sapply(estims, function(x){x$var.mean})),
+  PI = mean(sapply(estims, function(x){x$PI}))
+  ))
+}
+```
 
 ```{r}
 gatherEstimates<-function(tbls, estimRes, target){
@@ -157,7 +164,7 @@ estimMC(as.numeric(BV$BVvalueMeas),
 
 ### Simulated data
 
-#### CENSUS
+
 
 ```{r}
 check<-function(x,e, digits=2, show=T){
@@ -217,28 +224,14 @@ makeTbls<-function(tbls, prevTbls=list(), ...){
 }
 ```
 
+#### CENSUS
 
 ```{r}
 #tbls <- paste0("lvl", c("I", "II", "III"))
 set.seed(1234)
-hd<-makeTbls(LETTERS[1:5], method="SRSWOR", proportionSampled = 0.5)
+propSampled <- 1
+hd<-makeTbls(LETTERS[1:5], method="CENSUS", proportionSampled = propSampled)
 ```
-
-```{r}
-#TODO the big question is how to aggregate these estimations into one  especially PI
-aggLevelEstimations <- function(estims){
-  return(list(
-  est.total = sum(sapply(estims, function(x){x$est.total})),
-  est.mean = mean(sapply(estims, function(x){x$est.mean})),
-  var.total = sum(sapply(estims, function(x){x$var.total})),
-  var.mean = mean(sapply(estims, function(x){x$var.mean})),
-  PI = mean(sapply(estims, function(x){x$PI})),
-  tHat = mean(sapply(estims, function(x){mean(1/x$PI/x$Nn/x$Nn )})),
-  Nn = mean(sapply(estims, function(x){mean(x$Nn)}))
-  ))
-}
-```
-
 
 
 ```{r}
@@ -252,7 +245,7 @@ b <- hd$B[hd$B$Aid == 1, ]
 
 check(res$estim$est.mean, mean(b$By))
 check(res$estim$var.mean, 0)
-check(res$estim$est.total, sum(b$By))
+check(res$estim$est.total, sum(b$By*1/propSampled))
 check(res$estim$var.total, 0)
 nrow(b)
 ```
@@ -263,7 +256,7 @@ res<-gatherEstimates(tbls=hd, startEstim, target = "Cy")
 b <- hd$C[hd$C$Bid %in% c(1:4), ]
 check(res$estim$est.mean, mean(b$Cy))
 check(res$estim$var.mean, 0)
-check(res$estim$est.total, sum(b$Cy))
+check(res$estim$est.total, sum(b$Cy)*1/propSampled)
 check(res$estim$var.total, 0)
 nrow(b)
 ```
@@ -275,7 +268,7 @@ res<-gatherEstimates(tbls=hd, startEstim, target = "Dy")
 b <- hd$D[hd$D$Cid %in% c(1:16), ]
 check(res$estim$est.mean, mean(b$Dy))
 check(res$estim$var.mean, 0)
-check(res$estim$est.total, sum(b$Dy))
+check(res$estim$est.total, sum(b$Dy)*1/propSampled)
 check(res$estim$var.total, 0)
 nrow(b)
 ```
@@ -287,14 +280,185 @@ res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
 b <- hd$E[hd$E$Did %in% c(1:64), ]
 check(res$estim$est.mean, mean(b[[Ty]]))
 check(res$estim$var.mean, 0)
-check(res$estim$est.total, sum(b[[Ty]]))
+check(res$estim$est.total, sum(b[[Ty]])*1/propSampled)
 check(res$estim$var.total, 0)
 nrow(b)
 ```
 
+
+```{r}
+#tbls <- paste0("lvl", c("I", "II", "III"))
+```
+
+
 #### SRSWOR
 
+```{r}
+
+set.seed(1234)
+propSampled <- 1
+startEstim <- list(parentIdCol = "Aid", ids=c(1))
+hd<-makeTbls(LETTERS[1:5], method="SRSWOR", proportionSampled = propSampled)
+```
+
+
+```{r}
+res<-gatherEstimates(tbls=hd, startEstim, target = "By")
+b <- hd$B[hd$B$Aid == 1, ]
+
+check(res$estim$est.mean, mean(b$By))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, sum(b$By*1/propSampled))
+check(res$estim$var.total, 0)
+nrow(b)
+```
+
+
+```{r}
+res<-gatherEstimates(tbls=hd, startEstim, target = "Cy")
+b <- hd$C[hd$C$Bid %in% c(1:4), ]
+check(res$estim$est.mean, mean(b$Cy))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, sum(b$Cy)*1/propSampled)
+check(res$estim$var.total, 0)
+nrow(b)
+```
+
+
+```{r}
+res<-gatherEstimates(tbls=hd, startEstim, target = "Dy")
+
+b <- hd$D[hd$D$Cid %in% c(1:16), ]
+check(res$estim$est.mean, mean(b$Dy))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, sum(b$Dy)*1/propSampled)
+check(res$estim$var.total, 0)
+nrow(b)
+```
+
+```{r}
+Ty <- "Ey"
+res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
+
+b <- hd$E[hd$E$Did %in% c(1:64), ]
+check(res$estim$est.mean, mean(b[[Ty]]))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, sum(b[[Ty]])*1/propSampled)
+check(res$estim$var.total, 0)
+nrow(b)
+```
+```{r}
+
+set.seed(1234)
+propSampled <- 0.5
+startEstim <- list(parentIdCol = "Aid", ids=c(1))
+hd<-makeTbls(LETTERS[1:5], method="SRSWOR", proportionSampled = propSampled)
+```
+
+
+```{r}
+res<-gatherEstimates(tbls=hd, startEstim, target = "By")
+b <- hd$B[hd$B$Aid == 1, ]
+
+check(res$estim$est.mean, mean(b$By))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, sum(b$By*1/propSampled))
+check(res$estim$var.total, 0)
+nrow(b)
+```
+
+
+```{r}
+res<-gatherEstimates(tbls=hd, startEstim, target = "Cy")
+b <- hd$C[hd$C$Bid %in% c(1:4), ]
+check(res$estim$est.mean, mean(b$Cy))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, sum(b$Cy)*1/propSampled)
+check(res$estim$var.total, 0)
+nrow(b)
+```
+
+
+```{r}
+res<-gatherEstimates(tbls=hd, startEstim, target = "Dy")
+
+b <- hd$D[hd$D$Cid %in% c(1:16), ]
+check(res$estim$est.mean, mean(b$Dy))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, sum(b$Dy)*1/propSampled)
+check(res$estim$var.total, 0)
+nrow(b)
+```
+
+```{r}
+Ty <- "Ey"
+res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
+
+b <- hd$E[hd$E$Did %in% c(1:64), ]
+check(res$estim$est.mean, mean(b[[Ty]]))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, sum(b[[Ty]])*1/propSampled)
+check(res$estim$var.total, 0)
+nrow(b)
+```
+
+
 #### SRSWR
+
+```{r}
+
+set.seed(1234)
+propSampled <- 0.1
+startEstim <- list(parentIdCol = "Aid", ids=c(1))
+hd<-makeTbls(LETTERS[1:5], method="SRSWR", proportionSampled = propSampled)
+```
+
+
+```{r}
+res<-gatherEstimates(tbls=hd, startEstim, target = "By")
+b <- hd$B[hd$B$Aid == 1, ]
+
+check(res$estim$est.mean, mean(b$By))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, sum(b$By*1/propSampled))
+check(res$estim$var.total, 0)
+nrow(b)
+```
+
+
+```{r}
+res<-gatherEstimates(tbls=hd, startEstim, target = "Cy")
+b <- hd$C[hd$C$Bid %in% c(1:4), ]
+check(res$estim$est.mean, mean(b$Cy))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, sum(b$Cy)*1/propSampled)
+check(res$estim$var.total, 0)
+nrow(b)
+```
+
+
+```{r}
+res<-gatherEstimates(tbls=hd, startEstim, target = "Dy")
+
+b <- hd$D[hd$D$Cid %in% c(1:16), ]
+check(res$estim$est.mean, mean(b$Dy))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, sum(b$Dy)*1/propSampled)
+check(res$estim$var.total, 0)
+nrow(b)
+```
+
+```{r}
+Ty <- "Ey"
+res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
+
+b <- hd$E[hd$E$Did %in% c(1:64), ]
+check(res$estim$est.mean, mean(b[[Ty]]))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, sum(b[[Ty]])*1/propSampled)
+check(res$estim$var.total, 0)
+nrow(b)
+```
 
 
 ### Actual data
