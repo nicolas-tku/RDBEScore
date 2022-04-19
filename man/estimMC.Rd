@@ -7,13 +7,13 @@
 estimMC(y, sampled, total, method = "SRSWOR")
 }
 \arguments{
-\item{y}{variable to be estimated}
+\item{y}{numeric variable to be estimated}
 
-\item{sampled}{total number of units sampled}
+\item{sampled}{numeric total number of units sampled}
 
-\item{total}{total number of units int the population}
+\item{total}{numeric total number of units int the population}
 
-\item{method}{selection method code e.g SRSWOR}
+\item{method}{character selection method code e.g SRSWOR}
 }
 \value{
 list of 5 elements including the population mean, total

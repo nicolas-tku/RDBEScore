@@ -42,21 +42,6 @@ Functions for demonstrating multi-level design
 
 
 ```{r}
-getColnames <- function(tblName){
-  idCol <- paste0(tblName,"id")
-  numSampledCol <- paste0(tblName,"numSamp")
-  numTotalCol <- paste0(tblName,"numTotal")
-  selMethodCol <- paste0(tblName,"selectMeth")
-  stratumCol <- paste0(tblName,"stratumName")
-  c(idCol = idCol,
-    numSampledCol=numSampledCol,
-    numTotalCol=numTotalCol,
-    selMethodCol = selMethodCol,
-    stratumCol = stratumCol)
-}
-```
-
-```{r}
 getEstim<-function(id, data, cols, parentIdCol){
       data <- data[get(parentIdCol) == id, ]
       y <- data[, get(cols["y"])]
@@ -91,7 +76,7 @@ estimate<-function(tbl, estimRes, target){
   ids <- estimRes$ids
   tblName <- unique(tbl[[colnames(tbl)[grepl("recType$", colnames(tbl))]]])
   if(length(tblName)>1){stop("Mixed table")}
-  cols <- getColnames(tblName)
+  cols <- icesRDBES:::getColnames(tblName)
   missingCols <- setdiff(cols, colnames(tbl))
   isTarget  <- length(setdiff(target, colnames(tbl))) == 0
   data <- tbl[get(parentIdCol) %in% ids,]
@@ -185,52 +170,13 @@ check<-function(x,e, digits=2, show=T){
 ```
 
 
-```{r}
-makeTbl <- function(tblName, prevTbls = list(), rows=4, proportionSampled=0.5,
-                    method="CENSUS", stratum="U", mean=5){
-  cols <- getColnames(tblName)
-  prevTbl <- NULL
-  times<-rows
-  total<-rows/proportionSampled
-  if(method=="CENSUS"){total<-rows}
-  
-  if(length(prevTbls)>0){prevTbl <- prevTbls[[length(prevTbls)]]}
-  if(!is.null(prevTbl)){
-    times<- rows*nrow(prevTbl)
-    #take the first id column
-    cols <- c(cols, grep("id$", colnames(prevTbl), value = TRUE)[1])
-  }
-  data <- list(1:times,
-               rep(rows, times),
-               rep(total, times),
-               rep(method,times),
-               rep(stratum,times)
-               )
-  if(!is.null(prevTbl)){
-    ids <- prevTbl[,get(cols[length(cols)])]
-    data[[length(cols)]] <- rep(ids, each=rows)
-    }
-  names(data)<-cols
-  data[[paste0(tblName,"y")]] <- rnorm(times, mean=mean)
-  data[[paste0(tblName,"recType")]] <- tblName
-  data.table::as.data.table(data)
-}
-makeTbls<-function(tbls, prevTbls=list(), ...){
-  tbl<-makeTbl(tbls[1], prevTbls, ...)
-  prevTbls[[tbls[1]]] <- tbl
-  if(length(tbls)==1){return(prevTbls)}
-  tbls<-tbls[tbls != tbls[1]]
-  makeTbls(tbls, prevTbls, ...)
-}
-```
-
 #### CENSUS
 
 ```{r}
 #tbls <- paste0("lvl", c("I", "II", "III"))
 set.seed(1234)
 propSampled <- 1
-hd<-makeTbls(LETTERS[1:5], method="CENSUS", proportionSampled = propSampled)
+hd<-generateTestTbls(LETTERS[1:5], proportionSampled = propSampled)
 ```
 
 
@@ -298,7 +244,9 @@ nrow(b)
 set.seed(1234)
 propSampled <- 1
 startEstim <- list(parentIdCol = "Aid", ids=c(1))
-hd<-makeTbls(LETTERS[1:5], method="SRSWOR", proportionSampled = propSampled)
+hd<-generateTestTbls(LETTERS[1:5],
+                     selectionMethod="SRSWOR",
+                     proportionSampled = propSampled)
 ```
 
 
@@ -352,7 +300,9 @@ nrow(b)
 set.seed(1234)
 propSampled <- 0.5
 startEstim <- list(parentIdCol = "Aid", ids=c(1))
-hd<-makeTbls(LETTERS[1:5], method="SRSWOR", proportionSampled = propSampled)
+hd<-generateTestTbls(LETTERS[1:5],
+                     selectionMethod="SRSWOR",
+                     proportionSampled = propSampled)
 ```
 
 
@@ -410,7 +360,9 @@ nrow(b)
 set.seed(1234)
 propSampled <- 0.1
 startEstim <- list(parentIdCol = "Aid", ids=c(1))
-hd<-makeTbls(LETTERS[1:5], method="SRSWR", proportionSampled = propSampled)
+hd<-generateTestTbls(LETTERS[1:5],
+                     selectionMethod="SRSWR",
+                     proportionSampled = propSampled)
 ```
 
 
