@@ -29,7 +29,7 @@ library(icesRDBES)
 First we'll load some example data from the RDBES and check it's valid.  It's a good idea to check your RDBESRawObjects are valid after any manipulations you perform.
 
 ```{r load}
-h1d <- createRDBESRawObject(rdbesExtractPath = ".\\tests\\testthat\\h1_v_1_19")
+h1d <- createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19")
 h1dValid <- validateRDBESRawObject(h1d, verbose = FALSE)
 
 ```
@@ -102,11 +102,7 @@ estimate<-function(tbl, estimRes, target){
     estim<-aggLevelEstimations(estims)
     if(!is.null(estimRes$prevStage)){
       lastEstim <- getLastEstimRes(estimRes)
-      #browser()
       estim$est.total <- estim$est.total * lastEstim$est.total
-      #browser()
-      #estim$PI <- estim$PI 
-      
     }
    
   } 
@@ -160,11 +156,8 @@ estimMC(as.numeric(BV$BVvalueMeas),
 
 ## Multi-level Multiple Count Estimator
 
-### Simulated data
-
-
-
 ```{r}
+# a few convenience functions to check results
 check<-function(x,e, digits=2, show=T){
   if(show){
     if(x != e){
@@ -180,286 +173,107 @@ check<-function(x,e, digits=2, show=T){
     }
   }
 }
+
+checkEstimates <- function(tblName, hd, startEstim, propSampled, ...){
+  Ty <- paste0(tblName, "y")
+  numStages <- which(names(hd) == tblName) #from A to B
+  prevRows <- nrow(hd[[1]])^(numStages-2)
+  prevID <- paste0(names(hd)[numStages-1],"id")
+  res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
+  #browser()
+  b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
+  check(res$estim$est.mean, mean(b[[Ty]]), ...)
+  check(res$estim$var.mean, 0, ...)
+  check(res$estim$est.total, sum(b[[Ty]])*((1/propSampled)^numStages), ...)
+  check(res$estim$var.total, 0, ...)
+}
+
+```
+
+### Simulated data
+
+```{r}
+#keep results consistent
+set.seed(1234)
 ```
 
 
 #### CENSUS
 
 ```{r}
-#tbls <- paste0("lvl", c("I", "II", "III"))
-set.seed(1234)
+
 propSampled <- 1
-hd<-generateTestTbls(LETTERS[1:5], proportionSampled = propSampled)
-```
-
-
-```{r}
+hd<-generateTestTbls(LETTERS[1:5], propSamp = propSampled)
 startEstim <- list(parentIdCol = "Aid", ids=c(1))
 ```
 
-
 ```{r}
-res<-gatherEstimates(tbls=hd, startEstim, target = "By")
-b <- hd$B[hd$B$Aid == 1, ]
+for(L in LETTERS[2:5]){
+  cat(paste0("level ", L, ":\n"))
+  checkEstimates(L, hd=hd, startEstim = startEstim, propSampled = propSampled)
+  cat("\n")
+}
 
-check(res$estim$est.mean, mean(b$By))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, sum(b$By*1/propSampled))
-check(res$estim$var.total, 0)
-nrow(b)
 ```
 
-
-```{r}
-res<-gatherEstimates(tbls=hd, startEstim, target = "Cy")
-b <- hd$C[hd$C$Bid %in% c(1:4), ]
-check(res$estim$est.mean, mean(b$Cy))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, sum(b$Cy)*1/propSampled)
-check(res$estim$var.total, 0)
-nrow(b)
-```
-
-
-```{r}
-res<-gatherEstimates(tbls=hd, startEstim, target = "Dy")
-
-b <- hd$D[hd$D$Cid %in% c(1:16), ]
-check(res$estim$est.mean, mean(b$Dy))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, sum(b$Dy)*1/propSampled)
-check(res$estim$var.total, 0)
-nrow(b)
-```
-
-```{r}
-Ty <- "Ey"
-res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
-
-b <- hd$E[hd$E$Did %in% c(1:64), ]
-check(res$estim$est.mean, mean(b[[Ty]]))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, sum(b[[Ty]])*1/propSampled)
-check(res$estim$var.total, 0)
-nrow(b)
-```
-
-
-```{r}
-#tbls <- paste0("lvl", c("I", "II", "III"))
-```
 
 
 #### SRSWOR
 
 ##### All sampled
 ```{r}
-
 set.seed(1234)
 propSampled <- 1
 startEstim <- list(parentIdCol = "Aid", ids=c(1))
-hd<-generateTestTbls(LETTERS[1:5],
-                     selectionMethod="SRSWOR",
-                     proportionSampled = propSampled)
-```
-
-
-```{r}
-res<-gatherEstimates(tbls=hd, startEstim, target = "By")
-b <- hd$B[hd$B$Aid == 1, ]
-
-check(res$estim$est.mean, mean(b$By))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, sum(b$By*1/propSampled))
-check(res$estim$var.total, 0)
-nrow(b)
-```
-
-
-```{r}
-res<-gatherEstimates(tbls=hd, startEstim, target = "Cy")
-b <- hd$C[hd$C$Bid %in% c(1:4), ]
-check(res$estim$est.mean, mean(b$Cy))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, sum(b$Cy)*1/propSampled)
-check(res$estim$var.total, 0)
-nrow(b)
-```
-
-
-```{r}
-res<-gatherEstimates(tbls=hd, startEstim, target = "Dy")
-
-b <- hd$D[hd$D$Cid %in% c(1:16), ]
-check(res$estim$est.mean, mean(b$Dy))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, sum(b$Dy)*1/propSampled)
-check(res$estim$var.total, 0)
-nrow(b)
+hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWOR",propSamp = propSampled)
 ```
 
 ```{r}
-Ty <- "Ey"
-res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
+for(L in LETTERS[2:5]){
+  cat(paste0("level ", L, ":\n"))
+  checkEstimates(L, hd=hd, startEstim = startEstim, propSampled = propSampled)
+  cat("\n")
+}
 
-b <- hd$E[hd$E$Did %in% c(1:64), ]
-check(res$estim$est.mean, mean(b[[Ty]]))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, sum(b[[Ty]])*1/propSampled)
-check(res$estim$var.total, 0)
-nrow(b)
 ```
+
 ##### 50% sampled
 
 ```{r}
 set.seed(1234)
 propSampled <- 0.5
 startEstim <- list(parentIdCol = "Aid", ids=c(1))
-hd<-generateTestTbls(LETTERS[1:5],
-                     selectionMethod="SRSWOR",
-                     proportionSampled = propSampled)
+hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWOR",propSamp = propSampled)
 
-prevRows <- 1
-tblName <- "B"
-Ty <- paste0(tblName, "y")
-numStages <- which(names(hd) == tblName) #from A to B
-prevID <- paste0(names(hd)[numStages-1],"id")
-res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
-
-b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
-check(res$estim$est.mean, mean(b[[Ty]]))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, numStages*sum(b[[Ty]])*1/propSampled)
-check(res$estim$var.total, 0)
-prevRows <- nrow(b)
-prevRows
-```
-
-
-```{r}
-prevRows <- 4
-tblName <- "C"
-Ty <- paste0(tblName, "y")
-numStages <- which(names(hd) == tblName) #from A to E
-prevID <- paste0(names(hd)[numStages-1],"id")
-res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
-
-b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
-check(res$estim$est.mean, mean(b[[Ty]]))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, numStages*sum(b[[Ty]])*1/propSampled)
-check(res$estim$var.total, 0)
-prevRows <- nrow(b)
-prevRows
-```
-
-
-```{r}
-tblName <- "D"
-Ty <- paste0(tblName, "y")
-numStages <- which(names(hd) == tblName) #from A to E
-prevID <- paste0(names(hd)[numStages-1],"id")
-res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
-
-b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
-check(res$estim$est.mean, mean(b[[Ty]]))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, numStages*sum(b[[Ty]])*1/propSampled)
-check(res$estim$var.total, 0)
-prevRows <- nrow(b)
-prevRows
 ```
 
 ```{r}
-tblName <- "E"
-Ty <- paste0(tblName, "y")
-numStages <- which(names(hd) == tblName) #from A to E
-prevID <- paste0(names(hd)[numStages-1],"id")
-res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
+for(L in LETTERS[2:5]){
+  cat(paste0("level ", L, ":\n"))
+  checkEstimates(L, hd=hd, startEstim = startEstim, propSampled = propSampled)
+  cat("\n")
+}
 
-b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
-check(res$estim$est.mean, mean(b[[Ty]]))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, numStages*sum(b[[Ty]])*1/propSampled)
-check(res$estim$var.total, 0)
-prevRows <- nrow(b)
-prevRows
 ```
+
+
 ##### 10% sampled
 
 ```{r}
 set.seed(1234)
 propSampled <- 0.1
 startEstim <- list(parentIdCol = "Aid", ids=c(1))
-hd<-generateTestTbls(LETTERS[1:5],
-                     selectionMethod="SRSWOR",
-                     proportionSampled = propSampled)
+hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWOR",propSamp = propSampled)
 
-prevRows <- 1
-tblName <- "B"
-Ty <- paste0(tblName, "y")
-numStages <- which(names(hd) == tblName) #from A to B
-prevID <- paste0(names(hd)[numStages-1],"id")
-res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
-
-b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
-check(res$estim$est.mean, mean(b[[Ty]]))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, numStages*sum(b[[Ty]])*1/propSampled)
-check(res$estim$var.total, 0)
-prevRows <- nrow(b)
-prevRows
-```
-
-
-```{r}
-prevRows <- 4
-tblName <- "C"
-Ty <- paste0(tblName, "y")
-numStages <- which(names(hd) == tblName) #from A to E
-prevID <- paste0(names(hd)[numStages-1],"id")
-res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
-
-b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
-check(res$estim$est.mean, mean(b[[Ty]]))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, numStages*sum(b[[Ty]])*1/propSampled)
-check(res$estim$var.total, 0)
-prevRows <- nrow(b)
-prevRows
-```
-
-
-```{r}
-tblName <- "D"
-Ty <- paste0(tblName, "y")
-numStages <- which(names(hd) == tblName) #from A to E
-prevID <- paste0(names(hd)[numStages-1],"id")
-res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
-
-b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
-check(res$estim$est.mean, mean(b[[Ty]]))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, numStages*sum(b[[Ty]])*1/propSampled)
-check(res$estim$var.total, 0)
-prevRows <- nrow(b)
-prevRows
 ```
 
 ```{r}
-tblName <- "E"
-Ty <- paste0(tblName, "y")
-numStages <- which(names(hd) == tblName) #from A to E
-prevID <- paste0(names(hd)[numStages-1],"id")
-res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
+for(L in LETTERS[2:5]){
+  cat(paste0("level ", L, ":\n"))
+  checkEstimates(L, hd=hd, startEstim = startEstim, propSampled = propSampled)
+  cat("\n")
+}
 
-b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
-check(res$estim$est.mean, mean(b[[Ty]]))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, numStages*sum(b[[Ty]])*1/propSampled)
-check(res$estim$var.total, 0)
-prevRows <- nrow(b)
-prevRows
 ```
 
 #### SRSWR
@@ -469,77 +283,18 @@ prevRows
 ```{r}
 propSampled <- 0.1
 startEstim <- list(parentIdCol = "Aid", ids=c(1))
-hd<-generateTestTbls(LETTERS[1:5],
-                     selectionMethod="SRSWR",
-                     proportionSampled = propSampled)
+hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWR",propSamp = propSampled)
 prevRows <- 1
 ```
 
 
 ```{r}
-tblName <- "B"
-Ty <- paste0(tblName, "y")
-numStages <- which(names(hd) == tblName) #from A to B
-prevID <- paste0(names(hd)[numStages-1],"id")
-res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
+for(L in LETTERS[2:5]){
+  cat(paste0("level ", L, ":\n"))
+  checkEstimates(L, hd=hd, startEstim = startEstim, propSampled = propSampled)
+  cat("\n")
+}
 
-b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
-check(res$estim$est.mean, mean(b[[Ty]]))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, numStages*sum(b[[Ty]])*1/propSampled)
-check(res$estim$var.total, 0)
-prevRows <- nrow(b)
-prevRows
-```
-
-
-```{r}
-tblName <- "C"
-Ty <- paste0(tblName, "y")
-numStages <- which(names(hd) == tblName) #from A to E
-prevID <- paste0(names(hd)[numStages-1],"id")
-res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
-
-b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
-check(res$estim$est.mean, mean(b[[Ty]]))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, numStages*sum(b[[Ty]])*1/propSampled)
-check(res$estim$var.total, 0)
-prevRows <- nrow(b)
-prevRows
-```
-
-
-```{r}
-tblName <- "D"
-Ty <- paste0(tblName, "y")
-numStages <- which(names(hd) == tblName) #from A to E
-prevID <- paste0(names(hd)[numStages-1],"id")
-res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
-
-b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
-check(res$estim$est.mean, mean(b[[Ty]]))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, numStages*sum(b[[Ty]])*1/propSampled)
-check(res$estim$var.total, 0)
-prevRows <- nrow(b)
-prevRows
-```
-
-```{r}
-tblName <- "E"
-Ty <- paste0(tblName, "y")
-numStages <- which(names(hd) == tblName) #from A to E
-prevID <- paste0(names(hd)[numStages-1],"id")
-res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
-
-b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
-check(res$estim$est.mean, mean(b[[Ty]]))
-check(res$estim$var.mean, 0)
-check(res$estim$est.total, numStages*sum(b[[Ty]])*1/propSampled)
-check(res$estim$var.total, 0)
-prevRows <- nrow(b)
-prevRows
 ```
 
 

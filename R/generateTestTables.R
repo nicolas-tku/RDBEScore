@@ -3,13 +3,12 @@
 #' @param prevTbls list of data.tables upstream of the generated table.
 #'  Defaults to empty list
 #' @param rows  numeric number of rows per parent record. Defaults to 4.
-#' @param proportionSampled  numeric proportion of how many of total are
-#'  sampled. This is ignored for "CENSUS" defaults to 0.5
-#' @param selectionMethod the selection method used. Defaults to "CENSUS".
+#' @param propSamp  numeric proportion of how many of total are
+#'  sampled. This is ignored for "CENSUS". Defaults to 0.5
+#' @param selMeth character selection method used. Defaults to "CENSUS".
 #'  Others like SRSWR or SRSSWOR can be used as well
-#' @param stratified character code if the data should be stratified.
-#'  Defaults to "N"
-#' @param stratums character vector of the stratum names to be created
+#' @param stratums character vector of the stratum names to be created.
+#' Defaults to c("U"), meaning not stratified.
 #' @param mean numeric the expected mean of the target variable.
 #' The variable is created using \code{\link[stats]{rnorm}} and saved under
 #'  column ending with "y". Defaults to 5.
@@ -18,18 +17,18 @@
 #'
 makeTbl <- function(tblName, prevTbls = list(),
                     rows = 4,
-                    proportionSampled = 0.5,
-                    selectionMethod = "CENSUS",
-                    stratified = "N",
+                    propSamp = 0.5,
+                    selMeth = "CENSUS",
                     stratums = c("U"),
                     mean = 5) {
   cols <- getColnames(tblName)
   prevTbl <- NULL
   times <- rows
-  total <- rows / proportionSampled
-  if (selectionMethod == "CENSUS") {
+  total <- rows / propSamp
+  if (selMeth == "CENSUS") {
     total <- rows
   }
+  stratified <- ifelse(length(stratums) == 1, "N", "Y")
 
   if (length(prevTbls) > 0) {
     prevTbl <- prevTbls[[length(prevTbls)]]
@@ -43,7 +42,7 @@ makeTbl <- function(tblName, prevTbls = list(),
     1:times,
     rep(rows, times),
     rep(total, times),
-    rep(selectionMethod, times),
+    rep(selMeth, times),
     rep(stratums, times / length(stratums)),
     rep(stratified, times)
   )
@@ -52,7 +51,7 @@ makeTbl <- function(tblName, prevTbls = list(),
     data[[length(cols)]] <- rep(ids, each = rows)
   }
   names(data) <- cols
-  data[[paste0(tblName, "y")]] <- rnorm(times, mean = mean)
+  data[[paste0(tblName, "y")]] <- rnorm(n=times, mean=5)
   data[[paste0(tblName, "recType")]] <- tblName
   data.table::as.data.table(data)
 }

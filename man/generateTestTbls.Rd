@@ -16,13 +16,12 @@ Defaults to empty list}
   Arguments passed on to \code{\link[=makeTbl]{makeTbl}}
   \describe{
     \item{\code{rows}}{numeric number of rows per parent record. Defaults to 4.}
-    \item{\code{proportionSampled}}{numeric proportion of how many of total are
-sampled. This is ignored for "CENSUS" defaults to 0.5}
-    \item{\code{selectionMethod}}{the selection method used. Defaults to "CENSUS".
+    \item{\code{propSamp}}{numeric proportion of how many of total are
+sampled. This is ignored for "CENSUS". Defaults to 0.5}
+    \item{\code{selMeth}}{character selection method used. Defaults to "CENSUS".
 Others like SRSWR or SRSSWOR can be used as well}
-    \item{\code{stratified}}{character code if the data should be stratified.
-Defaults to "N"}
-    \item{\code{stratums}}{character vector of the stratum names to be created}
+    \item{\code{stratums}}{character vector of the stratum names to be created.
+Defaults to c("U"), meaning not stratified.}
     \item{\code{mean}}{numeric the expected mean of the target variable.
 The variable is created using \code{\link[stats]{rnorm}} and saved under
  column ending with "y". Defaults to 5.}

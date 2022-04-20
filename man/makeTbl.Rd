@@ -8,9 +8,8 @@ makeTbl(
   tblName,
   prevTbls = list(),
   rows = 4,
-  proportionSampled = 0.5,
-  selectionMethod = "CENSUS",
-  stratified = "N",
+  propSamp = 0.5,
+  selMeth = "CENSUS",
   stratums = c("U"),
   mean = 5
 )
@@ -21,16 +20,14 @@ Defaults to empty list}
 
 \item{rows}{numeric number of rows per parent record. Defaults to 4.}
 
-\item{proportionSampled}{numeric proportion of how many of total are
-sampled. This is ignored for "CENSUS" defaults to 0.5}
+\item{propSamp}{numeric proportion of how many of total are
+sampled. This is ignored for "CENSUS". Defaults to 0.5}
 
-\item{selectionMethod}{the selection method used. Defaults to "CENSUS".
+\item{selMeth}{character selection method used. Defaults to "CENSUS".
 Others like SRSWR or SRSSWOR can be used as well}
 
-\item{stratified}{character code if the data should be stratified.
-Defaults to "N"}
-
-\item{stratums}{character vector of the stratum names to be created}
+\item{stratums}{character vector of the stratum names to be created.
+Defaults to c("U"), meaning not stratified.}
 
 \item{mean}{numeric the expected mean of the target variable.
 The variable is created using \code{\link[stats]{rnorm}} and saved under
