@@ -29,38 +29,39 @@ estimMC <- function(y, sampled, total, method = "SRSWOR") {
   if (any(length(sampled) != n, length(total) != n)) {
     stop("y, sampled and total must, be vectors of same length!")
   }
-  if (method == "SRSWOR") {
-    pk <- sampled / total
-    PI <- matrix(sampled / total * (sampled - 1) / (total - 1),
-      nrow = length(pk),
-      ncol = length(pk)
-    )
-    diag(PI) <- pk
-    pl <- t(pk)
-    A <- (PI - (pk %*% pl)) / (PI * (pk %*% pl)) * (y %*% t(y))
 
-    total.est <- sum(y / pk)
-    var.total <- sum(A)
+  if(grepl("^SRS", method)){
 
-    mean.est <- sum(y / pk / total)
-    var.mean <- sum(A / (total^2))
+    enk <- sampled / total
+    enl <- t(enk)
+
+    if (method == "SRSWOR") {
+      enkl <- matrix((sampled / (sampled - 1))  * (total / (total - 1)),
+                     nrow = n, ncol = n)
+    }
+
+    if (method == "SRSWR") {
+      enkl <- (sampled %*% t(sampled - 1)) * enk %*% enl
+    }
+
+    total.est <- sum(y/enk)
+    partY <- (y/enk) %*% (t(y)/enl)
+    partUp <- enkl - (enk %*% enl)
+    var.total.biased <- sum(partUp * partY)
+    var.total <- sum((partUp/enkl)*partY)
+
+    mean.est <- sum(y / enk / total)
+    var.mean <- sum(var.total / (total^2))
+    PI <- enk %*% enl
   }
 
-  if (method == "SRSWR") {
-    pk <- 1 / total
-    mean.est <- (1 / n) * sum(y / pk / total)
-    total.est <- (1 / n) * sum(y / pk)
-    A <- (y / pk - total.est)^2
-    var.total <- sum(A) / (n * (n - 1))
-    var.mean <- sum(A / (total^2)) / (n * (n - 1))
-    PI <- matrix(pk %*% t(pk), nrow = n, ncol = n)
-  }
   # TODO Is CENSUS necessary?  This is just a simplification of SRSWOR at n=N
   if (method == "CENSUS") {
     total.est <- sum(y)
     var.total <- 0
     mean.est <- sum(y) / n
     var.mean <- 0
+    var.total.unbiased <- 0
     PI <- matrix(1, nrow = n, ncol = n)
   }
 
@@ -68,6 +69,7 @@ estimMC <- function(y, sampled, total, method = "SRSWOR") {
     est.total = total.est,
     est.mean = mean.est,
     var.total = var.total,
+    #var.total.unbiased <- var.total.unbiased,
     var.mean = var.mean,
     PI = PI
   ))
