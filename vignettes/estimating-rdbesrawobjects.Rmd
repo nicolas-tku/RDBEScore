@@ -122,7 +122,7 @@ aggLevelEstimations <- function(estims){
   return(list(
   est.total = mean(sapply(estims, function(x){x$est.total})),
   est.mean = mean(sapply(estims, function(x){x$est.mean})),
-  var.total = sum(sapply(estims, function(x){x$var.total})),
+  var.total = mean(sapply(estims, function(x){x$var.total})),
   var.mean = mean(sapply(estims, function(x){x$var.mean})),
   PI = Reduce(`+`,lapply(estims, function(x){x$PI})) #sum the PI, keep structure
   ))
@@ -158,21 +158,20 @@ estimMC(as.numeric(BV$BVvalueMeas),
 
 ```{r}
 # a few convenience functions to check results
-check<-function(x,e, digits=2, show=T){
+check<-function(x,e, name ="", digits=2, show=F){
   if(show){
-    if(x != e){
-      warning(paste("Expected:", round(e, digits), "!=", round(x, digits)),
+    if(round(x,digits*2) != round(e,digits*2)){
+      warning(paste(name,"expected:", round(e, digits), "!=", round(x, digits)),
               call. = F)
     }else{
-      cat(paste("Expected:", round(e, digits), "==", round(x, digits), "\n"))
+      cat(paste(name,"expected:", round(e, digits), "==", round(x, digits), "\n"))
     }
   }else{
-    if(x != e){
-      warning(paste("Expected:", round(e, digits), "!=", round(x, digits)),
-              call. = T)
+    
+    testthat::expect_equal(x,e)
     }
-  }
 }
+warning("The expected variances are likely wrong!", call. = F)
 
 checkEstimates <- function(tblName, hd, startEstim, propSampled, ...){
   Ty <- paste0(tblName, "y")
@@ -180,12 +179,20 @@ checkEstimates <- function(tblName, hd, startEstim, propSampled, ...){
   prevRows <- nrow(hd[[1]])^(numStages-2)
   prevID <- paste0(names(hd)[numStages-1],"id")
   res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
-  #browser()
+  
+ 
   b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
-  check(res$estim$est.mean, mean(b[[Ty]]), ...)
-  check(res$estim$var.mean, 0, ...)
-  check(res$estim$est.total, sum(b[[Ty]])*((1/propSampled)^numStages), ...)
-  check(res$estim$var.total, 0, ...)
+  #TODO the variance checks might be misleading repair
+  if(propSampled !=1){
+    }
+  
+  expTotal <- sum(b[[Ty]])*((1/propSampled)^numStages)
+  expVar <- ifelse(propSampled == 1, 0, var(b[[Ty]]))
+  expVarTot <- expVar * ((1/propSampled)^numStages)
+  check(res$estim$est.mean, mean(b[[Ty]]), "Mean", ...)
+  check(res$estim$var.mean, expVar, "Var mean", ...)
+  check(res$estim$est.total, expTotal,"Total",  ...)
+  check(res$estim$var.total, expVarTot, "Var total", ...)
 }
 
 ```
@@ -208,7 +215,7 @@ startEstim <- list(parentIdCol = "Aid", ids=c(1))
 
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
-  checkEstimates(L, hd=hd, startEstim = startEstim, propSampled = propSampled)
+  checkEstimates(L, hd, startEstim, propSampled, show=F)
   cat("\n")
 }
 
@@ -227,7 +234,7 @@ hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWOR",propSamp = propSampled)
 
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
-  checkEstimates(L, hd=hd, startEstim = startEstim, propSampled = propSampled)
+  checkEstimates(L, hd, startEstim, propSampled, show=F)
   cat("\n")
 }
 
@@ -244,7 +251,7 @@ hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWOR",propSamp = propSampled)
 
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
-  checkEstimates(L, hd=hd, startEstim = startEstim, propSampled = propSampled)
+  checkEstimates(L, hd, startEstim, propSampled, show=T)
   cat("\n")
 }
 
@@ -262,7 +269,7 @@ hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWOR",propSamp = propSampled)
 
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
-  checkEstimates(L, hd=hd, startEstim = startEstim, propSampled = propSampled)
+  checkEstimates(L, hd, startEstim, propSampled, show=T)
   cat("\n")
 }
 
@@ -278,7 +285,7 @@ hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWR",propSamp = propSampled)
 
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
-  checkEstimates(L, hd=hd, startEstim = startEstim, propSampled = propSampled)
+  checkEstimates(L, hd, startEstim, propSampled, show=T)
   cat("\n")
 }
 
@@ -295,7 +302,7 @@ hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWR",propSamp = propSampled)
 
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
-  checkEstimates(L, hd=hd, startEstim = startEstim, propSampled = propSampled)
+  checkEstimates(L, hd, startEstim, propSampled, show=T)
   cat("\n")
 }
 
@@ -310,7 +317,7 @@ hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWR",propSamp = propSampled)
 
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
-  checkEstimates(L, hd=hd, startEstim = startEstim, propSampled = propSampled)
+  checkEstimates(L, hd, startEstim, propSampled, show=T)
   cat("\n")
 }
 
