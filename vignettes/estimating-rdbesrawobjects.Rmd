@@ -54,7 +54,7 @@ getEstim<-function(id, data, cols, parentIdCol){
                    "has methods:", paste0(selMethod,collapse = ", ")))
         }
       estim <- estimMC(y, sampled, total, selMethod)
-      estim$Nn <- total/sampled
+      estim$nN <- sampled / total
       estim
       
     }
@@ -102,9 +102,10 @@ estimate<-function(tbl, estimRes, target){
     estim<-aggLevelEstimations(estims)
     if(!is.null(estimRes$prevStage)){
       lastEstim <- getLastEstimRes(estimRes)
-      estim$est.total <- estim$est.total / sum(lastEstim$PI)
       #browser()
-      estim$PI <- estim$PI * lastEstim$est.total
+      estim$est.total <- estim$est.total * lastEstim$est.total
+      #browser()
+      #estim$PI <- estim$PI 
       
     }
    
@@ -123,7 +124,7 @@ estimate<-function(tbl, estimRes, target){
 #TODO the big question is how to aggregate these estimations into one  especially PI
 aggLevelEstimations <- function(estims){
   return(list(
-  est.total = sum(sapply(estims, function(x){x$est.total})),
+  est.total = mean(sapply(estims, function(x){x$est.total})),
   est.mean = mean(sapply(estims, function(x){x$est.mean})),
   var.total = sum(sapply(estims, function(x){x$var.total})),
   var.mean = mean(sapply(estims, function(x){x$var.mean})),
@@ -317,12 +318,7 @@ startEstim <- list(parentIdCol = "Aid", ids=c(1))
 hd<-generateTestTbls(LETTERS[1:5],
                      selectionMethod="SRSWOR",
                      proportionSampled = propSampled)
-```
 
-
-
-
-```{r}
 prevRows <- 1
 tblName <- "B"
 Ty <- paste0(tblName, "y")
@@ -389,7 +385,82 @@ check(res$estim$var.total, 0)
 prevRows <- nrow(b)
 prevRows
 ```
+##### 10% sampled
 
+```{r}
+set.seed(1234)
+propSampled <- 0.1
+startEstim <- list(parentIdCol = "Aid", ids=c(1))
+hd<-generateTestTbls(LETTERS[1:5],
+                     selectionMethod="SRSWOR",
+                     proportionSampled = propSampled)
+
+prevRows <- 1
+tblName <- "B"
+Ty <- paste0(tblName, "y")
+numStages <- which(names(hd) == tblName) #from A to B
+prevID <- paste0(names(hd)[numStages-1],"id")
+res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
+
+b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
+check(res$estim$est.mean, mean(b[[Ty]]))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, numStages*sum(b[[Ty]])*1/propSampled)
+check(res$estim$var.total, 0)
+prevRows <- nrow(b)
+prevRows
+```
+
+
+```{r}
+prevRows <- 4
+tblName <- "C"
+Ty <- paste0(tblName, "y")
+numStages <- which(names(hd) == tblName) #from A to E
+prevID <- paste0(names(hd)[numStages-1],"id")
+res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
+
+b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
+check(res$estim$est.mean, mean(b[[Ty]]))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, numStages*sum(b[[Ty]])*1/propSampled)
+check(res$estim$var.total, 0)
+prevRows <- nrow(b)
+prevRows
+```
+
+
+```{r}
+tblName <- "D"
+Ty <- paste0(tblName, "y")
+numStages <- which(names(hd) == tblName) #from A to E
+prevID <- paste0(names(hd)[numStages-1],"id")
+res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
+
+b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
+check(res$estim$est.mean, mean(b[[Ty]]))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, numStages*sum(b[[Ty]])*1/propSampled)
+check(res$estim$var.total, 0)
+prevRows <- nrow(b)
+prevRows
+```
+
+```{r}
+tblName <- "E"
+Ty <- paste0(tblName, "y")
+numStages <- which(names(hd) == tblName) #from A to E
+prevID <- paste0(names(hd)[numStages-1],"id")
+res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
+
+b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
+check(res$estim$est.mean, mean(b[[Ty]]))
+check(res$estim$var.mean, 0)
+check(res$estim$est.total, numStages*sum(b[[Ty]])*1/propSampled)
+check(res$estim$var.total, 0)
+prevRows <- nrow(b)
+prevRows
+```
 
 #### SRSWR
 
