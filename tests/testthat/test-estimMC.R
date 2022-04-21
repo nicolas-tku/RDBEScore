@@ -27,11 +27,11 @@ test_that(paste("correct total if", testMain), {
   items <- c(3, 4, 4, 5)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
-  expect_equal(x$est.total, sum(items))
+  expect_equal(x$est.total, mean(items) * tot)
 
   items <- c(3, 1, 4, 2)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
-  expect_equal(x$est.total, sum(items))
+  expect_equal(x$est.total, mean(items) * tot)
 })
 
 test_that(paste("correct mean if", testMain), {
@@ -73,11 +73,11 @@ test_that(paste("correct total if", testMain), {
   items <- c(3, 4, 4, 5)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
-  expect_equal(x$est.total, sum(items) * 2)
+  expect_equal(x$est.total, mean(items) * tot)
 
   items <- c(3, 1, 4, 2)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
-  expect_equal(x$est.total, sum(items) * 2)
+  expect_equal(x$est.total, mean(items) * tot)
 })
 
 test_that(paste("correct mean if", testMain), {
@@ -118,17 +118,17 @@ test_that(paste("correct total if", testMain), {
   items <- c(3, 4)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
-  expect_equal(x$est.total, sum(items) * tot/elems - elems)
+  expect_equal(x$est.total, mean(items) * tot)
 
   items <- c(4, 2)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
-  expect_equal(x$est.total, sum(items) * tot/elems - elems)
+  expect_equal(x$est.total, mean(items) * tot)
 
   tot <- 30
   items <- c(3, 4, 5)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
-  expect_equal(x$est.total, sum(items) * tot/elems - elems)
+  expect_equal(x$est.total, mean(items) * tot)
 })
 
 test_that(paste("correct mean if", testMain), {
@@ -136,11 +136,11 @@ test_that(paste("correct mean if", testMain), {
   items <- c(3, 4)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
-  expect_equal(x$est.mean, mean(items) - 0.1)
+  expect_equal(x$est.mean, mean(items))
 
   items <- c(4, 2)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
-  expect_equal(x$est.mean, (sum(items) / elems)- 0.1)
+  expect_equal(x$est.mean, mean(items))
 })
 
 
@@ -175,11 +175,11 @@ test_that(paste("correct total if", testMain), {
   items <- c(3, 4, 4, 5)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expect_equal(x$est.total, sum(items))
+  expect_equal(x$est.total, mean(items) * tot)
 
   items <- c(3, 1, 4, 2)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expect_equal(x$est.total, sum(items))
+  expect_equal(x$est.total, mean(items) * tot)
 })
 
 test_that(paste("correct mean if", testMain), {
@@ -191,7 +191,7 @@ test_that(paste("correct mean if", testMain), {
 
   items <- c(3, 1, 4, 2)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expect_equal(x$est.mean, sum(items) / elems)
+  expect_equal(x$est.mean, mean(items))
 })
 
 
@@ -222,11 +222,11 @@ test_that(paste("correct total if", testMain), {
   items <- c(3, 4, 4, 5)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expect_equal(x$est.total, sum(items) * 2)
+  expect_equal(x$est.total, mean(items) * tot)
 
   items <- c(3, 1, 4, 2)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expect_equal(x$est.total, sum(items) * 2)
+  expect_equal(x$est.total, mean(items)*tot)
 })
 
 test_that(paste("correct mean if", testMain), {
@@ -238,7 +238,7 @@ test_that(paste("correct mean if", testMain), {
 
   items <- c(3, 1, 4, 2)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expect_equal(x$est.mean, sum(items) / elems)
+  expect_equal(x$est.mean, mean(items))
 })
 
 ########--------- 10% in sample-------------######
@@ -266,17 +266,17 @@ test_that(paste("correct total if", testMain), {
   items <- c(3, 4)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expect_equal(x$est.total, sum(items) * tot/elems - elems)
+  expect_equal(x$est.total, mean(items) * tot)
 
   items <- c(4, 2)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expect_equal(x$est.total, sum(items) * tot/elems - elems)
+  expect_equal(x$est.total, mean(items) * tot)
 
   tot <- 30
   items <- c(3, 4, 5)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expect_equal(x$est.total, sum(items) * tot/elems - elems)
+  expect_equal(x$est.total, mean(items) * tot)
 })
 
 test_that(paste("correct mean if", testMain), {
@@ -284,11 +284,11 @@ test_that(paste("correct mean if", testMain), {
   items <- c(3, 4)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expect_equal(x$est.mean, mean(items) - 0.1)
+  expect_equal(x$est.mean, mean(items))
 
   items <- c(4, 2)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expect_equal(x$est.mean, (sum(items) / elems)- 0.1)
+  expect_equal(x$est.mean, mean(items))
 })
 
 ## ------------CENSUS-----------------------------
