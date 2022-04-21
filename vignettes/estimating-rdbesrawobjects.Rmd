@@ -54,6 +54,11 @@ getEstim<-function(id, data, cols, parentIdCol){
                    "has methods:", paste0(selMethod,collapse = ", ")))
         }
       estim <- estimMC(y, sampled, total, selMethod)
+      #handle NaNs if n == 1 TODO is this the correct way? should it be zero
+      if(is.nan(estim$var.total)) estim$var.total <- estm$var.mean  <- 1
+      #TODO handle at one level CENSUS sampling 
+      #so that multiplication would'nt yield 0
+      if(estim$var.total == 0) estim$var.total <- estm$var.mean <- 1
       estim
       
     }

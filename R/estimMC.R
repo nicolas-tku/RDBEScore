@@ -29,48 +29,50 @@ estimMC <- function(y, sampled, total, method = "SRSWOR") {
   if (any(length(sampled) != n, length(total) != n)) {
     stop("y, sampled and total must, be vectors of same length!")
   }
-
-  if(grepl("^SRS", method)){
+  #TODO include also quasi random
+  if(grepl("^SRS", method) || grepl("^CENSUS$", method)){
 
     enk <- sampled / total
     enl <- t(enk)
-
-    if (method == "SRSWOR") {
-      enkl <- matrix((sampled / (sampled - 1))  * (total / (total - 1)),
-                     nrow = n, ncol = n)
-    }
-
-    if (method == "SRSWR") {
-      enkl <- (sampled %*% t(sampled - 1)) * enk %*% enl
-    }
-
-    total.est <- sum(y/enk)
-    partY <- (y/enk) %*% (t(y)/enl)
-    partUp <- enkl - (enk %*% enl)
-    var.total.biased <- sum(partUp * partY)
-    var.total <- sum((partUp/enkl)*partY)
-
-    mean.est <- sum(y / enk / total)
-    var.mean <- sum(var.total / (total^2))
-    PI <- enk %*% enl
   }
 
-  # TODO Is CENSUS necessary?  This is just a simplification of SRSWOR at n=N
+  #TODO Add Unequal probability here
+  if(grepl("^UPS", method)){
+    stop()
+  }
+
+  if (grepl("WOR$", method)) {
+      enkl <- enk %*% t((sampled - 1) / (total - 1))
+      #selecting one in the sample twice is not possible in WOR
+      diag(enkl) <- enk
+  }
+
+  if (grepl("WR$", method)) {
+    enkl <- (n * (n - 1)) * (enk/total %*% enl/sampled)
+  }
+
   if (method == "CENSUS") {
-    total.est <- sum(y)
-    var.total <- 0
-    mean.est <- sum(y) / n
-    var.mean <- 0
-    var.total.unbiased <- 0
-    PI <- matrix(1, nrow = n, ncol = n)
+    enkl <- enk %*% t((sampled - 1) / (total - 1))
   }
+
+    est.total <- sum(y %/% enk)
+    partY <- (y / enk) %*% (y / enl)
+    partUp <- enkl - (enk %*% enl)
+    var.total <- sum((partUp / enkl) * partY)
+
+    est.mean <- est.total / mean(total)
+    var.mean <- var.total / sum(total)
+    PI <- enk %*% enl
+
+
+
 
   return(list(
-    est.total = total.est,
-    est.mean = mean.est,
+    est.total = est.total,
+    est.mean = est.mean,
     var.total = var.total,
-    #var.total.unbiased <- var.total.unbiased,
     var.mean = var.mean,
     PI = PI
   ))
 }
+
