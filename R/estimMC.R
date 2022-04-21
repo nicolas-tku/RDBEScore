@@ -32,7 +32,8 @@ estimMC <- function(y, sampled, total, method = "SRSWOR") {
   #TODO include also quasi random
   if(grepl("^SRS", method) || grepl("^CENSUS$", method)){
 
-    propSampled <- sampled/total
+    enk <- sampled/total
+    enl <- t(enk)
   }
 
   #TODO Add Unequal probability here
@@ -41,29 +42,24 @@ estimMC <- function(y, sampled, total, method = "SRSWOR") {
   }
 
   if (grepl("WOR$", method) || grepl("^CENSUS$", method)) {
-    enk <- propSampled
-    enl <- t(enk)
     enkl <- enk %*% t((sampled - 1) / (total - 1))
-    #selecting one in the sample twice is not possible in WOR
+    #selecting single element in the sample twice is not possible in WOR
     diag(enkl) <- enk
   }
 
   if (grepl("WR$", method)) {
-    enk <- sampled * propSampled
-    enl <- t(enk)
-    enkl <- (sampled %*% t(sampled - 1)) %*% (enk %*% enl)
-    }
+    #browser()
+    enkl <-enk %*% t((sampled - 1)/total)
+  }
 
-
-    est.total <- sum(y %/% (propSampled))
+    est.total <- sum(y / enk)
     partY <- (y / enk) %*% (y / enl)
     partUp <- enkl - (enk %*% enl)
     var.total <- sum((partUp / enkl) * partY)
 
     est.mean <- est.total / mean(total)
     var.mean <- var.total / sum(total)*mean(sampled)
-    PI <- enk %*% enl
-
+    PI <- enkl
 
   return(list(
     est.total = est.total,

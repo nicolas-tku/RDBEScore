@@ -49,7 +49,7 @@ test_that(paste("correct mean if", testMain), {
 
 
 ### --------- half of elements in sample-------------
-testMain <- "SRSWOR half of elements in sample"
+testMain <- "SRSWOR 50% of elements in sample"
 test_that(paste("total variance is correct if", testMain), {
   tot <- 8
   items <- c(3, 4, 4, 5)
@@ -78,6 +78,12 @@ test_that(paste("correct total if", testMain), {
   items <- c(3, 1, 4, 2)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
   expect_equal(x$est.total, mean(items) * tot)
+
+  tot <- 4
+  items <- c(3, 4)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems))
+  expect_equal(x$est.total, mean(items) * tot)
 })
 
 test_that(paste("correct mean if", testMain), {
@@ -97,6 +103,13 @@ testMain <- "SRSWOR 10% elements in sample"
 test_that(paste("total variance is correct if", testMain), {
   tot <- 20
   items <- c(3, 4)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems))
+  expected <- varSRSWOR(items, elems, tot)
+  expect_equal(x$var.total, expected)
+
+  tot <- 40
+  items <- c(3, 4, 3, 5)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
   expected <- varSRSWOR(items, elems, tot)
@@ -126,6 +139,12 @@ test_that(paste("correct total if", testMain), {
 
   tot <- 30
   items <- c(3, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems))
+  expect_equal(x$est.total, mean(items) * tot)
+
+  tot <- 40
+  items <- c(3, 4, 5, 6)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
   expect_equal(x$est.total, mean(items) * tot)
@@ -198,8 +217,15 @@ test_that(paste("correct mean if", testMain), {
 ###
 
 ### --------- half of elements in sample-------------
-testMain <- "SRSWR half of elements in sample"
+testMain <- "SRSWR 50% of elements in sample"
 test_that(paste("total variance is correct if", testMain), {
+  tot <- 10
+  items <- c(3, 4, 4, 5, 6)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
+  expected <- varSRSWR(items, elems, tot)
+  expect_equal(x$var.total, expected)
+
   tot <- 8
   items <- c(3, 4, 4, 5)
   elems <- length(items)
