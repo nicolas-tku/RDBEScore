@@ -29,7 +29,7 @@ library(icesRDBES)
 First we'll load some example data from the RDBES and check it's valid.  It's a good idea to check your RDBESRawObjects are valid after any manipulations you perform.
 
 ```{r load}
-h1d <- createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19")
+h1d <- createRDBESRawObject(rdbesExtractPath = ".\\tests\\testthat\\h1_v_1_19")
 h1dValid <- validateRDBESRawObject(h1d, verbose = FALSE)
 
 ```
@@ -55,10 +55,10 @@ getEstim<-function(id, data, cols, parentIdCol){
         }
       estim <- estimMC(y, sampled, total, selMethod)
       #handle NaNs if n == 1 TODO is this the correct way? should it be zero
-      if(is.nan(estim$var.total)) estim$var.total <- estm$var.mean  <- 1
+      if(is.nan(estim$var.total)) estim$var.total <- estim$var.mean  <- 1
       #TODO handle at one level CENSUS sampling 
       #so that multiplication would'nt yield 0
-      if(estim$var.total == 0) estim$var.total <- estm$var.mean <- 1
+      #if(estim$var.total == 0) estim$var.total <- estim$var.mean <- 1
       estim
       
     }
