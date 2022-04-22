@@ -1,8 +1,8 @@
 ## ------------SRSWOR-----------------------------
-varSRSWOR <- function(y, n, N){
+varSRSWOR <- function(y, n, N) {
   meanY <- mean(y)
-  S2 <- (1/(n-1)) * sum((y - meanY)^2)
-  N^2 *(1-n/N) * (S2 / n)
+  S2 <- (1 / (n - 1)) * sum((y - meanY)^2)
+  N^2 * (1 - n / N) * (S2 / n)
 }
 ### --------- all elements in sample-------------
 testMain <- "SRSWOR all elements in sample"
@@ -98,7 +98,7 @@ test_that(paste("correct mean if", testMain), {
   expect_equal(x$est.mean, sum(items) / elems)
 })
 
-########--------- 10% in sample-------------######
+######## --------- 10% in sample-------------######
 testMain <- "SRSWOR 10% elements in sample"
 test_that(paste("total variance is correct if", testMain), {
   tot <- 20
@@ -123,7 +123,6 @@ test_that(paste("mean variance is correct if", testMain), {
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
   expected <- varSRSWOR(items, elems, tot) / tot
   expect_equal(x$var.mean, expected)
-
 })
 
 test_that(paste("correct total if", testMain), {
@@ -163,13 +162,13 @@ test_that(paste("correct mean if", testMain), {
 })
 
 
-########------------SRSWR----------------------------######
-varSRSWR <- function(y, n, N){
+######## ------------SRSWR----------------------------######
+varSRSWR <- function(y, n, N) {
   meanY <- mean(y)
-  S2 <- 1/(n-1) * (sum((y - meanY)^2))
-  N^2  * (S2 / n)
+  S2 <- 1 / (n - 1) * (sum((y - meanY)^2))
+  N^2 * (S2 / n)
 }
-########--------- all elements in sample-------------######
+######## --------- all elements in sample-------------######
 testMain <- "SRSWR all elements in sample"
 test_that(paste0("total variance if", testMain), {
   tot <- 4
@@ -185,7 +184,7 @@ test_that(paste("mean variance if", testMain), {
   items <- c(3, 4, 4, 5)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expected <- varSRSWOR(items, elems, tot) / tot
+  expected <- varSRSWR(items, elems, tot) / tot
   expect_equal(x$var.mean, expected)
 })
 
@@ -239,7 +238,7 @@ test_that(paste("mean variance is correct if", testMain), {
   items <- c(3, 4, 4, 5)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expected <- varSRSWOR(items, elems, tot) / tot
+  expected <- varSRSWR(items, elems, tot) / tot
   expect_equal(x$var.mean, expected)
 })
 
@@ -252,7 +251,7 @@ test_that(paste("correct total if", testMain), {
 
   items <- c(3, 1, 4, 2)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expect_equal(x$est.total, mean(items)*tot)
+  expect_equal(x$est.total, mean(items) * tot)
 })
 
 test_that(paste("correct mean if", testMain), {
@@ -267,14 +266,14 @@ test_that(paste("correct mean if", testMain), {
   expect_equal(x$est.mean, mean(items))
 })
 
-########--------- 10% in sample-------------######
+######## --------- 10% in sample-------------######
 testMain <- "SRSWR 10% elements in sample"
 test_that(paste("total variance is correct if", testMain), {
   tot <- 20
   items <- c(3, 4)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expected <- varSRSWOR(items, elems, tot)
+  expected <- varSRSWR(items, elems, tot)
   expect_equal(x$var.total, expected)
 })
 
@@ -283,7 +282,7 @@ test_that(paste("mean variance is correct if", testMain), {
   items <- c(3, 4)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expected <- varSRSWOR(items, elems, tot) / tot
+  expected <- varSRSWR(items, elems, tot) / tot
   expect_equal(x$var.mean, expected)
 })
 
