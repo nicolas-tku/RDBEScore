@@ -29,118 +29,9 @@ library(icesRDBES)
 First we'll load some example data from the RDBES and check it's valid.  It's a good idea to check your RDBESRawObjects are valid after any manipulations you perform.
 
 ```{r load}
-h1d <- createRDBESRawObject(rdbesExtractPath = ".\\tests\\testthat\\h1_v_1_19")
+h1d <- createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19")
 h1dValid <- validateRDBESRawObject(h1d, verbose = FALSE)
 
-```
-
-
-## Functions
-
-Functions for demonstrating multi-level design 
-
-
-
-```{r}
-getEstim<-function(id, data, cols, parentIdCol){
-      data <- data[get(parentIdCol) == id, ]
-      y <- data[, get(cols["y"])]
-      sampled <-data[, get(cols["numSampledCol"])]
-      total <- data[, get(cols["numTotalCol"])]
-      
-      selMethod <- unique(data[, get(cols["selMethodCol"])])
-      if(length(selMethod)!=1){
-        stop(paste("Can't deal with multiple selection methods.",tblName, 
-                   "has methods:", paste0(selMethod,collapse = ", ")))
-        }
-      estim <- estimMC(y, sampled, total, selMethod)
-      #handle NaNs if n == 1 TODO is this the correct way? should it be zero
-      if(is.nan(estim$var.total)) estim$var.total <- estim$var.mean  <- 1
-      #TODO handle at one level CENSUS sampling 
-      #so that multiplication would'nt yield 0
-      #if(estim$var.total == 0) estim$var.total <- estim$var.mean <- 1
-      estim
-      
-    }
-```
-
-
-```{r}
-getLastEstimRes<-function(estimRes){
-  if(is.null(estimRes$prevStage))stop("no estim found")
-  if(is.list(estimRes$estim)) return(estimRes$estim)
-  getLastEstimRes(estimRes$prevStage)
-  
-}
-```
-
-
-```{r estimate}
-estimate<-function(tbl, estimRes, target){
-  parentIdCol <- estimRes$parentIdCol
-  ids <- estimRes$ids
-  tblName <- unique(tbl[[colnames(tbl)[grepl("recType$", colnames(tbl))]]])
-  if(length(tblName)>1){stop("Mixed table")}
-  cols <- icesRDBES:::getColnames(tblName)
-  missingCols <- setdiff(cols, colnames(tbl))
-  isTarget  <- length(setdiff(target, colnames(tbl))) == 0
-  data <- tbl[get(parentIdCol) %in% ids,]
-  data$dummy <- 1
-  estim <- NA
-  if(length(missingCols) == 0){
-     #TODO stratification
-     #TODO type of measure should also be selected 
-     #NBfor sample/test data is all the same "Age"
-     stratified <- unique(data[,get(cols["stratifiedCol"])])
-     if(length(stratified)!= 1){stop("Can't handle mixed Y & N stratification")}
-     #if(stratified == "Y"){stop("Can't handle stratification Y")}
-     if(stratified == "Y"){data <- data[get(cols["stratumCol"]) %in% data[1,get(cols["stratumCol"])],]}
-    if(isTarget){cols <- c(cols,y=target)}
-    if(!isTarget){cols <- c(cols, y="dummy")}
-    if(!is.numeric(data[, get(cols["y"])])){
-        warning("Target is not numeric! converting!")
-        data[, cols["y"] := as.numeric(data[, get(cols["y"])])]
-    }
-    estims <- lapply(ids, getEstim, data = data, cols = cols, parentIdCol = parentIdCol)
-    estim<-aggLevelEstimations(estims)
-    if(!is.null(estimRes$prevStage)){
-      lastEstim <- getLastEstimRes(estimRes)
-      estim$est.total <- estim$est.total * lastEstim$est.total
-   
-    }
-  }
-  return(list(parentIdCol=cols["idCol"],
-              ids=data[, get(cols["idCol"])],
-              tbl=tblName,
-              estim=estim, prevStage=estimRes ))
-  
-  }
-```
-
-## Func
-
-```{r aggLevelEstimations}
-#TODO the big question is how to aggregate these estimations into one  especially PI
-aggLevelEstimations <- function(estims){
-  return(list(
-  est.total = mean(sapply(estims, function(x){x$est.total})),
-  est.mean = mean(sapply(estims, function(x){x$est.mean})),
-  var.total = mean(sapply(estims, function(x){x$var.total})),
-  var.mean = mean(sapply(estims, function(x){x$var.mean})),
-  PI = Reduce(`+`,lapply(estims, function(x){x$PI})) #sum the PI, keep structure
-  ))
-}
-```
-
-```{r}
-gatherEstimates<-function(tbls, estimRes, target){
-  if(length(tbls) == 0) return(NULL)
-  tbl <- tbls[[1]]
-  tbls[[1]]<-NULL
-  if(target %in% colnames(tbl)) return(estimate(tbl, estimRes, target))
-  estimRes <- estimate(tbl, estimRes, target)
-  gatherEstimates(tbls,estimRes, target)
-}
 ```
 
 
@@ -159,6 +50,7 @@ estimMC(as.numeric(BV$BVvalueMeas),
 
 ## Multi-level Multiple Count Estimator
 
+First I'll make a few (2) functions to make checking results easier.
 ```{r}
 # a few convenience functions to check results
 check<-function(x,e, name ="", digits=2, show=F){
@@ -174,14 +66,14 @@ check<-function(x,e, name ="", digits=2, show=F){
     testthat::expect_equal(x,e)
     }
 }
-warning("The expected variances are likely wrong!", call. = F)
+warning("The expected variances are likely wrong for SRSWR and SRSWOR!", call. = F)
 
-checkEstimates <- function(tblName, hd, startEstim, propSampled, ...){
+checkEstimates <- function(tblName, hd, startEstim, propSampled, res, ...){
   Ty <- paste0(tblName, "y")
   numStages <- which(names(hd) == tblName) #from A to B
   prevRows <- nrow(hd[[1]])^(numStages-2)
   prevID <- paste0(names(hd)[numStages-1],"id")
-  res<-gatherEstimates(tbls=hd, startEstim, target =Ty)
+  
   
  
   b <- hd[[tblName]][hd[[tblName]][[prevID]] %in% c(1:prevRows), ]
@@ -218,7 +110,9 @@ startEstim <- list(parentIdCol = "Aid", ids=c(1))
 
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
-  checkEstimates(L, hd, startEstim, propSampled, show=F)
+  Ty <- paste0(L, "y")
+  res<-estimateHieararhy(tbls=hd, startEstim, target = Ty)
+  checkEstimates(L, hd, startEstim, propSampled, res, show=F)
   cat("\n")
 }
 
@@ -236,8 +130,9 @@ startEstim <- list(parentIdCol = "Aid", ids=c(1))
 hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWOR",propSamp = propSampled)
 
 for(L in LETTERS[2:5]){
-  cat(paste0("level ", L, ":\n"))
-  checkEstimates(L, hd, startEstim, propSampled, show=T)
+  Ty <- paste0(L, "y")
+  res<-estimateHieararhy(tbls=hd, startEstim, target = Ty)
+  checkEstimates(L, hd, startEstim, propSampled, res, show=T)
   cat("\n")
 }
 
@@ -254,7 +149,9 @@ hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWOR",propSamp = propSampled)
 
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
-  checkEstimates(L, hd, startEstim, propSampled, show=T)
+  Ty <- paste0(L, "y")
+  res<-estimateHieararhy(tbls=hd, startEstim, target = Ty)
+  checkEstimates(L, hd, startEstim, propSampled, res, show=T)
   cat("\n")
 }
 
@@ -272,7 +169,9 @@ hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWOR",propSamp = propSampled, rows
 
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
-  checkEstimates(L, hd, startEstim, propSampled, show=T)
+  Ty <- paste0(L, "y")
+  res<-estimateHieararhy(tbls=hd, startEstim, target = Ty)
+  checkEstimates(L, hd, startEstim, propSampled, res, show=T)
   cat("\n")
 }
 
@@ -288,7 +187,9 @@ hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWR",propSamp = propSampled)
 
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
-  checkEstimates(L, hd, startEstim, propSampled, show=T)
+  Ty <- paste0(L, "y")
+  res<-estimateHieararhy(tbls=hd, startEstim, target = Ty)
+  checkEstimates(L, hd, startEstim, propSampled, res, show=T)
   cat("\n")
 }
 
@@ -305,7 +206,9 @@ hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWR",propSamp = propSampled)
 
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
-  checkEstimates(L, hd, startEstim, propSampled, show=T)
+  Ty <- paste0(L, "y")
+  res<-estimateHieararhy(tbls=hd, startEstim, target = Ty)
+  checkEstimates(L, hd, startEstim, propSampled, res, show=T)
   cat("\n")
 }
 
@@ -320,7 +223,9 @@ hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWR",propSamp = propSampled, rows=
 
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
-  checkEstimates(L, hd, startEstim, propSampled, show=T)
+  Ty <- paste0(L, "y")
+  res<-estimateHieararhy(tbls=hd, startEstim, target = Ty)
+  checkEstimates(L, hd, startEstim, propSampled, res, show=T)
   cat("\n")
 }
 
@@ -340,18 +245,14 @@ estimTables
 head(h1d[[estimTables[1]]])
 ```
 
-```{r}
-#fixBVtype for value measured
-#h1d$BV$BVvalueMeas <- as.numeric(h1d$BV$BVvalueMeas)
-```
 
 So we are estimating for a single Vessel the "BVvalueMeas" 
 
 ```{r}
 startEstim <- list(parentIdCol = "VSid", ids=c(4874))
-res<-gatherEstimates(tbls=h1d[estimTables], startEstim, target = "BVvalueMeas")
+res<-estimateHieararhy(tbls=h1d[estimTables], startEstim, target = "BVvalueMeas")
 
-warning("Variance is not corrected for  upper levels for variance")
+warning("Variance is not corrected for  upper levels for variance correctly")
 res$estim$est.mean
 res$estim$var.mean
 res$estim$est.total
