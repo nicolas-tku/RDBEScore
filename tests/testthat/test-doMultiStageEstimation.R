@@ -31,7 +31,7 @@ startEstim <- list(parentIdCol = "Aid", ids = c(1))
 test_that(paste0("total if ", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     # expect_equal(res$estim$est.mean, exp$expMean)#, "Mean"
     # expect_equal(res$estim$var.mean, exp$expMeanVar)#, "Var mean"
@@ -43,7 +43,7 @@ test_that(paste0("total if ", testMain), {
 test_that(paste0("total variance if ", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     # expect_equal(res$estim$est.mean, exp$expMean)#, "Mean"
     # expect_equal(res$estim$var.mean, exp$expMeanVar)#, "Var mean"
@@ -55,7 +55,7 @@ test_that(paste0("total variance if ", testMain), {
 test_that(paste0("mean variance if ", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     # expect_equal(res$estim$est.mean, exp$expMean)#, "Mean"
     expect_equal(res$estim$var.mean, exp$expMeanVar) # , "Var mean"
@@ -67,7 +67,7 @@ test_that(paste0("mean variance if ", testMain), {
 test_that(paste0("mean if ", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     expect_equal(res$estim$est.mean, exp$expMean) # , "Mean"
     # expect_equal(res$estim$var.mean, exp$expMeanVar)#, "Var mean"
@@ -92,7 +92,7 @@ startEstim <- list(parentIdCol = "Aid", ids = c(1))
 test_that(paste0("total if", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     # expect_equal(res$estim$est.mean, exp$expMean)#, "Mean"
     # expect_equal(res$estim$var.mean, exp$expMeanVar)#, "Var mean"
@@ -104,7 +104,7 @@ test_that(paste0("total if", testMain), {
 test_that(paste0("total variance if ", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     # expect_equal(res$estim$est.mean, exp$expMean)#, "Mean"
     # expect_equal(res$estim$var.mean, exp$expMeanVar)#, "Var mean"
@@ -116,7 +116,7 @@ test_that(paste0("total variance if ", testMain), {
 test_that(paste0("mean variance if ", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     # expect_equal(res$estim$est.mean, exp$expMean)#, "Mean"
     expect_equal(res$estim$var.mean, exp$expMeanVar) # , "Var mean"
@@ -128,7 +128,7 @@ test_that(paste0("mean variance if ", testMain), {
 test_that(paste0("mean if ", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     expect_equal(res$estim$est.mean, exp$expMean) # , "Mean"
     # expect_equal(res$estim$var.mean, exp$expMeanVar)#, "Var mean"
@@ -150,7 +150,7 @@ startEstim <- list(parentIdCol = "Aid", ids = c(1))
 test_that(paste0("total if ", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     # expect_equal(res$estim$est.mean, exp$expMean)#, "Mean"
     # expect_equal(res$estim$var.mean, exp$expMeanVar)#, "Var mean"
@@ -162,7 +162,7 @@ test_that(paste0("total if ", testMain), {
 test_that(paste0("mean if ", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     expect_equal(res$estim$est.mean, exp$expMean) # , "Mean"
     # expect_equal(res$estim$var.mean, exp$expMeanVar)#, "Var mean"
@@ -182,7 +182,7 @@ startEstim <- list(parentIdCol = "Aid", ids = c(1))
 test_that(paste0("total if ", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     # expect_equal(res$estim$est.mean, exp$expMean)#, "Mean"
     # expect_equal(res$estim$var.mean, exp$expMeanVar)#, "Var mean"
@@ -195,7 +195,7 @@ test_that(paste0("total if ", testMain), {
 test_that(paste0("mean if ", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     expect_equal(res$estim$est.mean, exp$expMean) # , "Mean"
     # expect_equal(res$estim$var.mean, exp$expMeanVar)#, "Var mean"
@@ -221,7 +221,7 @@ hd <- generateTestTbls(LETTERS[1:5], selMeth = "SRSWR", propSamp = propSampled)
 test_that(paste0("total if ", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     # expect_equal(res$estim$est.mean, exp$expMean)#, "Mean"
     # expect_equal(res$estim$var.mean, exp$expMeanVar)#, "Var mean"
@@ -234,7 +234,7 @@ test_that(paste0("total if ", testMain), {
 test_that(paste0("mean if ", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     expect_equal(res$estim$est.mean, exp$expMean) # , "Mean"
     # expect_equal(res$estim$var.mean, exp$expMeanVar)#, "Var mean"
@@ -254,7 +254,7 @@ hd <- generateTestTbls(LETTERS[1:5], selMeth = "SRSWR", propSamp = propSampled)
 test_that(paste0("total if ", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     # expect_equal(res$estim$est.mean, exp$expMean)#, "Mean"
     # expect_equal(res$estim$var.mean, exp$expMeanVar)#, "Var mean"
@@ -267,7 +267,7 @@ test_that(paste0("total if ", testMain), {
 test_that(paste0("mean if ", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     expect_equal(res$estim$est.mean, exp$expMean) # , "Mean"
     # expect_equal(res$estim$var.mean, exp$expMeanVar)#, "Var mean"
@@ -285,7 +285,7 @@ hd <- generateTestTbls(LETTERS[1:5], selMeth = "SRSWR", propSamp = propSampled)
 test_that(paste0("total if ", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     # expect_equal(res$estim$est.mean, exp$expMean)#, "Mean"
     # expect_equal(res$estim$var.mean, exp$expMeanVar)#, "Var mean"
@@ -298,7 +298,7 @@ test_that(paste0("total if ", testMain), {
 test_that(paste0("mean if ", testMain), {
   for (L in LETTERS[2:5]) {
     Ty <- paste0(L, "y")
-    res <- estimateHieararhy(tbls = hd, startEstim, target = Ty)
+    res <- doMultiStageEstimation(tbls = hd, startEstim, target = Ty)
     exp <- getCorrectEstimates(L, hd, startEstim, propSampled)
     expect_equal(res$estim$est.mean, exp$expMean) # , "Mean"
     # expect_equal(res$estim$var.mean, exp$expMeanVar)#, "Var mean"

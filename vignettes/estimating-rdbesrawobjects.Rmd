@@ -111,7 +111,7 @@ startEstim <- list(parentIdCol = "Aid", ids=c(1))
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
   Ty <- paste0(L, "y")
-  res<-estimateHieararhy(tbls=hd, startEstim, target = Ty)
+  res<-doMultiStageEstimation(tbls=hd, startEstim, target = Ty)
   checkEstimates(L, hd, startEstim, propSampled, res, show=F)
   cat("\n")
 }
@@ -131,7 +131,7 @@ hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWOR",propSamp = propSampled)
 
 for(L in LETTERS[2:5]){
   Ty <- paste0(L, "y")
-  res<-estimateHieararhy(tbls=hd, startEstim, target = Ty)
+  res<-doMultiStageEstimation(tbls=hd, startEstim, target = Ty)
   checkEstimates(L, hd, startEstim, propSampled, res, show=T)
   cat("\n")
 }
@@ -150,7 +150,7 @@ hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWOR",propSamp = propSampled)
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
   Ty <- paste0(L, "y")
-  res<-estimateHieararhy(tbls=hd, startEstim, target = Ty)
+  res<-doMultiStageEstimation(tbls=hd, startEstim, target = Ty)
   checkEstimates(L, hd, startEstim, propSampled, res, show=T)
   cat("\n")
 }
@@ -170,7 +170,7 @@ hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWOR",propSamp = propSampled, rows
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
   Ty <- paste0(L, "y")
-  res<-estimateHieararhy(tbls=hd, startEstim, target = Ty)
+  res<-doMultiStageEstimation(tbls=hd, startEstim, target = Ty)
   checkEstimates(L, hd, startEstim, propSampled, res, show=T)
   cat("\n")
 }
@@ -188,7 +188,7 @@ hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWR",propSamp = propSampled)
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
   Ty <- paste0(L, "y")
-  res<-estimateHieararhy(tbls=hd, startEstim, target = Ty)
+  res<-doMultiStageEstimation(tbls=hd, startEstim, target = Ty)
   checkEstimates(L, hd, startEstim, propSampled, res, show=T)
   cat("\n")
 }
@@ -207,7 +207,7 @@ hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWR",propSamp = propSampled)
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
   Ty <- paste0(L, "y")
-  res<-estimateHieararhy(tbls=hd, startEstim, target = Ty)
+  res<-doMultiStageEstimation(tbls=hd, startEstim, target = Ty)
   checkEstimates(L, hd, startEstim, propSampled, res, show=T)
   cat("\n")
 }
@@ -224,7 +224,7 @@ hd<-generateTestTbls(LETTERS[1:5], selMeth="SRSWR",propSamp = propSampled, rows=
 for(L in LETTERS[2:5]){
   cat(paste0("level ", L, ":\n"))
   Ty <- paste0(L, "y")
-  res<-estimateHieararhy(tbls=hd, startEstim, target = Ty)
+  res<-doMultiStageEstimation(tbls=hd, startEstim, target = Ty)
   checkEstimates(L, hd, startEstim, propSampled, res, show=T)
   cat("\n")
 }
@@ -250,7 +250,7 @@ So we are estimating for a single Vessel the "BVvalueMeas"
 
 ```{r}
 startEstim <- list(parentIdCol = "VSid", ids=c(4874))
-res<-estimateHieararhy(tbls=h1d[estimTables], startEstim, target = "BVvalueMeas")
+res<-doMultiStageEstimation(tbls=h1d[estimTables], startEstim, target = "BVvalueMeas")
 
 warning("Variance is not corrected for  upper levels for variance correctly")
 res$estim$est.mean

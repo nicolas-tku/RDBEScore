@@ -16,8 +16,8 @@
 #' @examples
 #' hd <- generateTestTbls(LETTERS[1:5], selMeth = "SRSWOR", propSamp = 0.5)
 #' startFrom <- list(parentIdCol = "Aid", ids = c(1))
-#' estimateHieararhy(tbls = hd, startFrom, target = "Dy")
-estimateHieararhy <- function(tbls, estimRes, target, ...) {
+#' doMultiStageEstimation(tbls = hd, startFrom, target = "Dy")
+doMultiStageEstimation <- function(tbls, estimRes, target, ...) {
   if (length(tbls) == 0) {
     return(NULL)
   }
@@ -27,7 +27,7 @@ estimateHieararhy <- function(tbls, estimRes, target, ...) {
     return(estimate(tbl, estimRes, target))
   }
   estimRes <- estimate(tbl, estimRes, target, ...)
-  estimateHieararhy(tbls, estimRes, target, ...)
+  doMultiStageEstimation(tbls, estimRes, target, ...)
 }
 
 
