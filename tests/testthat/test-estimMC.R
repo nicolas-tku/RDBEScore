@@ -57,6 +57,13 @@ test_that(paste("total variance is correct if", testMain), {
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
   expected <- varSRSWOR(items, elems, tot)
   expect_equal(x$var.total, expected)
+
+  tot <- 4
+  items <- c(2,2)
+  elems <-length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems))
+  expected <- varSRSWOR(items, elems, tot)
+  expect_equal(x$var.total, expected)
 })
 
 test_that(paste("mean variance is correct if", testMain), {

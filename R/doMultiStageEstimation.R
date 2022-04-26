@@ -63,6 +63,7 @@ estimate <- function(tbl, estimRes, target,
   data <- tbl[get(parentIdCol) %in% ids, ]
   data$dummy <- 1
   estim <- NA
+  idsEstims <- data[, get(cols["idCol"])]
   if (length(missingCols) == 0) {
     if (isTarget) {
       cols <- c(cols, y = target)
@@ -97,16 +98,21 @@ estimate <- function(tbl, estimRes, target,
       cols = cols,
       parentIdCol = parentIdCol
     )
+    idsEstims <- unique(unlist(sapply(estims, function(x){x$ids})))
 
     estim <- aggLevelEstimations(estims)
     if (!is.null(estimRes$prevStage)) {
       lastEstim <- getLastEstimRes(estimRes)
       estim$est.total <- estim$est.total * lastEstim$est.total
+      #TODO this is not implemented correctly, I think PI should be used
+      #see also
+      #https://github.com/ices-tools-dev/icesRDBES/files/8513298/A.Generalized.Horvitz-Thompson.Estimator.v2.docx
+      estim$var.total <- estim$var.total * lastEstim$var.total
     }
   }
   return(list(
     parentIdCol = cols["idCol"],
-    ids = data[, get(cols["idCol"])],
+    ids = idsEstims,
     tbl = tblName,
     estim = estim, prevStage = estimRes
   ))
@@ -119,30 +125,64 @@ estimStratum <- function(stratum, data, cols, parentIdCol, ids) {
     cols = cols,
     parentIdCol = parentIdCol
   )
-  aggLevelEstimations(estims)
+  res <- aggLevelEstimations(estims)
+  res$ids <- data[, get(cols["idCol"])]
+  res
 }
 
-aggLevelEstimations <- function(estims) {
+aggLevelEstimations <- function(estims, weighted = TRUE) {
   # TODO the big question is how to aggregate these estimations into one
   # especially PI
-  return(list(
-    est.total = mean(sapply(estims, function(x) {
-      x$est.total
-    })),
-    est.mean = mean(sapply(estims, function(x) {
-      x$est.mean
-    })),
-    var.total = mean(sapply(estims, function(x) {
-      x$var.total
-    })),
-    var.mean = mean(sapply(estims, function(x) {
-      x$var.mean
-    })),
-    # sum the PI, keep structure
-    PI = Reduce(`+`, lapply(estims, function(x) {
-      x$PI
+  # one way would be to take a simple mean
+  if (!weighted) {
+    res <- list(
+      est.total = mean(sapply(estims, function(x) {
+        x$est.total
+      })),
+      est.mean = mean(sapply(estims, function(x) {
+        x$est.mean
+      })),
+      var.total = mean(sapply(estims, function(x) {
+        x$var.total
+      })),
+      var.mean = mean(sapply(estims, function(x) {
+        x$var.mean
+      })),
+      # sum the PI, keep structure
+      PI = Reduce(`+`, lapply(estims, function(x) {
+        x$PI
+      }))
+    )
+  }
+  # another,likely better way would be to take into account the diffrent Ns
+  # ie weigh the results
+  if (weighted) {
+    totalN <- sum(sapply(estims, function(x) {
+      x$N
     }))
-  ))
+    res <- list(
+      est.total = sum(sapply(estims, function(x, N) {
+        x$est.total * x$N / N
+      }, totalN)),
+      est.mean = sum(sapply(estims, function(x, N) {
+        x$est.mean * x$N / N
+      }, totalN)),
+      var.total = sum(sapply(estims, function(x, N) {
+        x$var.total * x$N / N
+      }, totalN)),
+      var.mean = sum(sapply(estims, function(x, N) {
+        x$var.mean * x$N / N
+      }, totalN)),
+      # sum the PI, keep structure
+      PI = Reduce(`+`, lapply(estims, function(x, N) {
+        x$PI * x$N / N
+      }, totalN)),
+      N = totalN
+    )
+  }
+
+
+  return(res)
 }
 
 getEstim <- function(id, data, cols, parentIdCol) {
@@ -161,9 +201,8 @@ getEstim <- function(id, data, cols, parentIdCol) {
   estim <- estimMC(y, sampled, total, selMethod)
   # handle NaNs if n == 1 TODO is this the correct way? should it be zero
   if (is.nan(estim$var.total)) estim$var.total <- estim$var.mean <- 1
-  # TODO handle at one level CENSUS sampling
-  # so that multiplication would'nt yield 0
-  # if(estim$var.total == 0) estim$var.total <- estim$var.mean <- 1
+
+  estim$N <- mean(total)
   estim
 }
 
