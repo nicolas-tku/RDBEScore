@@ -123,6 +123,15 @@ test_that(paste("total variance is correct if", testMain), {
   expect_equal(x$var.total, expected)
 })
 
+test_that(paste("total variance is NaN for 1 sample if", testMain), {
+  tot <- 10
+  items <- c(3)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems))
+  expected <- varSRSWOR(items, elems, tot)
+  expect_equal(x$var.total, expected)
+})
+
 test_that(paste("mean variance is correct if", testMain), {
   tot <- 20
   items <- c(3, 4)
@@ -130,6 +139,7 @@ test_that(paste("mean variance is correct if", testMain), {
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
   expected <- varSRSWOR(items, elems, tot) / tot
   expect_equal(x$var.mean, expected)
+
 })
 
 test_that(paste("correct total if", testMain), {
@@ -278,6 +288,13 @@ testMain <- "SRSWR 10% elements in sample"
 test_that(paste("total variance is correct if", testMain), {
   tot <- 20
   items <- c(3, 4)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
+  expected <- varSRSWR(items, elems, tot)
+  expect_equal(x$var.total, expected)
+
+  tot <- 10
+  items <- c(4)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
   expected <- varSRSWR(items, elems, tot)
