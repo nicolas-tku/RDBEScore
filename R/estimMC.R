@@ -33,46 +33,44 @@ estimMC <- function(y, sampled, total, method = "SRSWOR") {
   if (grepl("^SRS", method) || grepl("^CENSUS$", method)) {
     enk <- sampled / total
     enl <- t(enk)
+    if (grepl("WOR$", method) || grepl("^CENSUS$", method)) {
+      enkl <- enk %*% t((sampled - 1) / (total - 1))
+      diag(enkl) <- enk
+    }
+
+    if (grepl("WR$", method)) {
+      enkl <- (enk %*% t((sampled - 1) / total))
+    }
   }
 
   # TODO Add Unequal probability here
   if (grepl("^UPS", method)) {
-    stop()
-  }
-
-  if (grepl("WOR$", method) || grepl("^CENSUS$", method)) {
-    enkl <- enk %*% t((sampled - 1) / (total - 1))
-    # selecting single element in the sample twice is not possible in WOR
-    diag(enkl) <- enk
-  }
-
-  if (grepl("WR$", method)) {
-    # from https://math.stackexchange.com/questions/2037468
-    pk <- enk * ((total - 1) / total)^ (sampled - 1)
-    enkl <- (sampled * pk %*% t(sampled * pk)) * (sampled - 1) * sampled
-    # enkl <-  ((enk %*% enl) * ((sampled - 1)*sampled))
+    stop("TODO")
   }
 
   est.total <- sum(y / enk)
   est.mean <- est.total / mean(total)
 
-  partY <- (y / enk) %*% (y / enl)
-  partUp <- enkl - (enk %*% enl)
-  var.total <- sum((partUp / enkl) * partY)
+  partY <- ((y / enk) %*% (y / enl))
+  var.mat <- ((enkl - (enk %*% enl)) / enkl) * partY
+  #the diagonal can be set here as well see below
+  # var.diag <- ((1-enk)/enk) * (y^2/enk)
+  # diag(var.mat) <- var.diag
+  var.total <- sum(var.mat)
+
+
 
   # TODO the code in "WR$" does not produce the expected value
   # temporarily falling back to simplification until fixed
   if (method == "SRSWR") {
     varSRSWR <- function(y, n, N) {
-      meanY <- mean(y)
-      S2 <- 1 / (n - 1) * (sum((y - meanY)^2))
-      N^2 * (S2 / n)
+      meanY <- sum(y / (n / N))
+      S2 <- (y * N - meanY)^2
+      mean(1 / (n * (n - 1))) * sum(S2)
     }
-    var.total <- varSRSWR(y, mean(sampled), mean(total))
-    # from https://math.stackexchange.com/questions/2037468
-    enkl <- pk %*% t(pk)
-    never_sampled <- ((total - 1) / total)^sampled
-    diag(enkl) <- 1 - (never_sampled + pk)
+    var.total <- varSRSWR(y, sampled, total)
+
+    enkl <- enk %*% enl
   }
 
   var.mean <- var.total / sum(total) * mean(sampled)
@@ -82,8 +80,8 @@ estimMC <- function(y, sampled, total, method = "SRSWOR") {
   return(list(
     est.total = est.total,
     est.mean = est.mean,
-    var.total = var.total,
-    var.mean = var.mean,
+    var.total = ifelse(n < 2, NaN, var.total),
+    var.mean = ifelse(n < 2, NaN, var.mean),
     PI = PI
   ))
 }
