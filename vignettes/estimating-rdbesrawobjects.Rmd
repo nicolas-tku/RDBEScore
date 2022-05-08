@@ -176,6 +176,52 @@ for(L in LETTERS[2:5]){
 }
 
 ```
+##### Stats Book example 
+
+Data and expected results from https://online.stat.psu.edu/stat506/lesson/9/9.1
+
+A restaurant chain wants to estimate the average employee satisfaction with their job (the scale is from 1 to 7). They have 120 restaurants the total number of employees in the chain is 6860. They use simple random sampling (without replacement) to sample 10 restaurants. They then use simple random sampling (without replacement) to sample and interview about 20% of the employees in those restaurants. 
+First let's make a RDBES data like object from the availabe data.
+
+```{r}
+rdf <- generateTestTbls(c("Restaurants"), rows=10, propSamp=1/12, selMeth = "SRSWOR")
+
+employeeSampled <- list(
+c(5, 7, 6, 5, 4, 7, 6, 6, 4, 5),
+c(7, 7, 7, 6, 5, 4, 7, 7, 6, 6),	
+c(5, 6, 5, 6, 4, 5, 6, 5, 4, 5, 4, 6, 5, 6)	,
+c(6, 5, 7, 6, 7, 6, 5, 7, 5, 7, 6, 5, 7, 6),	
+c(4, 5, 4, 5, 5, 6, 5, 4, 4, 4)	,
+c(5, 7, 6, 7, 4, 3, 1, 5, 4, 6, 4, 5),	
+c(7, 6, 7, 7, 6, 6, 5, 7),	
+c(6, 6, 5, 4, 6, 7, 5, 5, 7, 6, 5),
+c(7, 6, 5, 4, 6, 5, 7, 4, 3, 6, 5, 7),	
+c(7, 6, 6, 5, 7, 3, 5, 4, 5)
+)
+employeeTotals <- c(54, 48, 68, 70, 52, 62, 41, 53, 64, 43)
+employeeData <- list(values = employeeSampled, totals = employeeTotals)
+
+
+makeCustomTestData<-function(x, data, name="Employees",
+                             prevTblName = "Restaurants",
+                             selMeth = "SRSWOR"){
+
+tx <- generateTestTbls(c(name), 
+                       rows=length(data$values[[x]]),
+                       propSamp=length(data$values[[x]])/data$totals[x],
+                       selMeth = selMeth)[[1]]
+tx[,paste0(name, "y"):= data$values[[x]]]
+tx[,paste0(prevTblName, "id") := x]
+tx
+}
+edf <- do.call(rbind, lapply(1:length(employeeTotals), makeCustomTestData,
+                                      data = employeeData))
+edf[,Employeesid := 1:nrow(edf)]
+rdf$Employees <- edf
+```
+
+
+
 
 #### SRSWR
 ##### All sampled
@@ -239,7 +285,11 @@ For lower hierarchy tables the number of sampled and measured total
 ```{r}
 estimTables <- tablesInRDBESHierarchies$H1[3:9]
 estimTables
+```   
+```{r}
+#writexl::write_xlsx(h1d[estimTables], "h1_exmaple.xlsx")
 ```
+
 
 ```{r}
 head(h1d[[estimTables[1]]])
