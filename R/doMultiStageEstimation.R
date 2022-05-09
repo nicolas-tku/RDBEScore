@@ -52,7 +52,7 @@ estimate <- function(tbl, estimRes, target,
                      stratums = NULL,
                      typeOfMeasure = NULL) {
   parentIdCol <- estimRes$parentIdCol
-  ids <- estimRes$ids
+  ids <- estimRes[["ids"]]
   tblName <- unique(tbl[[colnames(tbl)[grepl("recType$", colnames(tbl))]]])
   if (length(tblName) > 1) {
     stop("Mixed table")
@@ -91,23 +91,22 @@ estimate <- function(tbl, estimRes, target,
         dataStratums <- levelStratums
       }
     }
-
     estims <- lapply(dataStratums, estimStratum,
       ids = ids,
       data = data,
       cols = cols,
       parentIdCol = parentIdCol
     )
-    idsEstims <- unique(unlist(sapply(estims, function(x){x$ids})))
-
+    idsEstims <- unique(unlist(sapply(estims, function(x){x$ids})))[,1]
     estim <- aggLevelEstimations(estims)
     if (!is.null(estimRes$prevStage)) {
       lastEstim <- getLastEstimRes(estimRes)
-      estim$est.total <- estim$est.total * lastEstim$est.total
+      estim$est.total <- estim$est.total * lastEstim$N/length(ids)
+      estim$est.Ntotal <- estim$N * lastEstim$N/length(ids)
       #TODO this is not implemented correctly, I think PI should be used
       #see also
       #https://github.com/ices-tools-dev/icesRDBES/files/8513298/A.Generalized.Horvitz-Thompson.Estimator.v2.docx
-      estim$var.total <- estim$var.total * lastEstim$var.total
+      estim$var.total <- estim$var.total/estim$N * lastEstim$N/length(ids)
     }
   }
   return(list(
@@ -130,36 +129,34 @@ estimStratum <- function(stratum, data, cols, parentIdCol, ids) {
   res
 }
 
-aggLevelEstimations <- function(estims, weighted = TRUE) {
+aggLevelEstimations <- function(estims, method = "ratio") {
+  totalN <- sum(sapply(estims, function(x) {
+    x$N
+  }))
   # TODO the big question is how to aggregate these estimations into one
   # especially PI
   # one way would be to take a simple mean
-  if (!weighted) {
+  if (method == "ratio") {
     res <- list(
-      est.total = mean(sapply(estims, function(x) {
+      est.total = sum(sapply(estims, function(x) {
         x$est.total
       })),
-      est.mean = mean(sapply(estims, function(x) {
-        x$est.mean
-      })),
-      var.total = mean(sapply(estims, function(x) {
+      est.mean = sum(sapply(estims, function(x) {
+        x$est.mean * x$N
+      })) / totalN,
+      var.total = sum(sapply(estims, function(x) {
         x$var.total
       })),
-      var.mean = mean(sapply(estims, function(x) {
+      var.mean = sum(sapply(estims, function(x) {
         x$var.mean
-      })),
-      # sum the PI, keep structure
-      PI = Reduce(`+`, lapply(estims, function(x) {
-        x$PI
-      }))
+      }))/ totalN,
+      N = totalN
     )
   }
   # another,likely better way would be to take into account the diffrent Ns
   # ie weigh the results
-  if (weighted) {
-    totalN <- sum(sapply(estims, function(x) {
-      x$N
-    }))
+  if (method == "unbiased") {
+    #TODO this is utterly wrong !
     res <- list(
       est.total = sum(sapply(estims, function(x, N) {
         x$est.total * x$N / N
@@ -174,9 +171,10 @@ aggLevelEstimations <- function(estims, weighted = TRUE) {
         x$var.mean * x$N / N
       }, totalN)),
       # sum the PI, keep structure
-      PI = Reduce(`+`, lapply(estims, function(x, N) {
-        x$PI * x$N / N
-      }, totalN)),
+      # PI = Reduce(`+`, lapply(estims, function(x, N) {
+      #   x$PI * x$N / N
+      # }, totalN)),
+      PI = NA,
       N = totalN
     )
   }
@@ -186,7 +184,7 @@ aggLevelEstimations <- function(estims, weighted = TRUE) {
 }
 
 getEstim <- function(id, data, cols, parentIdCol) {
-  data <- data[get(parentIdCol) == id, ]
+  data <- data[get(parentIdCol) %in% id, ]
   y <- data[, get(cols["y"])]
   sampled <- data[, get(cols["numSampledCol"])]
   total <- data[, get(cols["numTotalCol"])]
@@ -203,6 +201,7 @@ getEstim <- function(id, data, cols, parentIdCol) {
   if (is.nan(estim$var.total)) estim$var.total <- estim$var.mean <- 1
 
   estim$N <- mean(total)
+  estim$est.Ntotal <- estim$N
   estim
 }
 

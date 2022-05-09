@@ -29,7 +29,7 @@ library(icesRDBES)
 First we'll load some example data from the RDBES and check it's valid.  It's a good idea to check your RDBESRawObjects are valid after any manipulations you perform.
 
 ```{r load}
-h1d <- createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19")
+h1d <- createRDBESRawObject(rdbesExtractPath = ".\\tests\\testthat\\h1_v_1_19")
 h1dValid <- validateRDBESRawObject(h1d, verbose = FALSE)
 
 ```
@@ -220,7 +220,23 @@ edf[,Employeesid := 1:nrow(edf)]
 rdf$Employees <- edf
 ```
 
+```{r}
+sbRes <- doMultiStageEstimation(tbls=rdf,
+                                list(parentIdCol = "Restaurantsid", ids=1:10),
+                                target = "Employeesy")
+cat("Mean ")
+ cat(sbRes$estim$est.mean)
+cat("\n\tVar ")
+ cat(sbRes$estim$var.mean)
+ 
+cat("\nTotal ")
+ cat(sbRes$estim$est.total)
+cat("\n\tVar ")
+ cat(sbRes$estim$var.total)
+```
 
+The expected mean and its variance for **ratio estimation** are 5.48 and 0.029. 
+The expected total and its variance for **unbiased estimation** are 36471.5 and 3375.61. 
 
 
 #### SRSWR
