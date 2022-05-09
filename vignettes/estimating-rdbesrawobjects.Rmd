@@ -234,9 +234,21 @@ cat("\nTotal ")
 cat("\n\tVar ")
  cat(sbRes$estim$var.total)
 ```
-
+The expected total and its variance for **unbiased estimation** are 36469.4 and 3375.61. 
 The expected mean and its variance for **ratio estimation** are 5.48 and 0.029. 
-The expected total and its variance for **unbiased estimation** are 36471.5 and 3375.61. 
+For **ratio estimation**  the expected total and its variance are to be the same as for unbiased estimation. See below:
+
+
+```{r}
+# for total
+M <- 6860 
+estM <- 555/10*120
+estM
+sbRes$estim$est.mean * estM
+sbRes$estim$est.total / M
+
+##TODO for Var
+```
 
 
 #### SRSWR

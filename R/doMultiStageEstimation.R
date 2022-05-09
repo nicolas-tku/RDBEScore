@@ -97,12 +97,12 @@ estimate <- function(tbl, estimRes, target,
       cols = cols,
       parentIdCol = parentIdCol
     )
-    idsEstims <- unique(unlist(sapply(estims, function(x){x$ids})))[,1]
+    idsEstims <- unique(unlist(sapply(estims, function(x){x$ids})))
     estim <- aggLevelEstimations(estims)
     if (!is.null(estimRes$prevStage)) {
       lastEstim <- getLastEstimRes(estimRes)
-      estim$est.total <- estim$est.total * lastEstim$N/length(ids)
-      estim$est.Ntotal <- estim$N * lastEstim$N/length(ids)
+      estim$est.total <- estim$est.total * lastEstim$est.total/length(ids)
+      estim$est.Ntotal <- estim$N * lastEstim$est.total/length(ids)
       #TODO this is not implemented correctly, I think PI should be used
       #see also
       #https://github.com/ices-tools-dev/icesRDBES/files/8513298/A.Generalized.Horvitz-Thompson.Estimator.v2.docx
