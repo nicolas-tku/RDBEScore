@@ -67,6 +67,12 @@ ggplot(data = mySampResultsAll, mapping = aes(x = numberOfSamples, y = estimateT
   geom_hline(yintercept=popTotal, color = "red", size=1) +
   ggtitle("SRSWOR")
 
+# Plot the data - as we increase the number of samples we decrease the variance of our estimates
+ggplot(data = mySampResultsAll, mapping = aes(x = numberOfSamples, y = estimatevariance)) +
+  geom_boxplot() +
+  ggtitle("SRSWOR")
+
+
 
 ## SRSWR
 #
@@ -82,5 +88,9 @@ mySampResultsAll$numberOfSamples <- as.factor(mySampResultsAll$numberOfSamples)
 ggplot(data = mySampResultsAll, mapping = aes(x = numberOfSamples, y = estimateTotal)) +
   geom_boxplot() +
   geom_hline(yintercept=popTotal, color = "red", size=1) +
+  ggtitle("SRSWR")
+
+ggplot(data = mySampResultsAll, mapping = aes(x = numberOfSamples, y = estimatevariance)) +
+  geom_boxplot() +
   ggtitle("SRSWR")
 
