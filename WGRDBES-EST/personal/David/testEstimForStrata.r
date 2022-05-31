@@ -43,13 +43,12 @@ temp <- dplyr::left_join(testData[['SD']],testData[['VS']][,c("VSid","SDid")],by
 unsampledSD <- temp[is.na(temp$VSid),"SDid"]
 testData[['SD']] <- testData[['SD']][!testData[['SD']]$SDid %in% unsampledSD$SDid,]
 
-#View(testData[['SA']])
+#names(testData[['DE']])
 
 #Filter our data for 2019 hierachy 1
-myFields <- c("DEyear", "DEhierarchy")
 myValues <- c(2019,1)
-#myFields <- c("DEhierarchy")
-#myValues <- c(1)
+myFields <- c("DEyear","DEhierarchy")
+
 
 myFilteredTestData <- filterRDBESRawObject(testData,
                                           fieldsToFilter = myFields,
@@ -57,23 +56,25 @@ myFilteredTestData <- filterRDBESRawObject(testData,
 # Remove any orphan records we created during the filtering
 myFilteredTestData <- findAndKillOrphans(myFilteredTestData, verbose = FALSE)
 
+
+
 # Generate estimates for all strata
 myStrataEst <- doEstimationForAllStrata(rdbesRawObjectForEstim = myFilteredTestData ,
                                         hierarchyToUse = 1)
 
+## OK, do the same as above but with the basic test data from the package
+
 myH1RawObject <-
       createRDBESRawObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
-# Update our test data with some random sample measurements
-myH1RawObject[['SA']]$SAsampWtLive <- round(runif(n=nrow(myH1RawObject[['SA']]),min = 1, max = 100))
 
-#runif(min = 1, max = 100)
+# Update our test data with some random sample measurements (it didn't include these)
+myH1RawObject[['SA']]$SAsampWtLive <- round(runif(n=nrow(myH1RawObject[['SA']]),min = 1, max = 100))
 
 # Generate estimates for all strata
 myStrataEst <- doEstimationForAllStrata(rdbesRawObjectForEstim = myH1RawObject,
                                         hierarchyToUse = 1)
 
-(myFilteredTestData)
-getEstim(data = myFilteredTestData)
+
 
 
 

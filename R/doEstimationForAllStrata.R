@@ -52,6 +52,7 @@ doEstimationForAllStrata <- function(rdbesRawObjectForEstim,
   # Loop through our tables, starting at SA and working backwards
   saPosition <- match("SA", tablesToCheck)
   for (i in saPosition:1) {
+    #i <- 6
     currentTable <- tablesToCheck[i]
     parentTable <- NA
     if (i > 1) {
@@ -91,6 +92,9 @@ doEstimationForAllStrata <- function(rdbesRawObjectForEstim,
     names(myTable) <- substring(names(myTable), 3)
     myTable$parentTable <- parentTable
 
+    # We'll fill in the values for parent stratum as we go through the tables
+    myTable$parentTableStratum <- NA
+
     # Make some changes for specific tables
     if (currentTable == "SA") {
       # Rename the variable we want to estimate
@@ -108,7 +112,7 @@ doEstimationForAllStrata <- function(rdbesRawObjectForEstim,
     # Create a new field combining parent ID and stratum names - this ensures
     # that records with the same stratum name but different parent records
     # are easily distinguished
-    myTable$parentAndStratum <-
+    myTable$parentIDandStratum <-
       paste0(myTable$parentTableID, ":", myTable$stratumName)
 
 
@@ -127,12 +131,25 @@ doEstimationForAllStrata <- function(rdbesRawObjectForEstim,
         dplyr::group_by(parentTableID) %>%
         dplyr::summarise(studyVariable = sum(est.total, na.rm = TRUE))
 
+
+
       # Join our current table with the previous resuults
       myTableWithValues <-
         dplyr::left_join(myTable,
           myPrevEstimates,
           by = c("id" = "parentTableID")
         )
+
+      # Append the parent table stratum to our previous results (so we can
+      # easily join the parent and child records of our final results)
+      myStrataResults[myStrataResults$parentTable == currentTable, ]$
+        parentTableStratum <-
+         dplyr::left_join(
+           myStrataResults[myStrataResults$parentTable == currentTable, ],
+           myTable[,c("id","parentIDandStratum")],
+           by = c("parentTableID"="id"))$"parentIDandStratum.y"
+
+
     }
 
     ## DE/SD/SS need to be handled differently because we can't estimate with
@@ -154,8 +171,9 @@ doEstimationForAllStrata <- function(rdbesRawObjectForEstim,
           recType,
           parentTable,
           parentTableID,
+          parentTableStratum,
           stratumName,
-          parentAndStratum
+          parentIDandStratum,
         ) %>%
         dplyr::summarise(studyVariable = sum(studyVariable, na.rm = TRUE))
 
@@ -163,8 +181,9 @@ doEstimationForAllStrata <- function(rdbesRawObjectForEstim,
         "recType" = myTableWithValuesGrouped$recType,
         "parentTable" = myTableWithValuesGrouped$parentTable,
         "parentTableID" = myTableWithValuesGrouped$parentTableID,
+        "parentTableStratum" = myTableWithValuesGrouped$parentTableStratum,
         "stratumName" = myTableWithValuesGrouped$stratumName,
-        "parentAndStratum" = myTableWithValuesGrouped$parentAndStratum,
+        "parentIDandStratum" = myTableWithValuesGrouped$parentIDandStratum,
         "est.results.available" = FALSE,
         "est.total" = myTableWithValuesGrouped$studyVariable,
         "est.mean" = NA,
@@ -176,7 +195,7 @@ doEstimationForAllStrata <- function(rdbesRawObjectForEstim,
       # For the other tables we'll run the estimation function
 
       # Split by parent ID and stratum name
-      myTableList <- split(myTableWithValues, f = myTable$parentAndStratum)
+      myTableList <- split(myTableWithValues, f = myTable$parentIDandStratum)
       # apply estimate function to each unique parent ID and stratum name
       # combination
       myResults <- lapply(myTableList, getEstimForStratum)
@@ -205,8 +224,9 @@ getEstimForStratum <- function(x) {
     "recType" = unique(x$recType),
     "parentTable" = unique(x$parentTable),
     "parentTableID" = unique(x$parentTableID),
+    "parentTableStratum" = unique(x$parentTableStratum),
     "stratumName" = unique(x$stratumName),
-    "parentAndStratum" = unique(x$parentAndStratum)
+    "parentIDandStratum" = unique(x$parentIDandStratum)
   )
   myEstim <- NA
   try(
