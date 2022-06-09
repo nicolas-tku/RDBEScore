@@ -188,7 +188,11 @@ doEstimationForAllStrata <- function(rdbesRawObjectForEstim,
         "est.total" = myTableWithValuesGrouped$studyVariable,
         "est.mean" = NA,
         "var.total" = NA,
-        "var.mean" = NA
+        "var.mean" = NA,
+        "sd.total" = NA,
+        "sd.mean" = NA,
+        "se.total" = NA,
+        "se.mean" = NA
       )
     } else {
 
@@ -249,6 +253,36 @@ getEstimForStratum <- function(x) {
     myReturnValues$est.mean <- myEstim$est.mean
     myReturnValues$var.total <- myEstim$var.total
     myReturnValues$var.mean <- myEstim$var.mean
+
   }
+
+  # Calculate the standard deviation and standard error from the variance
+  numberOfSamples <- unique(x$numSamp)
+
+  if (is.numeric(myEstim$var.total) && !is.nan(myEstim$var.total) && !is.na(myEstim$var.total) && myEstim$var.total >0 ){
+    myReturnValues$sd.total <- sqrt(myEstim$var.total)
+    if (length(numberOfSamples) == 1 && numberOfSamples >0){
+      myReturnValues$se.total <- sqrt(myEstim$var.total)/sqrt(numberOfSamples)
+    } else {
+      myReturnValues$se.total <- NA
+    }
+  } else {
+    myReturnValues$sd.total <- NA
+    myReturnValues$se.total <- NA
+  }
+
+
+  if (is.numeric(myEstim$var.mean) && !is.nan(myEstim$var.mean) && !is.na(myEstim$var.mean) && myEstim$var.mean >0){
+    myReturnValues$sd.mean <- sqrt(myEstim$var.mean)
+    if (length(numberOfSamples) == 1 && numberOfSamples >0){
+      myReturnValues$se.mean <- sqrt(myEstim$var.mean)/sqrt(numberOfSamples)
+    } else {
+      myReturnValues$se.mean <- NA
+    }
+  } else {
+    myReturnValues$sd.mean <- NA
+    myReturnValues$se.mean <- NA
+  }
+
   myReturnValues
 }
