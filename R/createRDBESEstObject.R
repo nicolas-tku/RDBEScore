@@ -14,13 +14,24 @@
 #'   createRDBESRawObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
 #' myH1EstObj <- createRDBESEstObject(myH1RawObject, 1)
 #' }
-createRDBESEstObject <- function(rdbesPrepObject, hierarchyToUse) {
-  warning("Function is a work in progress and not fully tested yet")
+createRDBESEstObject <- function(rdbesPrepObject, hierarchyToUse, verbose = FALSE) {
+
+  print("Function is a work in progress and not fully tested yet")
 
 
   # For testing
   #myH1RawObject <-
   #  createRDBESRawObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
+  # Remove column because it seems to be logical data type
+  #myH1RawObject[["SA"]][, SAparentID:= NULL]
+  # Generate some new parent ids
+  #myH1RawObject[["SA"]][51:100,"SAparentID"] <- myH1RawObject[["SA"]][1:50,"SAid"]
+  #myH1RawObject[["SA"]][101:125,"SAparentID"] <- myH1RawObject[["SA"]][51:75,"SAid"]
+  # Fix the column order
+  #setcolorder(myH1RawObject[["SA"]],
+  #            c("SAid","SAparentID", setdiff(names(myH1RawObject[["SA"]]), c("SAid","SAparentID"))   )
+  #)
+
   #rdbesPrepObject <- myH1RawObject
   #hierarchyToUse <- 1
 
@@ -35,28 +46,83 @@ createRDBESEstObject <- function(rdbesPrepObject, hierarchyToUse) {
 
   if (!hierarchyToUse %in% 1:13) {
     stop(paste0(
-      "An invalid value was used for the 'hierarchyToUse' paramter",
-      "- createRDBESEstObject will not proceed"
+      "An invalid value was used for the 'hierarchyToUse' parameter",
+      " - createRDBESEstObject will not proceed"
     ))
   }
 
-  if (any(!is.na(rdbesPrepObject[["SA"]]$parentID))) {
-    stop("Sub-sampling present in SA: not yet developed")
-  }
 
   # Copy the input data table so we don't accidentally change the orignal data
   rdbesPrepObjectCopy <- data.table::copy(rdbesPrepObject)
 
   # Combine the lower hierachy tables (FM,BV)
-  allLower <- processRDBESEstObjLowerHierarchies(rdbesPrepObjectCopy)
+  allLower <- processRDBESEstObjLowerHierarchies(rdbesPrepObjectCopy, verbose = verbose)
+
+
+  # Handle any sub-sampling
+
+  # Check if we have any SA data
+  if (length(is.null(rdbesPrepObjectCopy[["SA"]])) == 1 &&
+      is.null(rdbesPrepObjectCopy[["SA"]]) ){
+    if (verbose){
+      print("No SA data found - can't check for sub-sampling")
+    }
+  } else {
+
+    # Deal with the sub-sampling
+
+    subSampleLevels  <- lapply(rdbesPrepObjectCopy[["SA"]][,SAid],
+                               getSubSampleLevel,
+                               SAdata = rdbesPrepObjectCopy[["SA"]])
+    subSampleLevels<- do.call(rbind, subSampleLevels)
+    rdbesPrepObjectCopy[["SA"]][,"SAtopLevelSAid"] <- subSampleLevels$topLevelSAid
+    rdbesPrepObjectCopy[["SA"]][,"SAsubSampleLevel"] <- subSampleLevels$subSampleLevel
+    numberOfSampleLevels <- max(rdbesPrepObjectCopy[["SA"]][,"SAsubSampleLevel"])
+
+    if (numberOfSampleLevels > 1){
+      # Create new entries for each level of sampling
+      for(i in 1:numberOfSampleLevels){
+        saNameNew <- paste0("SA",i)
+        rdbesPrepObjectCopy[[saNameNew]] <-
+          rdbesPrepObjectCopy[["SA"]][rdbesPrepObjectCopy[["SA"]]$SAsubSampleLevel==i,]
+        rdbesPrepObjectCopy[[saNameNew]]$SArecType <-
+          paste0(rdbesPrepObjectCopy[[saNameNew]]$SArecType,i)
+        # Rename the columns to SA2 etc (don't bother for SA1 because we
+        # are going to chaneg its name to SA in a moment)
+        if (i > 1){
+          names(rdbesPrepObjectCopy[[saNameNew]]) <-
+            gsub("^SA",saNameNew,names(rdbesPrepObjectCopy[[saNameNew]]))
+        }
+      }
+      # Get rid of the overall SA entry
+      rdbesPrepObjectCopy[["SA"]] <- NULL
+      # Rename SA1 to SA for consistency
+      names(rdbesPrepObjectCopy)[names(rdbesPrepObjectCopy) == "SA1"] <- "SA"
+    }
+  }
 
   # Combine the upper hierachy tables
   upperHierarchy <- processRDBESEstObjUpperHierarchies(
                                         rdbesPrepObject = rdbesPrepObjectCopy,
-                                        hierarchyToUse = hierarchyToUse)
+                                        hierarchyToUse = hierarchyToUse,
+                                        verbose = verbose)
+
+
+  # TODO - check how we join the upper and lower hierachy data when there
+  # is sub-sampling e.g. are we joining the right SAxID value?
 
   # Join the upper and lower hierarchy tables together
-  myRDBESEstObj <- dplyr::left_join(upperHierarchy,allLower,by="SAid")
+  # Check if we have any lower hierarchy data first
+  if (length(is.null(rdbesPrepObjectCopy[["SA"]])) == 1 &&
+      is.null(rdbesPrepObjectCopy[["SA"]]) ){
+    if (verbose){
+      print("No lower hierachy data data found")
+    }
+    myRDBESEstObj <- upperHierarchy
+  } else {
+    myRDBESEstObj <- dplyr::left_join(upperHierarchy,allLower,by="SAid")
+  }
+
 
   # Choose which VDid field to keep
   vdIDFields <- names(myRDBESEstObj)[grepl("^VDid", names(myRDBESEstObj))]
@@ -81,10 +147,20 @@ createRDBESEstObject <- function(rdbesPrepObject, hierarchyToUse) {
     myRDBESEstObj[, (vdIDFieldsToRemove) := NULL]
   }
 
+
+  # If myRDBESEstObj is null let's create an empty data table to return
+  if (length(is.null(myRDBESEstObj)) == 1 &&
+      is.null(myRDBESEstObj) ){
+    if (verbose){
+      print("Returning an RDBESEstObject")
+    }
+    myRDBESEstObj <- data.table(DEid=numeric())
+  }
+
   # Set the class of the object
   class(myRDBESEstObj) <- c("RDBESEstObject", class(myRDBESEstObj))
 
-  names(myRDBESEstObj)
+
   myRDBESEstObj
 }
 
@@ -96,7 +172,17 @@ createRDBESEstObject <- function(rdbesPrepObject, hierarchyToUse) {
 #' @return allLower - the FM and BV tables combined
 #'
 #' @examples
-processRDBESEstObjLowerHierarchies <- function(rdbesPrepObject){
+processRDBESEstObjLowerHierarchies <- function(rdbesPrepObject, verbose = FALSE){
+
+
+  # Check if we have any SA data - if not we'll just stop now
+  if (length(is.null(rdbesPrepObject[["SA"]])) == 1 &&
+      is.null(rdbesPrepObject[["SA"]]) ){
+    if (verbose){
+      print("No SA data found - can't process the lower hierarchies")
+    }
+    return (NULL)
+  }
 
   # Break out the lower hierachies - they need to join to different tables
   lowerA <- rdbesPrepObject[["SA"]][
@@ -180,12 +266,28 @@ processRDBESEstObjLowerHierarchies <- function(rdbesPrepObject){
 processRDBESEstObjUpperHierarchies <- function(myRDBESEstObj = NULL,
                                                rdbesPrepObject,
                                                hierarchyToUse,
-                                               i = 1){
+                                               i = 1,
+                                               verbose = FALSE){
 
   # Which tables do we expect to find in the data?
   targetTables <- icesRDBES::tablesInRDBESHierarchies[[hierarchyToUse]]
+  SAloc <- which( targetTables =="SA")
+
+  names(rdbesPrepObject)[grep("^SA.*$",names(rdbesPrepObject))]
+
+  # Replace "SA" in the target tables with "SA", "SA2" etc to handle
+  # sub-sampling (if required)
+  if (length(SAloc)>0 && length(grep("^SA.+$",names(rdbesPrepObject))) > 0){
+    targetTables <- append(targetTables,
+                           names(rdbesPrepObject)[grep("^SA.+$",names(rdbesPrepObject))],
+                           after=SAloc)
+  }
+
+
   thisTable <- targetTables[i]
-  print(thisTable)
+  if (verbose){
+    print(paste0("Processing ",thisTable))
+  }
 
   if (thisTable %in% c("FM","BV")){
     # if we've got to FM or BV we're done so lets stop
@@ -202,6 +304,9 @@ processRDBESEstObjUpperHierarchies <- function(myRDBESEstObj = NULL,
       # get the sampling unit level
       suLevel <- paste0("su",i-2)
 
+      grep("^SA.+$",thisTable)
+      grepl("^SA.+$","SA2")
+
       if (i > 1) {
         joinField <- paste0(targetTables[i - 1], "id")
       } else {
@@ -210,7 +315,11 @@ processRDBESEstObjUpperHierarchies <- function(myRDBESEstObj = NULL,
 
       # First get rid of any unneccessary id fields to avoid trouble
       # with field naming
-      allowedIds <- c(paste0(thisTable, "id"), joinField, "VDid", "SLid")
+      allowedIds <- c(paste0(thisTable, "id"),
+                      joinField,
+                      "VDid",
+                      "SLid",
+                      paste0(thisTable, "parentID"))
       unallowedIDs <-
         paste0(names(rdbesPrepObject), "id")[
           !(paste0(names(rdbesPrepObject), "id") %in% allowedIds)
@@ -223,11 +332,20 @@ processRDBESEstObjUpperHierarchies <- function(myRDBESEstObj = NULL,
         rdbesPrepObject[[thisTable]][, (unallowedIDs) := NULL]
       }
 
+      # If we're dealing with sub-sampling rename SAxparentID to the join field
+      # - shoudl mean we can easily join with the data from the level above
+      if (grepl("^SA.+$",thisTable)){
+        names(rdbesPrepObject[[thisTable]])[
+          names(rdbesPrepObject[[thisTable]]) == paste0(thisTable,"parentID")
+              ] <- joinField
+      }
+
       # Field names of the design variables
       designVariables <- c("stratification","stratumName","clustering",
-                           "clusterName","sampler","numTotal","numSamp","selProb",
-                           "incProb","selectMeth","unitName", "selectMethCluster",
-                           "numTotalClusters","numSampClusters","selProbCluster",
+                           "clusterName","sampler","numTotal","numSamp",
+                           "selProb","incProb","selectMeth","unitName",
+                           "selectMethCluster", "numTotalClusters",
+                           "numSampClusters","selProbCluster",
                            "incProbCluster","samp", "noSampReason")
 
       # if this table has design variable columns
@@ -259,6 +377,46 @@ processRDBESEstObjUpperHierarchies <- function(myRDBESEstObj = NULL,
     processRDBESEstObjUpperHierarchies(myRDBESEstObj,
                                        rdbesPrepObject,
                                        hierarchyToUse,
-                                       i+1)
+                                       i+1,
+                                       verbose = verbose)
   }
+}
+
+
+#' Private function to get sub-sample level and top-level SAid for SA data
+#'
+#' @param SAdata
+#' @param SAidToCheck
+#' @param subSampleLevel
+#'
+#' @return
+#'
+#' @examples
+getSubSampleLevel <- function(SAdata,SAidToCheck, subSampleLevel = 1 ){
+
+  # Fix in case the parentID is not numeric - this can be the case if it was
+  # empty when it was imported
+  if(!is.numeric(SAdata$SAparentID)){
+    SAdata$SAparentID <- as.numeric(SAdata$SAparentID)
+  }
+
+  dataToCheck <- SAdata[SAdata$SAid == SAidToCheck,]
+
+  # If we have mutiple matches we probably don't have unique SAid values
+  if (nrow(dataToCheck) > 1){
+    warning("There is a problem with non-unique SAid values- check your data")
+    # Just use the first match
+    dataToCheck <- dataToCheck[1,]
+  }
+
+  if (nrow(dataToCheck) == 0) {
+    return (NA)
+  } else if (is.na(dataToCheck$SAparentID)) {
+    return (data.frame("topLevelSAid" = SAidToCheck, "subSampleLevel" = subSampleLevel))
+  } else {
+    return (getSubSampleLevel(SAdata = SAdata,
+                              SAidToCheck = dataToCheck$SAparentID,
+                              subSampleLevel = subSampleLevel + 1))
+  }
+
 }
