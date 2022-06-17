@@ -6,7 +6,7 @@
 records i.e.those rows which have a value of SpeciesListName that does not
 exist in the SL table.}
 \usage{
-removeBrokenSpeciesListLinks(objectToCheck, verbose = TRUE)
+removeBrokenSpeciesListLinks(objectToCheck, verbose = FALSE)
 }
 \arguments{
 \item{objectToCheck}{an RDBESRawObject.}

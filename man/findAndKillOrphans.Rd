@@ -7,7 +7,7 @@ RDBESRawObject.  Normally data that has been downloaded from the RDBES
 will not contain orphan records - however if the data is subsequently
 filtered it is possible to introduce orphan records.}
 \usage{
-findAndKillOrphans(objectToCheck, verbose = TRUE)
+findAndKillOrphans(objectToCheck, verbose = FALSE)
 }
 \arguments{
 \item{objectToCheck}{an RDBESRawObject.}

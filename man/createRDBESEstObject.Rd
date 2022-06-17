@@ -4,7 +4,7 @@
 \alias{createRDBESEstObject}
 \title{Creates an rdbesEStObject from prepared RDBES data}
 \usage{
-createRDBESEstObject(rdbesPrepObject, hierarchyToUse)
+createRDBESEstObject(rdbesPrepObject, hierarchyToUse, verbose = FALSE)
 }
 \arguments{
 \item{rdbesPrepObject}{The prepared RDBES object that should be used to

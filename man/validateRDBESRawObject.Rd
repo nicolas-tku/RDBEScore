@@ -5,9 +5,9 @@
 \alias{checkRDBESRawObject}
 \title{Check whether an rdbesRawObject is in a valid format}
 \usage{
-validateRDBESRawObject(objectToCheck, checkDataTypes = FALSE, verbose = TRUE)
+validateRDBESRawObject(objectToCheck, checkDataTypes = FALSE, verbose = FALSE)
 
-checkRDBESRawObject(objectToCheck, checkDataTypes = FALSE, verbose = TRUE)
+checkRDBESRawObject(objectToCheck, checkDataTypes = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{objectToCheck}{rdbesRawObject i.e. a list of data.tables}
