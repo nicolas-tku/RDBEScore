@@ -115,3 +115,13 @@
 #' }
 #' @source Nuno Prista @ SLU Aqua, 2022
 "shrimpsStrat"
+#' A dataset containing the RDBES "design variable" names
+#'
+#' @format A vector containing the short R names of the RDBES design variables
+#' (without any 2 letter table prefixes)
+#' R field name:
+#' \describe{
+#'   \item{designVariables}{The design variable names}
+#' }
+#' @source \url{https://sboxrdbes.ices.dk}
+"designVariables"

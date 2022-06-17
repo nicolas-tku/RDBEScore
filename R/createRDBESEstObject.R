@@ -330,14 +330,7 @@ procRDBESEstObjUppHier <- function(myRDBESEstObj = NULL,
       }
 
       # Field names of the design variables
-      designVariables <- c(
-        "stratification", "stratumName", "clustering",
-        "clusterName", "sampler", "numTotal", "numSamp",
-        "selProb", "incProb", "selectMeth", "unitName",
-        "selectMethCluster", "numTotalClusters",
-        "numSampClusters", "selProbCluster",
-        "incProbCluster", "samp", "noSampReason"
-      )
+      designVariables <- icesRDBES::designVariables
 
       # if this table has design variable columns
       if (any(names(rdbesPrepObject[[thisTable]])
