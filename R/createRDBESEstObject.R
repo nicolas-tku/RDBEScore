@@ -167,11 +167,10 @@ createRDBESEstObject <- function(rdbesPrepObject, hierarchyToUse, verbose = FALS
 #' Private function to process the lower hierarchies when creating
 #' the RDBESEstObject
 #'
-#' @param rdbesPrepObject
+#' @param rdbesPrepObject A prepared RDBESRawObj
 #'
 #' @return allLower - the FM and BV tables combined
 #'
-#' @examples
 processRDBESEstObjLowerHierarchies <- function(rdbesPrepObject, verbose = FALSE){
 
 
@@ -255,14 +254,13 @@ processRDBESEstObjLowerHierarchies <- function(rdbesPrepObject, verbose = FALSE)
 #' Private function to process the upper hierarchies when creating
 #' the RDBESEstObject
 #'
-#' @param myRDBESEstObj
-#' @param rdbesPrepObject
-#' @param hierarchyToUse
-#' @param i
+#' @param myRDBESEstObj An RDBESEstObj to add data to
+#' @param rdbesPrepObject A prepared RDBESRawObj
+#' @param hierarchyToUse The hierarchy we are using
+#' @param i Interger to keep track of where we are in the list of tables
 #'
 #' @return
 #'
-#' @examples
 processRDBESEstObjUpperHierarchies <- function(myRDBESEstObj = NULL,
                                                rdbesPrepObject,
                                                hierarchyToUse,
@@ -385,13 +383,12 @@ processRDBESEstObjUpperHierarchies <- function(myRDBESEstObj = NULL,
 
 #' Private function to get sub-sample level and top-level SAid for SA data
 #'
-#' @param SAdata
-#' @param SAidToCheck
-#' @param subSampleLevel
+#' @param SAdata The SA data to check
+#' @param SAidToCheck The SAid to check
+#' @param subSampleLevel The currrent level of sampling
 #'
 #' @return
 #'
-#' @examples
 getSubSampleLevel <- function(SAdata,SAidToCheck, subSampleLevel = 1 ){
 
   # Fix in case the parentID is not numeric - this can be the case if it was
