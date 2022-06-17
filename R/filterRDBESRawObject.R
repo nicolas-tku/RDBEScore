@@ -49,7 +49,6 @@ filterRDBESRawObject <- function(rdbesRawObjectToFilter,
         foundNames <- names(x)[which(names(x) %in% fieldsToFilter)]
         if (length(foundNames)> 0){
           x <-
-            # Changed from if_any to if_all
             dplyr::filter(x,dplyr::if_all(foundNames, ~ .x %in% valuesToFilter))
         }
         x

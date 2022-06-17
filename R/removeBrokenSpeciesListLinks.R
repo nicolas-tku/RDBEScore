@@ -26,18 +26,7 @@
 #'   verbose = FALSE
 #' )
 #' }
-removeBrokenSpeciesListLinks <- function(objectToCheck, verbose = TRUE) {
-
-  # for testing - to be removed
-  # myH1RawObject <-
-  #  createRDBESRawObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
-  # verbose <- TRUE
-  # myFields <- c("SLspeclistName")
-  # myValues <- c("WGRDBES-EST TEST 5 - sprat data" )
-  # objectToCheck <- filterRDBESRawObject(myH1RawObject,
-  #                                         fieldsToFilter = myFields,
-  #                                          valuesToFilter = myValues )
-  # objectToCheck[["SL"]] <- NULL
+removeBrokenSpeciesListLinks <- function(objectToCheck, verbose = FALSE) {
 
 
   # Check we have a valid RDBESRawObject before doing anything else
@@ -62,11 +51,13 @@ removeBrokenSpeciesListLinks <- function(objectToCheck, verbose = TRUE) {
   # Check any non-null tables
   if (tableToCheck %in% nonNullEntries) {
 
-    print(paste0(
-      "Number of rows in relevent non-null tables before removing ",
-      "broken species list links"
-    ))
-    print(unlist(lapply(objectToCheck[tableToCheck], nrow)))
+    if (verbose){
+      print(paste0(
+        "Number of rows in relevent non-null tables before removing ",
+        "broken species list links"
+      ))
+      print(unlist(lapply(objectToCheck[tableToCheck], nrow)))
+    }
 
     myTable <- objectToCheck[[tableToCheck]]
 
@@ -126,11 +117,13 @@ removeBrokenSpeciesListLinks <- function(objectToCheck, verbose = TRUE) {
     }
   }
 
-  print(paste0(
-    "Number of rows in relevent non-null tables after removing ",
-    "broken species list links"
-  ))
-  print(unlist(lapply(objectToCheck[tableToCheck], nrow)))
+  if (verbose){
+    print(paste0(
+      "Number of rows in relevent non-null tables after removing ",
+      "broken species list links"
+    ))
+    print(unlist(lapply(objectToCheck[tableToCheck], nrow)))
+  }
 
   objectToCheck
 }

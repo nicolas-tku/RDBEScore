@@ -24,17 +24,8 @@
 #'   verbose = FALSE
 #' )
 #' }
-removeBrokenVesselLinks <- function(objectToCheck, verbose = TRUE) {
+removeBrokenVesselLinks <- function(objectToCheck, verbose = FALSE) {
 
-  # for testing - to be removed
-  # myH1RawObject <-
-  #  createRDBESRawObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
-  # verbose <- TRUE
-  # myFields <- c("VDlenCat")
-  # myValues <- c("18-<24" )
-  # objectToCheck <- filterRDBESRawObject(myH1RawObject,
-  #                                         fieldsToFilter = myFields,
-  #                                         valuesToFilter = myValues )
 
   # Check we have a valid RDBESRawObject before doing anything else
   if (!validateRDBESRawObject(objectToCheck, verbose = FALSE)) {
@@ -63,11 +54,13 @@ removeBrokenVesselLinks <- function(objectToCheck, verbose = TRUE) {
     "cannot check for broken vessel details links"))
   }
 
-  print(paste0(
-    "Number of rows in relevent non-null tables before removing ",
-    "broken vessel links"
-  ))
-  print(unlist(lapply(objectToCheck[vDtables], nrow)))
+  if (verbose){
+    print(paste0(
+      "Number of rows in relevent non-null tables before removing ",
+      "broken vessel links"
+    ))
+    print(unlist(lapply(objectToCheck[vDtables], nrow)))
+  }
 
   # Check any non-null tables
   for (tableToCheck in nonNullTablesToCheck) {
@@ -129,11 +122,13 @@ removeBrokenVesselLinks <- function(objectToCheck, verbose = TRUE) {
     }
   }
 
-  print(paste0(
-    "Number of rows in relevent non-null tables after removing ",
-    "broken vessel links"
-  ))
-  print(unlist(lapply(objectToCheck[vDtables], nrow)))
+  if (verbose){
+    print(paste0(
+      "Number of rows in relevent non-null tables after removing ",
+      "broken vessel links"
+    ))
+    print(unlist(lapply(objectToCheck[vDtables], nrow)))
+  }
 
   objectToCheck
 }

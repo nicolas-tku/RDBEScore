@@ -18,7 +18,7 @@
 #'
 validateRDBESRawObject <- function(objectToCheck,
                                 checkDataTypes = FALSE,
-                                verbose = TRUE) {
+                                verbose = FALSE) {
   validRDBESRawObject <- TRUE
   warningText <- NA
 

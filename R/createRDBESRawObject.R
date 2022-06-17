@@ -28,11 +28,6 @@ createRDBESRawObject <- function(rdbesExtractPath = NA,
                                  castToCorrectDataTypes = TRUE) {
 
 
-  # For testing - to be removed!
-  # rdbesExtractPath <- "H:\\git\\WK_RDBES\\WKRDB-EST2\\subGroup6\\icesRDBES\\tests\\testthat\\h1_v_1_19"
-  # load("H:\\git\\WK_RDBES\\WKRDB-EST2\\subGroup6\\icesRDBES\\data\\mapColNamesFieldR.RData")
-
-
   # If we have not been passed a list of file names use a default
   if (length(listOfFileNames) == 1 && is.na(listOfFileNames)){
 
