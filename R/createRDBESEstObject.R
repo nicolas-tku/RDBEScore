@@ -167,6 +167,8 @@ createRDBESEstObject <- function(rdbesPrepObject,
     myRDBESEstObj <- upperHierarchy
   } else if (!processLowerHierarchy) {
     myRDBESEstObj <- upperHierarchy
+  } else if (is.null(nrow(allLower))) {
+    myRDBESEstObj <- upperHierarchy
   } else {
     if (verbose) {
       print("Combining upper and lower hierarachy data")
@@ -320,17 +322,36 @@ procRDBESEstObjLowHier <- function(rdbesPrepObject,
     (rdbesPrepObject[["SA"]][, "SAlowHierarchy"] == "D")[, 1], "SAid"
   ]
 
-  # Join FM and BV - we do it in both ways left join on FM and right join on
-  # BV.  This is because not all of the lower hierachies have FM data
+  # Join FM and BV - we do it in both ways - left join on FM and right join on
+  # BV.  This is because not all of the lower hierachies have FM data.
 
-  fMBV <-
-    dplyr::left_join(rdbesPrepObject[["FM"]],
-      rdbesPrepObject[["BV"]],
-      by = "FMid"
-    )
-  # sort out the wrong SAid column name after the join
-  names(fMBV)[names(fMBV) == "SAid.x"] <- "SAid"
-  fMBV[, "SAid.y" := NULL]
+  # FMBV
+
+  # We need to check if we have Fm and BV data before joining them.
+  if (is.null(nrow(rdbesPrepObject[["FM"]])) &
+      is.null(nrow(rdbesPrepObject[["BV"]]))){
+
+    # Both Fm and BV are null
+    fMBV <- NULL
+  } else if (is.null(nrow(rdbesPrepObject[["FM"]]))) {
+
+    # FM is null
+    fMBV <- NULL
+  } else if (is.null(nrow(rdbesPrepObject[["BV"]]))) {
+
+    # Just BV is null
+    fMBV <- rdbesPrepObject[["FM"]]
+  } else {
+    # if we have both FM and BV data - join them together
+    fMBV <-
+      dplyr::left_join(rdbesPrepObject[["FM"]],
+        rdbesPrepObject[["BV"]],
+        by = "FMid"
+      )
+    # sort out the wrong SAid column name after the join
+    names(fMBV)[names(fMBV) == "SAid.x"] <- "SAid"
+    fMBV[, "SAid.y" := NULL]
+  }
 
   # Now get rid of any unneccessary id fields to avoid trouble with field naming
   allowedIds <- c("SAid", "FMid", "BVid")
@@ -342,14 +363,33 @@ procRDBESEstObjLowHier <- function(rdbesPrepObject,
     names(fMBV)[names(fMBV) %in% unallowedIDs]
   if (length(unallowedIDs) > 0) fMBV[, (unallowedIDs) := NULL]
 
+  # BVFM
 
-  bVFM <- dplyr::right_join(rdbesPrepObject[["FM"]],
-    rdbesPrepObject[["BV"]],
-    by = "FMid"
-  )
-  # sort out the wrong SAid column name after the join
-  names(bVFM)[names(bVFM) == "SAid.y"] <- "SAid"
-  bVFM[, "SAid.x" := NULL]
+  # We need to check if we have Fm and BV data before joining though.
+  if (is.null(nrow(rdbesPrepObject[["FM"]])) &
+      is.null(nrow(rdbesPrepObject[["BV"]]))){
+
+    # Both Fm and BV are null
+    bVFM <- NULL
+  } else if (is.null(nrow(rdbesPrepObject[["BV"]]))) {
+
+    # BV is null
+    bVFM <- NULL
+  } else if (is.null(nrow(rdbesPrepObject[["FM"]]))) {
+
+    # Just FM is null
+    bVFM <- rdbesPrepObject[["BV"]]
+  } else {
+
+    # if we have both FM and BV data - join them together
+    bVFM <- dplyr::right_join(rdbesPrepObject[["FM"]],
+      rdbesPrepObject[["BV"]],
+      by = "FMid"
+    )
+    # sort out the wrong SAid column name after the join
+    names(bVFM)[names(bVFM) == "SAid.y"] <- "SAid"
+    bVFM[, "SAid.x" := NULL]
+  }
 
   # Now get rid of any unneccessary id fields to avoid trouble with field naming
   allowedIds <- c("SAid", "FMid", "BVid")
@@ -361,15 +401,25 @@ procRDBESEstObjLowHier <- function(rdbesPrepObject,
     names(bVFM)[names(bVFM) %in% unallowedIDs]
   if (length(unallowedIDs) > 0) bVFM[, (unallowedIDs) := NULL]
 
-  lowerA <- dplyr::left_join(lowerA, fMBV, by = "SAid")
-  lowerB <- dplyr::left_join(lowerB, fMBV, by = "SAid")
-  # Note the difference in lowerC
-  lowerC <- dplyr::left_join(lowerC, bVFM, by = "SAid")
-  lowerD <- dplyr::left_join(lowerD, fMBV, by = "SAid")
+  # Now we join the data to create the output
+  allLower <- NULL
+
+  # If we have data join our lowerX with the fmBV or BVFm data
+  if (!is.null(nrow(fMBV))){
+    lowerA <- dplyr::left_join(lowerA, fMBV, by = "SAid")
+    lowerB <- dplyr::left_join(lowerB, fMBV, by = "SAid")
+    #lowerD <- dplyr::left_join(lowerD, fMBV, by = "SAid")
+    lowerD <- NULL
+    allLower <- rbind(allLower,lowerA, lowerB, lowerD)
+  }
+
+  if (!is.null(nrow(bVFM))){
+    # Note the difference in lowerC
+    lowerC <- dplyr::left_join(lowerC, bVFM, by = "SAid")
+    allLower <- rbind(allLower,lowerC)
+  }
 
   # Ok, this shoudl be all the FM, and BV data for all lower hierarchies
-  allLower <- rbind(lowerA, lowerB, lowerC, lowerD)
-
   allLower
 }
 
