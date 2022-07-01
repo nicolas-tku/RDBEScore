@@ -19,8 +19,8 @@ A data frame with 10 rows and 95 variables:
   \item{SDinstitution}{Institution that collected the data}
   \item{su1, su2, su3, su4, su5}{sampling units of RDBES. More details in RDBES documentation}
   \item{XXXnumberSampled, ...}{Design Variables of RDBES. More details in RDBES documentation}
-  \item{su5stratumName} {sieve fraction}
-  \item{targetValue} {estimate of weight fraction in each haul (in kg)}
+  \item{su5stratumName}{sieve fraction}
+  \item{targetValue}{estimate of weight fraction in each haul (in kg)}
 }
 }
 \source{

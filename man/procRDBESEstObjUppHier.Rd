@@ -10,6 +10,7 @@ procRDBESEstObjUppHier(
   rdbesPrepObject,
   hierarchyToUse,
   i = 1,
+  targetTables,
   verbose = FALSE
 )
 }
@@ -20,7 +21,9 @@ procRDBESEstObjUppHier(
 
 \item{hierarchyToUse}{The hierarchy we are using}
 
-\item{i}{Interger to keep track of where we are in the list of tables}
+\item{i}{Integer to keep track of where we are in the list of tables}
+
+\item{targetTables}{The RDBES tables we are interested in}
 }
 \value{
 

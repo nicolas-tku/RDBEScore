@@ -17,7 +17,7 @@ the data types of the required columns are correct, or FALSE if you don't
 care. Default value is FALSE.}
 
 \item{verbose}{(Optional) Set to TRUE if you want informative text printed
-out, or FALSE if you don't.  The default is TRUE.}
+out, or FALSE if you don't.  The default is FALSE.}
 }
 \value{
 TRUE if object is valid, FALSE is object is not valid
