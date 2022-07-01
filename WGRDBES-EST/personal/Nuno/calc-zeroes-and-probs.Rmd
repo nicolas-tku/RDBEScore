@@ -55,7 +55,7 @@ First we'll load some example data from the RDBES and check it's valid.  It's a 
 getwd()
 
 # H7 test data
-load ("data/testData.Rdata")
+load ("data/testDataPreparationFunctions.Rdata")
 
 # Number of rows in each non-null table
 unlist(lapply(myH7RawObject, nrow))
