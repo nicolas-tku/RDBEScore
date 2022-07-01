@@ -1,0 +1,160 @@
+---
+title: "Calculating zeros and probabilities"
+date: "`r Sys.Date()`"
+output:  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Calculating zeros and probabilities}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction 
+
+The aim of this document is to illustrate how to calculate zeros and probabilities using the icesRDBES package.
+
+```{r}
+library(icesRDBES)
+```
+## Load functions from their temporary locations
+
+These should be added to the icesRDBES package which will make this step unnecessary in the future.
+
+```{r loadFunctionsTemp}
+
+# clean the table prefixes of variable names 
+#[makes it easier to handle in other functions]
+	source("R/removePrefixFromVarNames.R") 
+# checks data for some issues related to selection and probabilities, 
+# including some features not yet developed 
+# [stops need to corrected before probabilities are calculated]
+	source("R/runChecksOnSelectionAndProbs.R") 
+# modified/improved version of generateProbs developed during WKRDB-EST 1 
+# and WKRDB-EST 2 [several new functionalities, warnings, etc]
+	source("R/generateProbs.r") 
+ # wrapper to "runChecksOnSelectionAndProbs" and "generateProbs"
+	source("R/applyGenerateProbs.r")
+  source("R/generateZerosUsingSL.r")
+
+
+```
+
+
+## Prerequisites
+
+First we'll load some example data from the RDBES and check it's valid.  It's a good tip to check your RDBESRawObjects are valid after any manipulations you perform.
+
+```{r load}
+
+getwd()
+
+# H7 test data
+load ("data/testDataPreparationFunctions.Rdata")
+
+# Number of rows in each non-null table
+unlist(lapply(myH7RawObject, nrow))
+
+validateRDBESRawObject(myH7RawObject, verbose = TRUE)
+
+
+```
+
+
+## Check selection and probability values
+
+First we remove the prefixes and then check the selection and probability values for any issues - there are some things we need to fix.
+
+```{r checkSelAndProbs, error = TRUE}
+
+# clean the prefixes [makes it easier to handle in other functions]
+myH7RawObject <- removePrefixFromVarNames(myH7RawObject)
+
+class(myH7RawObject)
+
+# checks data for some issues related to selection and probabilities
+# note: this function is only exemplified here - 
+# in general only applyGenerateProbs will be used as the wrapper also includes
+# this function
+runChecksOnSelectionAndProbs(myH7RawObject, printStopIssue = FALSE)
+
+
+
+```
+
+First, we'll change the selection methods.
+
+```{r changeData1}
+
+	# changes to selection methods
+	myH7RawObject$OS$selectMeth<-"SRSWOR"
+	
+	myH7RawObject$SA$stratification<-"N"
+	
+	myH7RawObject$SA$selectMeth<-"SRSWOR"
+	
+	myH7RawObject$BV$selectMeth<-"SRSWOR"
+	
+	runChecksOnSelectionAndProbs(myH7RawObject)
+
+```
+Now the main issues relation to selection methods have been corrected (and documented) but still probabilities cannot be calculated because numTotal are missing. 
+
+
+```{r changeData2, error = TRUE}
+
+  myH7PrepObject<-applyGenerateProbs (x = myH7RawObject
+                                      , probType = "both"
+                                      , overwrite=T
+                                      , runInitialProbChecks = FALSE)
+	
+
+```
+ 
+ We'll fix that now.
+ 
+```{r changeData3}
+
+	# changes to numTotal
+	myH7RawObject$OS$numTotal<-c(3,3,3)
+	myH7RawObject$SS$numTotal<-c(1,1,1)
+	myH7RawObject$SA$numTotal<-c(20, 10, 5)
+	myH7RawObject$BV$numTotal<-c(rep(50, 29*5), rep(200, 95*5), rep(200, 39*5))
+	
+	myH7PrepObject<-applyGenerateProbs (x = myH7RawObject
+	                                    , probType = "both"
+	                                    , overwrite=T
+	                                    , runInitialProbChecks = FALSE)
+
+```
+## Generate zeroes using SL
+
+Generate true zeroes using the data from the SL table.
+
+```{r generateZeroes}
+
+  myH7PrepObject2<-generateZerosUsingSL(myH7PrepObject)
+
+# note the solution [dec SAid added to avoid integer that could 
+# duplicate other already existing]
+	myH7PrepObject2$SA
+
+
+```
+
+Finally, let's check our object is still valid. (It won't be until Nuno changes his function code :-) )
+
+```{r checkValid}
+  validateRDBESRawObject(myH7PrepObject2, verbose = TRUE)
+```
+
+
+
+```{r}
+#END
+```
