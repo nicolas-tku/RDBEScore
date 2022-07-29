@@ -19,9 +19,6 @@ generateProbs <- function(x, probType) {
     stop(paste0("Unallowed value supplied for 'probType': ",probType))
   }
 
-  #a <- unique(x[grepl("selectMeth", names(x)) == T])
-  #a <- as.character(unique(a[grepl("selectMethCluster", names(a)) == F]))
-  # The above lines were giving an error "...Recycling of logical i is no longer allowed..."
   methColNames <- grep("^..selectMeth$", names(x), value = TRUE)
   a <- as.character(unique(x[ ,..methColNames ]))
 
@@ -29,11 +26,6 @@ generateProbs <- function(x, probType) {
   if (sum(is.na(a)) > 0) stop("cannot proceed: NAs in SSselectMeth")
   if (length(a) > 1) stop("two different selection methods")
 
-  #vecSmallN <- x[grepl("numSamp", names(x)) == T]
-  #vecSmallN <- vecSmallN[grepl("SampCluster", names(vecSmallN)) == F]
-  #vecBigN <- x[grepl("numTotal", names(x)) == T]
-  #vecBigN <- vecBigN[grepl("TotalCluster", names(vecBigN)) == F]
-  # The above lines were giving an error "...Recycling of logical i is no longer allowed..."
   numSampColNames <- grep("^..numSamp$", names(x), value = TRUE)
   vecSmallN <- x[[numSampColNames]]
   numTotalColNames <- grep("^..numTotal$", names(x), value = TRUE)
@@ -42,7 +34,6 @@ generateProbs <- function(x, probType) {
   vecProb <- NA
 
   if (probType == "selection") {
-    #vecProb <- a[grepl("selProbUnit", names(a)) == T] # not defined
     vecProbColNames <- grep("^..selProb$", names(x), value = TRUE)
     vecProb <- x[[vecProbColNames]]
 
@@ -60,7 +51,6 @@ generateProbs <- function(x, probType) {
 
 
   if (probType == "inclusion") {
-    #vecProb <- a[grepl("incProbUnit", names(a)) == T]
     vecProbColNames <- grep("^..incProb$", names(x), value = TRUE)
     vecProb <- x[[vecProbColNames]]
 
@@ -82,6 +72,5 @@ generateProbs <- function(x, probType) {
     x[[vecProbColNames]] <- vecProb
   }
 
-  #vecProb
   x
 }

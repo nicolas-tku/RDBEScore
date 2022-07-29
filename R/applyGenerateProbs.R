@@ -26,49 +26,28 @@
 
 applyGenerateProbs <- function(x, probType, overwrite,
                                runInitialProbChecks = TRUE) {
+
+  # Check we have a valid RDBESRawObject before doing anything else
+  if (!validateRDBESRawObject(x, verbose = FALSE)) {
+    stop(paste0(
+      "x is not valid ",
+      "- applyGenerateProbs will not proceed"
+    ))
+  }
+
   if (runInitialProbChecks) {
     print("========start runChecksOnSelectionAndProbs=======")
     runChecksOnSelectionAndProbs(x)
     print("========end runChecksOnSelectionAndProbs=======")
   }
 
-  # For testing
-  #x<-myRawObject
-  #probType <- "inclusion"
 
   print("========start generateProbs=======")
 
   if (length(unique(x[["DE"]]$DEhierarchy)) > 1) stop(">1 hierarchy in data:
                                                     not yet developed")
-  # if (x[["DE"]]$hierarchy[1] %in% c(1, 7)) {
-  #   if (x[["DE"]]$hierarchy[1] == 1) {
-  #     targetTables <- c("VS", "FT", "FO", "SS", "SA", "BV")
-  #     parentId <- c("SDid", "VSid", "FTid", "FOid", "SSid", "SAid")
-  #     # aspects needing development
-  #     if (any(!is.na(x[["SA"]]$parentID))) stop("multiple sub-sampling present
-  #                                               in SA: not yet developed")
-  #     if (!is.null(x[["FM"]]) & nrow(x[["FM"]]) != 0) stop("lower hierarchy A
-  #                                                          and B present: not
-  #                                                          yet developed")
-  #   }
-  #   if (x[["DE"]]$hierarchy[1] == 7) {
-  #     targetTables <- c("OS", "SS", "SA", "BV")
-  #     parentId <- c("SDid", "OSid", "SSid", "SAid")
-  #     # aspects needing development
-  #     if (any(!is.na(x[["SA"]]$parentID))) stop("multiple sub-sampling present
-  #                                               in SA: not yet developed")
-  #     if (!is.null(x[["FM"]]) & nrow(x[["FM"]]) != 0) stop("lower hierarchy A
-  #                                                          and B present: not
-  #                                                          yet developed")
-  #   }
-  # } else {
-  #   stop(paste0("generateProbs not yet specified for H",
-  #               x[["DE"]]$hierarchy[1]))
-  # }
-
 
   hierarchyToCheck <- paste0("H",x[["DE"]]$DEhierarchy[1])
-  # hierarchyToCheck <- "H7"
   targetTables <- tablesInRDBESHierarchies[[hierarchyToCheck]]
   targetTables <- targetTables[targetTables!="DE"]
   # Code doesn't handle lower hierachy A or B yet
@@ -91,7 +70,6 @@ applyGenerateProbs <- function(x, probType, overwrite,
 
 
   for (i in targetTables) {
-    #i<- "OS"
     print(i)
 
     # following code will be worth setting in data.table
@@ -105,17 +83,13 @@ applyGenerateProbs <- function(x, probType, overwrite,
         stop("clustering present: not yet developed")
       print(paste0(parentId[targetTables == i], ": ",
                    x[[parentId[targetTables == i]]][1]))
-      #x <- generateProbs(x, probType, overwrite)
-      # 'overwrite' is not a prameter for generateProbs
       x <- generateProbs(x, probType)
       x
     })
-    #x[[i]] <- do.call("rbind", ls2)
     x[[i]] <- data.table::setDT(do.call("rbind", ls2))
 
   }
 
   print("========end generateProbs=======")
-  #lapply(x, function(x) if (!is.null(x)) data.table::data.table(x) else x)
   x
 }
