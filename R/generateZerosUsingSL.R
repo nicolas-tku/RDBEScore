@@ -21,7 +21,7 @@ generateZerosUsingSL <- function(x) {
 
   # Take a copy of SA since we'll change some column data types and
   # we don't want to update the original version
-  tmpSA <- copy(x[["SA"]])
+  tmpSA <- data.table::copy(x[["SA"]])
   tmpSL <- x[["SL"]]
   # Now convert some columns from int to numeric
   colsToConvertToNumeric <- c("SAid","SAseqNum")
