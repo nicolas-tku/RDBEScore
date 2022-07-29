@@ -61,6 +61,11 @@ validateRDBESRawObjectDataTypes <- function(objectToCheck){
   names(myDiffs)[which(names(myDiffs) == "RDataType.x")] <- "RDataType_expected"
   names(myDiffs)[which(names(myDiffs) == "RDataType.y")] <- "RDataType_actual"
 
+  # Let's say that if we were expecting a numeric but got an intger that it's ok
+  myDiffs <-
+    myDiffs[!(myDiffs$RDataType_expected == "numeric" &
+            myDiffs$RDataType_actual == "integer"),]
+
   # Return the differences
   myDiffs
 
