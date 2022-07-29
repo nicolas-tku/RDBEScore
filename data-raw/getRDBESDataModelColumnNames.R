@@ -101,5 +101,14 @@ mapColNamesFieldR[
     !is.na(mapColNamesFieldR$Type) &
     is.na(mapColNamesFieldR$RDataType),"RDataType"] <- "character"
 
+# Change SAid and SAseqNum to be numeric rather than integer -
+# this is required when we generate true zeros
+mapColNamesFieldR[
+mapColNamesFieldR$Table.Prefix == "SA" &
+  mapColNamesFieldR$Field.Name == "SAid","RDataType"] <- "numeric"
+mapColNamesFieldR[
+  mapColNamesFieldR$Table.Prefix == "SA" &
+    mapColNamesFieldR$Field.Name == "SAsequenceNumber","RDataType"] <- "numeric"
+
 # Save the data
 save(mapColNamesFieldR,file=outFile)
