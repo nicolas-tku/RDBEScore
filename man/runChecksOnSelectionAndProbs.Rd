@@ -4,12 +4,12 @@
 \alias{runChecksOnSelectionAndProbs}
 \title{Run basic checks on selection methods and probabilities}
 \usage{
-runChecksOnSelectionAndProbs(x, printStopIssue = TRUE)
+runChecksOnSelectionAndProbs(x, verbose = TRUE)
 }
 \arguments{
 \item{x}{- RDBES raw object}
 
-\item{printStopIssue}{- If TRUE prints the issue behind the stop}
+\item{verbose}{- If TRUE prints the issue behind the stop}
 }
 \value{
 nothing
