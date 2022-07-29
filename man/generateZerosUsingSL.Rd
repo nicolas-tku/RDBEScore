@@ -14,5 +14,6 @@ RDBES data frame where SA was complemented with species looked for
 (sensu in sampling objectives) but not registered in sample
 }
 \description{
-Generate zeros in samples using Species List information
+examples for now see
+https://github.com/ices-eg/WK_RDBES/tree/master/WKRDB-EST2/chairs/Nuno
 }
