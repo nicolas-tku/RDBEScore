@@ -20,7 +20,7 @@
 #'
 
 
-runChecksOnSelectionAndProbs <- function(x, verbose = TRUE)  {
+runChecksOnSelectionAndProbs <- function(x, verbose = TRUE) {
 
 
   # Check we have a valid RDBESRawObject before doing anything else
@@ -35,40 +35,40 @@ runChecksOnSelectionAndProbs <- function(x, verbose = TRUE)  {
                                                     yet specified")
 
 
-    hierarchyToCheck <- paste0("H",x[["DE"]]$DEhierarchy[1])
-    targetTables <- tablesInRDBESHierarchies[[hierarchyToCheck]]
-    targetTables <- targetTables[targetTables!="DE"]
-    # Code doesn't handle lower hierachy A or B yet
-    targetTables <- targetTables[targetTables!="FM"]
-    # Dirty hack - tablesInRDBESHierarchies should really know which tables are
-    # in the sampling hierarchy
-    if(hierarchyToCheck == "H7"){
-      targetTables <- targetTables[targetTables!="LE"]
-    }
-    parentId <- paste0(targetTables,"id")
-    targetTables <- targetTables[targetTables!="SD"]
-    parentId <-parentId[parentId!="BVid"]
+  hierarchyToCheck <- paste0("H", x[["DE"]]$DEhierarchy[1])
+  targetTables <- tablesInRDBESHierarchies[[hierarchyToCheck]]
+  targetTables <- targetTables[targetTables != "DE"]
+  # Code doesn't handle lower hierachy A or B yet
+  targetTables <- targetTables[targetTables != "FM"]
+  # Dirty hack - tablesInRDBESHierarchies should really know which tables are
+  # in the sampling hierarchy
+  if (hierarchyToCheck == "H7") {
+    targetTables <- targetTables[targetTables != "LE"]
+  }
+  parentId <- paste0(targetTables, "id")
+  targetTables <- targetTables[targetTables != "SD"]
+  parentId <- parentId[parentId != "BVid"]
 
-    # aspects needing development
-    if (any(!is.na(x[["SA"]]$SAparentID))) stop("multiple sub-sampling present
+  # aspects needing development
+  if (any(!is.na(x[["SA"]]$SAparentID))) stop("multiple sub-sampling present
                                                 in SA: not yet developed")
-    if (nrow(x[["SA"]]) >= 1 && x[["SA"]]$SAlowHierarchy %in% c("A","B")) {
-            stop("lower hierarchy A and B present: not yet developed")
-    }
+  if (nrow(x[["SA"]]) >= 1 && x[["SA"]]$SAlowHierarchy %in% c("A", "B")) {
+    stop("lower hierarchy A and B present: not yet developed")
+  }
 
 
   for (i in targetTables) {
     print(paste("====", i, "====="))
     # Get the column names we'll need
-    stratumNameCol <- paste0(i,"stratumName")
-    stratificationCol <- paste0(i,"stratification")
-    clusterNameCol <- paste0(i,"clusterName")
-    clusteringCol <- paste0(i,"clustering")
-    selectMethCol <- paste0(i,"selectMeth")
-    selProbCol <- paste0(i,"selProb")
-    incProbCol <- paste0(i,"incProb")
-    numTotalCol <- paste0(i,"numTotal")
-    numSampCol <- paste0(i,"numSamp")
+    stratumNameCol <- paste0(i, "stratumName")
+    stratificationCol <- paste0(i, "stratification")
+    clusterNameCol <- paste0(i, "clusterName")
+    clusteringCol <- paste0(i, "clustering")
+    selectMethCol <- paste0(i, "selectMeth")
+    selProbCol <- paste0(i, "selProb")
+    incProbCol <- paste0(i, "incProb")
+    numTotalCol <- paste0(i, "numTotal")
+    numSampCol <- paste0(i, "numSamp")
 
     if (!is.null(x[[i]])) {
       # following code will be worth setting in data.table
@@ -87,13 +87,15 @@ runChecksOnSelectionAndProbs <- function(x, verbose = TRUE)  {
 
         # stops
         # on not yet developed features
-        if (length(unique(x[[stratumNameCol]])) > 1 | any(x[[stratificationCol]] == "Y")) {
+        if (length(unique(x[[stratumNameCol]])) > 1 |
+            any(x[[stratificationCol]] == "Y")) {
           if (verbose) {
             print(x)
           }
           stop("strata present: not yet specified")
         }
-        if (length(unique(x[[clusterNameCol]])) > 1 | any(x[[clusteringCol]] == "Y")) {
+        if (length(unique(x[[clusterNameCol]])) > 1 |
+            any(x[[clusteringCol]] == "Y")) {
           if (verbose) {
             print(x)
           }
@@ -106,7 +108,7 @@ runChecksOnSelectionAndProbs <- function(x, verbose = TRUE)  {
           "NPCS", "NPJS", "NPQSRSWOR", "NPQSRSWR",
           "NPQSYSS", "Unknown"
         )
-        if (any(x[[selectMethCol]] %in% nonProbMethods) ) {
+        if (any(x[[selectMethCol]] %in% nonProbMethods)) {
           if (verbose) {
             print(x)
           }
@@ -146,18 +148,26 @@ runChecksOnSelectionAndProbs <- function(x, verbose = TRUE)  {
                stratification == N")
         }
 
-        if (length(unique(x[[selectMethCol]])) > 1) print("warning: more than 1
-                                                    selection method")
-        if (sum(x[[selectMethCol]] == "OutOfFrame") > 1) print("warning: outOfFrame
-                                                         present")
-        if (any(x[[selectMethCol]] %in% c("WR")) == TRUE) print("warning: WR selection
-                                                          methods present")
+        if (length(unique(x[[selectMethCol]])) > 1) {
+          print("warning: more than 1 selection method")
+        }
+        if (sum(x[[selectMethCol]] == "OutOfFrame") > 1) {
+          print("warning: outOfFrame present")
+        }
+        if (any(x[[selectMethCol]] %in% c("WR")) == TRUE) {
+          print("warning: WR selection methods present")
+        }
         if (any(x[[selectMethCol]] %in% c("UPSWR", "UPSWOR")) == TRUE) {
           print("warning:UP selection methods present")
         }
-        if (any(is.na(x[[numTotalCol]])) == TRUE) print("warning: NAs in numTotal")
-        if (any(is.na(x[[numSampCol]])) == TRUE) print("warning: NAs in numSamp")
-        if (any(is.na(x[[numSampCol]])) == FALSE & unique(x[[numSampCol]]) != nrow(x)) {
+        if (any(is.na(x[[numTotalCol]])) == TRUE) {
+          print("warning: NAs in numTotal")
+        }
+        if (any(is.na(x[[numSampCol]])) == TRUE) {
+          print("warning: NAs in numSamp")
+        }
+        if (any(is.na(x[[numSampCol]])) == FALSE &
+            unique(x[[numSampCol]]) != nrow(x)) {
           print("warning: numSamp!= nrows")
         }
       })

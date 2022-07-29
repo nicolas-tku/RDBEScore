@@ -10,17 +10,17 @@
 #'
 #' @examples
 #' \dontrun{
-#' generateProbs(x=y, probType="inclusion")
+#' generateProbs(x = y, probType = "inclusion")
 #' }
 generateProbs <- function(x, probType) {
 
   # Only allow "inclusion" or "selection" probType at the moment
-  if (!probType %in% c("inclusion","selection")){
-    stop(paste0("Unallowed value supplied for 'probType': ",probType))
+  if (!probType %in% c("inclusion", "selection")) {
+    stop(paste0("Unallowed value supplied for 'probType': ", probType))
   }
 
   methColNames <- grep("^..selectMeth$", names(x), value = TRUE)
-  a <- as.character(unique(x[ ,..methColNames ]))
+  a <- as.character(unique(x[, ..methColNames]))
 
 
   if (sum(is.na(a)) > 0) stop("cannot proceed: NAs in SSselectMeth")

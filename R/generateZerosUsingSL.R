@@ -1,6 +1,6 @@
 #' Generate zeros in samples using Species List information
 #'
-#'examples for now see
+#' examples for now see
 #' https://github.com/ices-eg/WK_RDBES/tree/master/WKRDB-EST2/chairs/Nuno
 #'
 #' @param x RDBES data frame
@@ -28,8 +28,9 @@ generateZerosUsingSL <- function(x) {
   tmpSA <- data.table::copy(x[["SA"]])
   tmpSL <- x[["SL"]]
   # Now convert some columns from int to numeric
-  colsToConvertToNumeric <- c("SAid","SAseqNum")
-  tmpSA[, (colsToConvertToNumeric) := lapply(.SD, as.double), .SDcols = colsToConvertToNumeric]
+  colsToConvertToNumeric <- c("SAid", "SAseqNum")
+  tmpSA[, (colsToConvertToNumeric) := lapply(.SD, as.double),
+        .SDcols = colsToConvertToNumeric]
 
 
   ls1 <- split(tmpSA, tmpSA$SSid)
@@ -39,7 +40,7 @@ generateZerosUsingSL <- function(x) {
         if (!sppCode %in% x$SAspeCode) {
           # duplicates SA row
           y <- x[1, ]
-           y$SAspeCode <- sppCode
+          y$SAspeCode <- sppCode
           y$SAtotalWtLive <- 0
           y$SAsampWtLive <- 0
           y$SAtotalWtMes <- 0

@@ -47,24 +47,24 @@ applyGenerateProbs <- function(x, probType, overwrite,
   if (length(unique(x[["DE"]]$DEhierarchy)) > 1) stop(">1 hierarchy in data:
                                                     not yet developed")
 
-  hierarchyToCheck <- paste0("H",x[["DE"]]$DEhierarchy[1])
+  hierarchyToCheck <- paste0("H", x[["DE"]]$DEhierarchy[1])
   targetTables <- tablesInRDBESHierarchies[[hierarchyToCheck]]
-  targetTables <- targetTables[targetTables!="DE"]
+  targetTables <- targetTables[targetTables != "DE"]
   # Code doesn't handle lower hierachy A or B yet
-  targetTables <- targetTables[targetTables!="FM"]
+  targetTables <- targetTables[targetTables != "FM"]
   # Dirty hack - tablesInRDBESHierarchies should really know which tables are
   # in the sampling hierarchy
-  if(hierarchyToCheck == "H7"){
-    targetTables <- targetTables[targetTables!="LE"]
+  if (hierarchyToCheck == "H7") {
+    targetTables <- targetTables[targetTables != "LE"]
   }
-  parentId <- paste0(targetTables,"id")
-  targetTables <- targetTables[targetTables!="SD"]
-  parentId <-parentId[parentId!="BVid"]
+  parentId <- paste0(targetTables, "id")
+  targetTables <- targetTables[targetTables != "SD"]
+  parentId <- parentId[parentId != "BVid"]
 
   # aspects needing development
   if (any(!is.na(x[["SA"]]$SAparentID))) stop("multiple sub-sampling present
                                                 in SA: not yet developed")
-  if (nrow(x[["SA"]]) >= 1 && x[["SA"]]$SAlowHierarchy %in% c("A","B")) {
+  if (nrow(x[["SA"]]) >= 1 && x[["SA"]]$SAlowHierarchy %in% c("A", "B")) {
     stop("lower hierarchy A and B present: not yet developed")
   }
 
@@ -74,20 +74,22 @@ applyGenerateProbs <- function(x, probType, overwrite,
 
     # following code will be worth setting in data.table
     ls1 <- split(x[[i]], x[[i]][[eval(noquote(parentId[targetTables == i]))]])
-    #x<-ls1[[1]]
     ls2 <- lapply(ls1, function(x, ...) {
       # aspects needing development
-      if (length(unique(x$stratumName)) > 1 | any(x$stratification == "Y"))
+      if (length(unique(x$stratumName)) > 1 | any(x$stratification == "Y")) {
         stop("stratification present: not yet developed")
-      if (length(unique(x$clusterName)) > 1 | any(x$clustering == "Y"))
+      }
+      if (length(unique(x$clusterName)) > 1 | any(x$clustering == "Y")) {
         stop("clustering present: not yet developed")
-      print(paste0(parentId[targetTables == i], ": ",
-                   x[[parentId[targetTables == i]]][1]))
+      }
+      print(paste0(
+        parentId[targetTables == i], ": ",
+        x[[parentId[targetTables == i]]][1]
+      ))
       x <- generateProbs(x, probType)
       x
     })
     x[[i]] <- data.table::setDT(do.call("rbind", ls2))
-
   }
 
   print("========end generateProbs=======")
