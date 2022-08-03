@@ -40,7 +40,7 @@ createRDBESEstObject <- function(rdbesPrepObject,
 
   # See if the user has specified a table to stop at
   targetTables <-
-    icesRDBES::tablesInRDBESHierarchies[[paste0("H", hierarchyToUse)]]
+    icesRDBES::getTablesInRDBESHierarchy(hierarchyToUse)
   if (length(is.null(stopTable)) == 1 &&
     !is.null(stopTable)) {
     stopTableLoc <- which(targetTables == stopTable)

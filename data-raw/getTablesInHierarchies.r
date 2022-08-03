@@ -33,12 +33,14 @@ if (downloadFromGitHub) {
               , " files from GitHub", sep = ""))
 
   # Download our files
-  for (i in 1:seq_len(myHierarchyFiles)) {
-    anHierarchyFile <- RCurl::getURL(myHierarchyFiles[i, "downloadURL"])
+  for (i in seq_len(nrow(myHierarchyFiles))) {
+    anHierarchyFile <- httr::GET(myHierarchyFiles[i, "downloadURL"])
+    # stop if there was a problem accessing the file
+    httr::stop_for_status(anHierarchyFile$status_code)
     # save the file locally
-    writeLines(anHierarchyFile
-               , paste(fileLocation,
-                       myHierarchyFiles[i, "fileName"], sep = "")
+    writeLines(httr::content(anHierarchyFile, "text")
+              , paste(fileLocation,
+                      myHierarchyFiles[i, "fileName"], sep = "")
     )
   }
 }
@@ -82,6 +84,38 @@ for (fileToParse in filesToRead) {
   myHierarchyTables[[hierachyName]] <- myResults
 }
 
-tablesInRDBESHierarchies <- myHierarchyTables
+#tablesInRDBESHierarchies <- myHierarchyTables
 
+# Add on some values describing the table
+myHierarchyTablesDF <-
+  lapply(myHierarchyTables,
+       function(x){
+         data.frame(table = x,
+                    lowerHierarchy = FALSE,
+                    optional = FALSE,
+                    samplingUnit = TRUE,
+                    sortOrder = seq(1:length(x)))
+  })
+
+# Combine into a single data frame
+myHierarchyTablesDF <- data.table::rbindlist(myHierarchyTablesDF,idcol=TRUE)
+names(myHierarchyTablesDF)[names(myHierarchyTablesDF) == ".id"] <- "hierarchy"
+
+# Set FM and BV to lower hierarchy
+myHierarchyTablesDF[myHierarchyTablesDF$table %in% c("FM","BV"),"lowerHierarchy"] <- TRUE
+
+## Make some specifc changes for hierarchies with option tables and tables that aren't a sampling unit
+
+# Set FT in H5 to be optional and not a sampling unit
+myHierarchyTablesDF[myHierarchyTablesDF$hierarchy == "H5" & myHierarchyTablesDF$table == "FT","optional"] <- TRUE
+myHierarchyTablesDF[myHierarchyTablesDF$hierarchy == "H5" & myHierarchyTablesDF$table == "FT","samplingUnit"] <- FALSE
+
+# Set LE in H7 to not be a sampling unit
+myHierarchyTablesDF[myHierarchyTablesDF$hierarchy == "H7" & myHierarchyTablesDF$table == "LE","samplingUnit"] <- FALSE
+
+# Set LE in H9 to not be a sampling unit
+myHierarchyTablesDF[myHierarchyTablesDF$hierarchy == "H9" & myHierarchyTablesDF$table == "LE","samplingUnit"] <- FALSE
+
+
+tablesInRDBESHierarchies <- myHierarchyTablesDF
 usethis::use_data(tablesInRDBESHierarchies, overwrite = TRUE)

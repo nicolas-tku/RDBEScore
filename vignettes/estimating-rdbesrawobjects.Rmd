@@ -311,7 +311,8 @@ for(L in LETTERS[2:5]){
 
 For lower hierarchy tables the number of sampled and measured total 
 ```{r}
-estimTables <- tablesInRDBESHierarchies$H1[3:9]
+estimTables <- icesRDBES::getTablesInRDBESHierarchy(1)
+estimTables <- estimTables[3:9]
 estimTables
 ```   
 ```{r}

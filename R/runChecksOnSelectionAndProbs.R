@@ -35,16 +35,11 @@ runChecksOnSelectionAndProbs <- function(x, verbose = TRUE) {
                                                     yet specified")
 
 
-  hierarchyToCheck <- paste0("H", x[["DE"]]$DEhierarchy[1])
-  targetTables <- tablesInRDBESHierarchies[[hierarchyToCheck]]
+  targetTables <- getTablesInRDBESHierarchy(x[["DE"]]$DEhierarchy[1],
+                                            includeTablesNotInSampHier = FALSE)
   targetTables <- targetTables[targetTables != "DE"]
   # Code doesn't handle lower hierachy A or B yet
   targetTables <- targetTables[targetTables != "FM"]
-  # Dirty hack - tablesInRDBESHierarchies should really know which tables are
-  # in the sampling hierarchy
-  if (hierarchyToCheck == "H7") {
-    targetTables <- targetTables[targetTables != "LE"]
-  }
   parentId <- paste0(targetTables, "id")
   targetTables <- targetTables[targetTables != "SD"]
   parentId <- parentId[parentId != "BVid"]

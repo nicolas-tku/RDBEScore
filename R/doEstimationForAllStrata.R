@@ -48,7 +48,7 @@ doEstimationForAllStrata <- function(rdbesRawObjectForEstim,
 
   # Find what tables we need for this hierarchy
   tablesToCheck <-
-    icesRDBES::tablesInRDBESHierarchies[[paste0("H", hierarchyToUse)]]
+    icesRDBES::getTablesInRDBESHierarchy(hierarchyToUse)
   # Loop through our tables, starting at SA and working backwards
   saPosition <- match("SA", tablesToCheck)
   for (i in saPosition:1) {
