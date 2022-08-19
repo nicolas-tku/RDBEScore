@@ -141,11 +141,12 @@ Generate true zeroes using the data from the SL table.
 
   myH7PrepObjectWithZeroes<-generateZerosUsingSL(myH7PrepObject)
 
-  # Need to increase the number of digits shown to see the new values of SAid / SAseqNum
-  options(digits = 9)
+  myH7PrepObjectWithZeroes$SA
 
   # note the solution now has floating points values for SAid, and SAseqNum
-	myH7PrepObjectWithZeroes$SA
+  # (we are using sprintf to ensure the decimal places are displayed)
+	sprintf(myH7PrepObjectWithZeroes[['SA']]$SAid, fmt = '%.3f')
+	sprintf(myH7PrepObjectWithZeroes[['SA']]$SAseqNum, fmt = '%.3f')
 
 
 ```
