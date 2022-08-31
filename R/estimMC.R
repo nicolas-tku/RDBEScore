@@ -5,8 +5,9 @@
 #' @param total numeric total number of units int the population
 #' @param method character selection method code e.g SRSWOR
 #'
-#' @return list of 5 elements including the population mean, total
-#' (and their variance) and the I order inclusion probabilities
+#' @return list of 7 elements including the population mean, total
+#' (and their variance), the algorithm name used and the I order
+#' inclusion probabilities
 #' @export
 #'
 #' @examples
@@ -48,40 +49,32 @@ estimMC <- function(y, sampled, total, method = "SRSWOR") {
     stop("TODO")
   }
 
+  # Generalized Horvitz-Thompson estimator
+  est.algorithm <- "Generalized Horvitz-Thompson aka Mutiple-Count"
   est.total <- sum(y / enk)
   est.mean <- est.total / mean(total)
 
-  partY <- ((y / enk) %*% (y / enl))
-  var.mat <- ((enkl - (enk %*% enl)) / enkl) * partY
-  #the diagonal can be set here as well see below
-  # var.diag <- ((1-enk)/enk) * (y^2/enk)
-  # diag(var.mat) <- var.diag
-  var.total <- sum(var.mat)
-
-
-
-  # TODO the code in "WR$" does not produce the expected value
-  # temporarily falling back to simplification until fixed
-  if (method == "SRSWR") {
-    varSRSWR <- function(y, n, N) {
-      meanY <- sum(y / (n / N))
-      S2 <- (y * N - meanY)^2
-      mean(1 / (n * (n - 1))) * sum(S2)
-    }
-    var.total <- varSRSWR(y, sampled, total)
-
-    enkl <- enk %*% enl
-  }
-
+  # Sen-Yates-Grundy estimate of variance
+  var.algorithm <- "Sen-Yates-Grundy"
+  partY <- (y / enk) %*% t(rep(1,n)) - t((y / enk) %*% t(rep(1,n)) )
+  diag(partY) <- NA
+  partY <- partY^2
+  var.mat <- 0.5 * (((enk %*% enl) - enkl) / enkl)
+  diag(var.mat) <- NA
+  var.mat <- var.mat * partY
+  var.total <- sum(var.mat, na.rm = T)
   var.mean <- var.total / sum(total) * mean(sampled)
+
   PI <- enkl
 
 
   return(list(
     est.total = est.total,
     est.mean = est.mean,
+    est.algorithm = est.algorithm,
     var.total = ifelse(n < 2, NaN, var.total),
     var.mean = ifelse(n < 2, NaN, var.mean),
+    var.algorithm = var.algorithm,
     PI = PI
   ))
 }
