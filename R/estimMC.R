@@ -1,4 +1,4 @@
-#' Multiple Count Estimator for Population Total
+#' Multiple Count Estimator for Population Total and Variance
 #'
 #' @param y numeric variable to be estimated
 #' @param sampled numeric total number of units sampled
@@ -51,30 +51,39 @@ estimMC <- function(y, sampled, total, method = "SRSWOR") {
 
   # Generalized Horvitz-Thompson estimator
   est.algorithm <- "Generalized Horvitz-Thompson aka Mutiple-Count"
-  est.total <- sum(y / enk)
-  est.mean <- est.total / mean(total)
+  estFunction <- function(y,enk){
+    sum(y / enk)
+  }
 
   # Sen-Yates-Grundy estimate of variance
   var.algorithm <- "Sen-Yates-Grundy"
-  partY <- (y / enk) %*% t(rep(1,n)) - t((y / enk) %*% t(rep(1,n)) )
-  diag(partY) <- NA
-  partY <- partY^2
-  var.mat <- 0.5 * (((enk %*% enl) - enkl) / enkl)
-  diag(var.mat) <- NA
-  var.mat <- var.mat * partY
-  var.total <- sum(var.mat, na.rm = T)
-  var.mean <- var.total / sum(total) * mean(sampled)
+  varFunction <- function(y,enk,enkl){
+    # Sen-Yates-Grundy estimate of variance
+    var.algorithm <- "Sen-Yates-Grundy"
+    partY <- (y / enk) %*% t(rep(1,n)) - t((y / enk) %*% t(rep(1,n)) )
+    diag(partY) <- NA
+    partY <- partY^2
+    var.mat <- 0.5 * (((enk %*% enl) - enkl) / enkl)
+    diag(var.mat) <- NA
+    var.mat <- var.mat * partY
+    var.total <- sum(var.mat, na.rm = T)
+  }
 
-  PI <- enkl
+  # Run the estimation using the functions we just defined
+  estimResult <- estim(y, enk, enkl, method, estFunction, varFunction)
+
+  # Calculate the means
+  est.mean <- estimResult$est.total / mean(total)
+  var.mean <- estimResult$var.total / sum(total) * mean(sampled)
 
 
   return(list(
-    est.total = est.total,
+    est.total = estimResult$est.total,
     est.mean = est.mean,
     est.algorithm = est.algorithm,
-    var.total = ifelse(n < 2, NaN, var.total),
-    var.mean = ifelse(n < 2, NaN, var.mean),
+    var.total = estimResult$var.total,
+    var.mean = var.mean,
     var.algorithm = var.algorithm,
-    PI = PI
+    PI = estimResult$PI
   ))
 }
