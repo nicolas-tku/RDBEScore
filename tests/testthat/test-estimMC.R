@@ -105,6 +105,7 @@ test_that(paste("correct mean if", testMain), {
   expect_equal(x$est.mean, sum(items) / elems)
 })
 
+
 ######## --------- 10% in sample-------------######
 testMain <- "SRSWOR 10% elements in sample"
 test_that(paste("total variance is correct if", testMain), {
@@ -385,17 +386,6 @@ test_that(paste("correct mean if", testMain), {
 
 ### --------- errors-------------
 testMain <- "error"
-test_that(paste("unequal probality sampling is not implemented"), {
-  tot <- 4
-  items <- c(3, 4, 4, 5)
-  elems <- length(items)
-  expect_error(estimMC(items, rep(elems, elems), rep(tot, elems),
-    method = "UPSWOR"
-  ))
-  expect_error(estimMC(items, rep(elems, elems), rep(tot, elems),
-    method = "UPSWR"
-  ))
-})
 
 test_that(paste("all inputs must have same length"), {
   tot <- 4
@@ -412,6 +402,9 @@ test_that(paste("all inputs must be numeric"), {
   expect_error(estimMC(items, rep(elems, elems), rep(tot, elems)))
   expect_error(estimMC(1:5, rep(elems, elems), rep("4", elems)))
 })
+
+
+### ------------WORKED EXAMPLES-----------------------------
 test_that("Annica DeG SRSWOR example 1", {
   y <- c(147.1,102.2,79.5)
   sampled <- c(3,3,3)
@@ -427,4 +420,118 @@ test_that("Annica DeG SRSWR example 2", {
   x <- estimMC(y, sampled, total, method = "SRSWR")
   expect_equal(round(x$est.total,1), 174.0)
   expect_equal(round(x$var.total,1), 612.0)
+})
+
+### ------------PROBABILITIES-----------------------------
+testMain <- "UPSWOR 50% of elements in sample - use equal probabilites"
+test_that(paste("correct total if", testMain), {
+  tot <- 8
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  selProb <- rep(1/tot, elems)
+  incProb <- rep(elems/tot, elems)
+  x <- estimMC(items,
+               sampled = rep(elems, elems),
+               total = rep(tot, elems),
+               method = "UPSWOR",
+               selProb = selProb,
+               incProb = incProb)
+  expect_equal(x$est.total, mean(items) * tot)
+
+  tot <- 4
+  items <- c(2,2)
+  elems <-length(items)
+  selProb <- rep(1/tot, elems)
+  incProb <- rep(elems/tot, elems)
+  x <- estimMC(items,
+               sampled = rep(elems, elems),
+               total = rep(tot, elems),
+               method = "UPSWOR",
+               selProb = selProb,
+               incProb = incProb)
+  expect_equal(x$est.total, mean(items) * tot)
+})
+test_that(paste("NA variance total if", testMain), {
+  tot <- 8
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  selProb <- rep(1/tot, elems)
+  incProb <- rep(elems/tot, elems)
+  x <- estimMC(items,
+               sampled = rep(elems, elems),
+               total = rep(tot, elems),
+               method = "UPSWOR",
+               selProb = selProb,
+               incProb = incProb)
+  expect_equal(x$var.total, NA)
+
+  tot <- 4
+  items <- c(2,2)
+  elems <-length(items)
+  selProb <- rep(1/tot, elems)
+  incProb <- rep(elems/tot, elems)
+  x <- estimMC(items,
+               sampled = rep(elems, elems),
+               total = rep(tot, elems),
+               method = "UPSWOR",
+               selProb = selProb,
+               incProb = incProb)
+  expect_equal(x$var.total, NA)
+})
+testMain <- "UPSWR 50% of elements in sample - use equal probabilites"
+test_that(paste("correct total if", testMain), {
+  tot <- 8
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  selProb <- rep(1/tot, elems)
+  incProb <- rep(elems/tot, elems)
+  x <- estimMC(items,
+               sampled = rep(elems, elems),
+               total = rep(tot, elems),
+               method = "UPSWR",
+               selProb = selProb,
+               incProb = incProb)
+  expect_equal(x$est.total, mean(items) * tot)
+
+  tot <- 4
+  items <- c(2,2)
+  elems <-length(items)
+  selProb <- rep(1/tot, elems)
+  incProb <- rep(elems/tot, elems)
+  x <- estimMC(items,
+               sampled = rep(elems, elems),
+               total = rep(tot, elems),
+               method = "UPSWR",
+               selProb = selProb,
+               incProb = incProb)
+  expect_equal(x$est.total, mean(items) * tot)
+})
+test_that(paste("total variance is correct if", testMain), {
+  tot <- 8
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  selProb <- rep(1/tot, elems)
+  incProb <- rep(elems/tot, elems)
+  x <- estimMC(items,
+               sampled = rep(elems, elems),
+               total = rep(tot, elems),
+               method = "UPSWR",
+               selProb = selProb,
+               incProb = incProb)
+  expected <- varSRSWR(items, elems, tot)
+  expect_equal(x$var.total, expected)
+
+  tot <- 4
+  items <- c(2,2)
+  elems <-length(items)
+  selProb <- rep(1/tot, elems)
+  incProb <- rep(elems/tot, elems)
+  x <- estimMC(items,
+               sampled = rep(elems, elems),
+               total = rep(tot, elems),
+               method = "UPSWR",
+               selProb = selProb,
+               incProb = incProb)
+  expected <- varSRSWR(items, elems, tot)
+  expect_equal(x$var.total, expected)
 })
