@@ -404,23 +404,6 @@ test_that(paste("all inputs must be numeric"), {
 })
 
 
-### ------------WORKED EXAMPLES-----------------------------
-test_that("Annica DeG SRSWOR example 1", {
-  y <- c(147.1,102.2,79.5)
-  sampled <- c(3,3,3)
-  total <- c(9,9,9)
-  x <- estimMC(y, sampled, total, method = "SRSWOR")
-  expect_equal(round(x$est.total,1), 986.4)
-  expect_equal(round(x$var.total,1), 21303.2)
-})
-test_that("Annica DeG SRSWR example 2", {
-  y <- c(18,10,12,18)
-  sampled <- c(4,4,4,4)
-  total <- c(12,12,12,12)
-  x <- estimMC(y, sampled, total, method = "SRSWR")
-  expect_equal(round(x$est.total,1), 174.0)
-  expect_equal(round(x$var.total,1), 612.0)
-})
 
 ### ------------PROBABILITIES-----------------------------
 testMain <- "UPSWOR 50% of elements in sample - use equal probabilites"
@@ -534,4 +517,53 @@ test_that(paste("total variance is correct if", testMain), {
                incProb = incProb)
   expected <- varSRSWR(items, elems, tot)
   expect_equal(x$var.total, expected)
+})
+
+### ------------WORKED EXAMPLES-----------------------------
+testMain <- "Annica DeG worked examples"
+test_that(paste("SRSWOR", testMain), {
+  y <- c(147.1,102.2,79.5)
+  sampled <- c(3,3,3)
+  total <- c(9,9,9)
+  x <- estimMC(y, sampled, total, method = "SRSWOR")
+  expect_equal(round(x$est.total,1), 986.4)
+  expect_equal(round(x$var.total,1), 21303.2)
+})
+test_that(paste("SRSWR", testMain), {
+  y <- c(18,10,12,18)
+  sampled <- c(4,4,4,4)
+  total <- c(12,12,12,12)
+  x <- estimMC(y, sampled, total, method = "SRSWR")
+  expect_equal(round(x$est.total,1), 174.0)
+  expect_equal(round(x$var.total,1), 612.0)
+})
+test_that(paste("UPSWOR", testMain), {
+  tot <- 9
+  items <- c(147.1,102.2,79.5)
+  elems <- length(items)
+  selProb <- NA
+  incProb <- c(0.18565,0.19853,0.41690)
+  x <- estimMC(items,
+               sampled = rep(elems, elems),
+               total = rep(tot, elems),
+               method = "UPSWOR",
+               selProb = selProb,
+               incProb = incProb)
+  expect_equal(round(x$est.total,0), 1498)
+  expect_equal(x$var.total, NA)
+})
+test_that(paste("UPSWR", testMain), {
+  tot <- 15
+  items <- c(75,203,203,191,168)
+  elems <- length(items)
+  selProb <- c(24/647,100/647,100/647,76/647,44/647)
+  incProb <- NA
+  x <- estimMC(items,
+               sampled = rep(elems, elems),
+               total = rep(tot, elems),
+               method = "UPSWR",
+               selProb = selProb,
+               incProb = incProb)
+  expect_equal(round(x$est.total,1), 1749.0)
+  expect_equal(round(x$var.total,1), 49471.5)
 })
