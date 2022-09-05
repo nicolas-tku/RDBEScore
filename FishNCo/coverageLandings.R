@@ -91,6 +91,16 @@ coverageLandings <- function(dataToPlot,
                                "Bivariate",
                                "Points"
                              )) {
+  # For testing
+  # dataToPlot = testData
+  # var="species"
+  # CatchCat = "Dis"
+  # year = NA
+  # quarter = NA
+  # Vessel_flag = NA
+  # setwd("H:/git/icesRDBES/FishNCo")
+
+
   if (length(CatchCat) == 3) {
     stop("You must provide a Catch Category")
   } else if (length(CatchCat) == 2) {
@@ -123,8 +133,19 @@ coverageLandings <- function(dataToPlot,
   }
 
   if (var == "gear" && is.na(quarter) == FALSE) {
-    stop("Unused argument, no quarters avialable for  var gear")
+    stop("Unused argument, no quarters available for  var gear")
   }
+
+  # We'll convert the CS data into a RDBESEstObject to
+  # make it easier to handle here
+  if (!validateRDBESRawObject(dataToPlot)){
+    stop("dataToPlot is not a valid RDBESRawObject")
+  }
+  hierarchiesInData <- unique(dataToPlot[["DE"]]$DEhierarchy)
+  if (length(hierarchiesInData)!=1) {
+    stop("This function will only work if there is a single hierarchy in dataToPlot")
+  }
+  datatoPlot_EstOb <- createRDBESEstObject(dataToPlot, hierarchiesInData)
 
 
   # join to spatial data
@@ -149,7 +170,6 @@ coverageLandings <- function(dataToPlot,
 
   myRDBESData <- dataToPlot
 
-
   # get landings
   LD <- myRDBESData[["CL"]] %>%
     select(
@@ -160,17 +180,22 @@ coverageLandings <- function(dataToPlot,
       CLoffWeight:CLsciWeight
     )
   LD$CLGear <- substr(LD$CLmetier6, 0, 3)
+
+
   # get sampling
-  SA <- left_join(myRDBESData[["SA"]],
-    myRDBESData[["SS"]][, c("SSid", "FOid")],
-    by = "SSid"
-  )
-  # Join to FO
-  SA <- left_join(SA, myRDBESData[["FO"]], by = "FOid")
-  # Join to FT
-  SA <- left_join(SA, myRDBESData[["FT"]][, c("FTid", "VDid")],
-    by = "FTid"
-  )
+  SA <- datatoPlot_EstOb
+
+  # SA <- left_join(myRDBESData[["SA"]],
+  #   myRDBESData[["SS"]][, c("SSid", "FOid")],
+  #   by = "SSid"
+  # )
+  # # Join to FO
+  # SA <- left_join(SA, myRDBESData[["FO"]], by = "FOid")
+  # # Join to FT
+  # SA <- left_join(SA, myRDBESData[["FT"]][, c("FTid", "VDid")],
+  #   by = "FTid"
+  # )
+
   # Join to VD to get Vessel flag country
   SA <- left_join(SA, myRDBESData[["VD"]], by = "VDid")
 
@@ -182,24 +207,64 @@ coverageLandings <- function(dataToPlot,
   SA$SAmonth <-
     as.integer(lubridate::month(as.Date(SA$FOendDate, format = "%Y-%m-%d")))
 
+
   # Get only necessary columns
+
+  # Find the first SA columns - we are only dealing with the top level SA data
+  colsToCheck <-
+    names(datatoPlot_EstOb)[grep("^su.table$",names(datatoPlot_EstOb))]
+  correctCol <- NA
+  suNumber <- NA
+  for (myCol in colsToCheck){
+    myColValues <- unique(datatoPlot_EstOb[,..myCol])[[1]]
+    myColValues <- myColValues[!is.na(myColValues)]
+    if (myColValues == "SA"){
+      correctCol <- myCol
+      suNumber <- gsub("su","",correctCol)
+      suNumber <- gsub("table","",suNumber)
+      suNumber <- as.integer(suNumber)
+      break
+    }
+  }
+  if (is.na(correctCol)) {
+    stop("Sample data could not be found - cannot continue")
+  }
+
   SA <- SA %>%
     select(
-      SAmetier5:SAgear,
-      SAtotalWtLive:SAnumSamp,
-      SAtotalWtMes:SAsampWtMes,
-      SAyear:SAmonth,
-      SAcatchCat,
-      SAspeCode:SAspeCodeFAO,
-      SAstatRect,
-      VDflgCtry
-    ) %>%
+      c("SAmetier5", "SAmetier6", "SAgear", "SAtotalWtLive",
+        "SAsampWtLive",
+        paste0("su",suNumber,"numTotal"),
+        paste0("su",suNumber,"numSamp"),
+        "SAtotalWtMes", "SAsampWtMes", "SAyear", "SAquar", "SAmonth",
+        "SAcatchCat", "SAspeCode", "SAspeCodeFAO", "SAstatRect",
+        "VDflgCtry",
+        "SAid")
+    )%>%
     relocate(SAstatRect, SAyear, SAquar, SAmonth)
+
+    # SA <- SA %>%
+    # select(
+    #   SAmetier5:SAgear,
+    #   SAtotalWtLive:SAnumSamp,
+    #   SAtotalWtMes:SAsampWtMes,
+    #   SAyear:SAmonth,
+    #   SAcatchCat,
+    #   SAspeCode:SAspeCodeFAO,
+    #   SAstatRect,
+    #   VDflgCtry
+    # ) %>%
+    # relocate(SAstatRect, SAyear, SAquar, SAmonth)
+
 
 
   if (length(which(duplicated(SA))) > 0) {
     SA <- SA[-which(duplicated(SA)), ]
   }
+
+  # Remove any rows with SAid = NA, then get rid of the SAid column
+  SA <- SA[!is.na(SA$SAid),]
+  SA <- select(SA,-SAid)
 
   SA$SAspeCode <- as.integer(SA$SAspeCode)
 
