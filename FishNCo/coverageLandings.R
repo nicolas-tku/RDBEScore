@@ -91,15 +91,6 @@ coverageLandings <- function(dataToPlot,
                                "Bivariate",
                                "Points"
                              )) {
-  # For testing
-  # dataToPlot = testData
-  # var="species"
-  # CatchCat = "Dis"
-  # year = NA
-  # quarter = NA
-  # Vessel_flag = NA
-  # setwd("H:/git/icesRDBES/FishNCo")
-
 
   if (length(CatchCat) == 3) {
     stop("You must provide a Catch Category")
@@ -185,17 +176,6 @@ coverageLandings <- function(dataToPlot,
   # get sampling
   SA <- datatoPlot_EstOb
 
-  # SA <- left_join(myRDBESData[["SA"]],
-  #   myRDBESData[["SS"]][, c("SSid", "FOid")],
-  #   by = "SSid"
-  # )
-  # # Join to FO
-  # SA <- left_join(SA, myRDBESData[["FO"]], by = "FOid")
-  # # Join to FT
-  # SA <- left_join(SA, myRDBESData[["FT"]][, c("FTid", "VDid")],
-  #   by = "FTid"
-  # )
-
   # Join to VD to get Vessel flag country
   SA <- left_join(SA, myRDBESData[["VD"]], by = "VDid")
 
@@ -230,32 +210,21 @@ coverageLandings <- function(dataToPlot,
     stop("Sample data could not be found - cannot continue")
   }
 
+  # Rename the suXnumTotal and suXnumSamp columns to SAnumTotal and SAnumSamp
+  SA <- SA %>% rename("SAnumTotal" = paste0("su",suNumber,"numTotal"))
+  SA <- SA %>% rename("SAnumSamp" = paste0("su",suNumber,"numSamp"))
+
   SA <- SA %>%
     select(
       c("SAmetier5", "SAmetier6", "SAgear", "SAtotalWtLive",
         "SAsampWtLive",
-        paste0("su",suNumber,"numTotal"),
-        paste0("su",suNumber,"numSamp"),
+        "SAnumTotal","SAnumSamp",
         "SAtotalWtMes", "SAsampWtMes", "SAyear", "SAquar", "SAmonth",
         "SAcatchCat", "SAspeCode", "SAspeCodeFAO", "SAstatRect",
         "VDflgCtry",
         "SAid")
     )%>%
     relocate(SAstatRect, SAyear, SAquar, SAmonth)
-
-    # SA <- SA %>%
-    # select(
-    #   SAmetier5:SAgear,
-    #   SAtotalWtLive:SAnumSamp,
-    #   SAtotalWtMes:SAsampWtMes,
-    #   SAyear:SAmonth,
-    #   SAcatchCat,
-    #   SAspeCode:SAspeCodeFAO,
-    #   SAstatRect,
-    #   VDflgCtry
-    # ) %>%
-    # relocate(SAstatRect, SAyear, SAquar, SAmonth)
-
 
 
   if (length(which(duplicated(SA))) > 0) {
