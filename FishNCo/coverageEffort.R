@@ -146,7 +146,16 @@ coverageEffort <- function(dataToPlot,
     stop("You must provide a year")
   }
 
-
+  # We'll convert the CS data into a RDBESEstObject to
+  # make it easier to handle here
+  if (!validateRDBESRawObject(dataToPlot)){
+    stop("dataToPlot is not a valid RDBESRawObject")
+  }
+  hierarchiesInData <- unique(dataToPlot[["DE"]]$DEhierarchy)
+  if (length(hierarchiesInData)!=1) {
+    stop("This function will only work if there is a single hierarchy in dataToPlot")
+  }
+  datatoPlot_EstOb <- createRDBESEstObject(dataToPlot, hierarchiesInData)
 
   # join to spatial data
   ices_rect <- readOGR(
@@ -182,16 +191,8 @@ coverageEffort <- function(dataToPlot,
   EF$CEGear <- substr(EF$CEmetier6, 0, 3)
 
   # get sampling
-  SA <- left_join(myRDBESData[["SA"]],
-    myRDBESData[["SS"]][, c("SSid", "FOid")],
-    by = "SSid"
-  )
-  # Join to FO
-  SA <- left_join(SA, myRDBESData[["FO"]], by = "FOid")
-  # Join to FT
-  SA <- left_join(SA, myRDBESData[["FT"]][, c("FTid", "VDid")],
-    by = "FTid"
-  )
+  SA <- datatoPlot_EstOb
+
   # Join to VD to get Vessel flag country
   SA <- left_join(SA, myRDBESData[["VD"]], by = "VDid")
 
@@ -204,22 +205,50 @@ coverageEffort <- function(dataToPlot,
     as.integer(lubridate::month(as.Date(SA$FOendDate, format = "%Y-%m-%d")))
 
   # Get only necessary columns
+
+  # Find the first SA columns - we are only dealing with the top level SA data
+  colsToCheck <-
+    names(datatoPlot_EstOb)[grep("^su.table$",names(datatoPlot_EstOb))]
+  correctCol <- NA
+  suNumber <- NA
+  for (myCol in colsToCheck){
+    myColValues <- unique(datatoPlot_EstOb[,..myCol])[[1]]
+    myColValues <- myColValues[!is.na(myColValues)]
+    if (myColValues == "SA"){
+      correctCol <- myCol
+      suNumber <- gsub("su","",correctCol)
+      suNumber <- gsub("table","",suNumber)
+      suNumber <- as.integer(suNumber)
+      break
+    }
+  }
+  if (is.na(correctCol)) {
+    stop("Sample data could not be found - cannot continue")
+  }
+
+  # Rename the suXnumTotal and suXnumSamp columns to SAnumTotal and SAnumSamp
+  SA <- SA %>% rename("SAnumTotal" = paste0("su",suNumber,"numTotal"))
+  SA <- SA %>% rename("SAnumSamp" = paste0("su",suNumber,"numSamp"))
+
   SA <- SA %>%
     select(
-      SAmetier5:SAgear,
-      SAtotalWtLive:SAnumSamp,
-      SAtotalWtMes:SAsampWtMes,
-      SAyear:SAmonth,
-      SAcatchCat,
-      SAspeCode:SAspeCodeFAO,
-      SAstatRect,
-      VDflgCtry
-    ) %>%
+      c("SAmetier5", "SAmetier6", "SAgear", "SAtotalWtLive",
+        "SAsampWtLive",
+        "SAnumTotal","SAnumSamp",
+        "SAtotalWtMes", "SAsampWtMes", "SAyear", "SAquar", "SAmonth",
+        "SAcatchCat", "SAspeCode", "SAspeCodeFAO", "SAstatRect",
+        "VDflgCtry",
+        "SAid")
+    )%>%
     relocate(SAstatRect, SAyear, SAquar, SAmonth)
 
   if (length(which(duplicated(SA))) > 0) {
     SA <- SA[-which(duplicated(SA)), ]
   }
+
+  # Remove any rows with SAid = NA, then get rid of the SAid column
+  SA <- SA[!is.na(SA$SAid),]
+  SA <- select(SA,-SAid)
 
   #########################
 
