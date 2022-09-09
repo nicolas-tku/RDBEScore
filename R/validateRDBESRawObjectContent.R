@@ -28,6 +28,12 @@ validateRDBESRawObjectContent <- function(objectToCheck) {
     # Are all the required names present?
     if (all(requiredColumnNames %in% names(x))) {
       returnValue <- TRUE
+    } else {
+      missingColumnNames <-
+        requiredColumnNames[!requiredColumnNames %in% names(x)]
+      print(paste("The following required columns are missing from table",
+            tableName,":",
+            paste(missingColumnNames,collapse = ",")))
     }
     returnValue
   })]

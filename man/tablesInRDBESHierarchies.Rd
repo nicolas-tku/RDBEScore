@@ -5,11 +5,14 @@
 \alias{tablesInRDBESHierarchies}
 \title{The tables required for each RDBES hierarchy.}
 \format{
-A named list containing the tables required for each RDBES hierachy.
-Each entry in the list is a character vecor
+A data frame containing the tables required for each RDBES hierachy.
 \describe{
-  \item{tablesInRDBESHierarchies}{named list of character vectors}
-  ...
+  \item{hierarchy}{the hierachy this applies to H1 to H13}
+  \item{table}{the 2-letter table name}
+  \item{lowerHierarchy}{is this a lower hierarchy table?}
+  \item{optional}{is this table optional within the hierarchy?}
+  \item{samplingUnit}{is this table a sampling unit within the hierarchy?}
+  \item{sortOrder}{the table sort order within the hiaerarchy}
 }
 }
 \source{
@@ -19,6 +22,6 @@ Each entry in the list is a character vecor
 tablesInRDBESHierarchies
 }
 \description{
-A list containing the tables required for each RDBES hierachy
+A data frame containing the tables required for each RDBES hierachy
 }
 \keyword{datasets}

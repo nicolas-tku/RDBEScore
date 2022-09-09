@@ -36,11 +36,20 @@ filterRDBESRawObject <- function(rdbesRawObjectToFilter,
     ))
   }
 
+  # Check if the requested columns actually exist in the object
+  allColNames <- unlist(lapply(rdbesRawObjectToFilter,names))
+  missingFields <- fieldsToFilter[!fieldsToFilter %in% allColNames]
+  if (length(missingFields)>0){
+    warning(paste0("The following fields were not found in the ",
+                   "RDBESRawObject: ",
+                   missingFields))
+  }
+
   alteredObject <- lapply(rdbesRawObjectToFilter, function(x) {
         foundNames <- names(x)[which(names(x) %in% fieldsToFilter)]
         if (length(foundNames)> 0){
           x <-
-            dplyr::filter(x,dplyr::if_any(foundNames, ~ .x %in% valuesToFilter))
+            dplyr::filter(x,dplyr::if_all(foundNames, ~ .x %in% valuesToFilter))
         }
         x
     }

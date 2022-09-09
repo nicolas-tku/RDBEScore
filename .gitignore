@@ -37,3 +37,6 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# FishNCo raw test data
+FishNCo/testData/RegionalTestData/*

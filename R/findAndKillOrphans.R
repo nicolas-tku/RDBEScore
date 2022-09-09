@@ -23,7 +23,7 @@
 #' myObjectNoOrphans <- findAndKillOrphans(objectToCheck = myFilteredObject,
 #'                                        verbose = FALSE)
 #' }
-findAndKillOrphans <- function(objectToCheck, verbose = TRUE) {
+findAndKillOrphans <- function(objectToCheck, verbose = FALSE) {
 
   # Check we have a valid RDBESRawObject before doing anything else
   if (!validateRDBESRawObject(objectToCheck, verbose = FALSE)) {
@@ -59,8 +59,10 @@ findAndKillOrphans <- function(objectToCheck, verbose = TRUE) {
 
   myForeignKeyIds <- rbind(myForeignKeyIds, myParSeqNum)
 
-  print("Number of rows in non-null tables before killing orphans")
-  print(unlist(lapply(objectToCheck, nrow)))
+  if (verbose){
+    print("Number of rows in non-null tables before killing orphans")
+    print(unlist(lapply(objectToCheck, nrow)))
+  }
 
   nonNullEntries <- names(objectToCheck[sapply(objectToCheck, Negate(is.null))])
 
@@ -70,7 +72,9 @@ findAndKillOrphans <- function(objectToCheck, verbose = TRUE) {
 
   orphanCheckNumber <- 1
 
-  print("Starting to hunt down the orphans")
+  if (verbose) {
+    print("Starting to hunt down the orphans")
+  }
 
   # Removing orphans can then have the knock-on effect of creating more
   # orphans lower in the hierarchy so we will keep need to check for orphans
@@ -116,15 +120,19 @@ findAndKillOrphans <- function(objectToCheck, verbose = TRUE) {
 
     # If we didn't find any orphans this time we can stop looking
     if (numberOfOrphansFound == 0) {
-      print("All orphans have been killed")
+      if (verbose){
+        print("All orphans have been killed")
+      }
       break
     }
 
     orphanCheckNumber <- orphanCheckNumber + 1
   }
 
-  print("Number of rows in non-null tables after killing orphans")
-  print(unlist(lapply(objectToCheck, nrow)))
+  if (verbose){
+    print("Number of rows in non-null tables after killing orphans")
+    print(unlist(lapply(objectToCheck, nrow)))
+  }
 
   objectToCheck
 }

@@ -1,0 +1,176 @@
+---
+title: "Testing stuff"
+author: "Richard Meitern"
+date: "8 4 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This file contains some ongoing work and testing of approaches to use in the package. Do not expect to understand what is going on or me to explain it.
+
+```{r}
+rDir<-paste0(getwd(), "/R/")
+```
+
+```{r}
+for(fname in list.files(rDir, full.names = TRUE)){source(fname)}
+```
+
+
+## Simple Random Sampling (SRS)
+
+### Without Replacment (SRSWOR)
+
+
+```{r}
+## SRSWOR
+# Sample the data using single stage simple random sampling without replacement (srswor)
+numberOfSamples <- 50
+y_srswor <- myTestData[sample(nrow(myTestData),numberOfSamples, replace = FALSE),]
+y_srswor$SAselectionMethod <- 'SRSWOR'
+y_srswor$SAnumberSampled <- numberOfSamples
+y_srswor$SAnumberTotal <- nrow(myTestData)
+# Get correctly named fields in our sample data
+y_srswor$studyVariable <- y_srswor$discardedWeight
+y_srswor$numberSampled <- y_srswor$SAnumberSampled
+y_srswor$numberTotal <- y_srswor$SAnumberTotal
+
+# Use our functions to make a univariate estimate of the total discards
+```
+
+
+```{r}
+# Estimte the total discards
+mcPopulationEstimator(y_srswor)
+
+# What are the actual total discards of the population?
+sum(myTestData$discardedWeight)
+
+# Calculate the variance of our estimate - 0 if I sample everything
+var <- mcVarianceEstimator(y_srswor)
+var
+sqrt(var)
+```
+```{r}
+var/(100*100)
+```
+
+
+```{r}
+N<-nrow(myTestData)
+y<-y_srswor$studyVariable
+pk <- y_srswor$numberSampled/y_srswor$SAnumberTotal
+PI<-matrix(y_srswor$numberSampled/y_srswor$SAnumberTotal*(y_srswor$numberSampled-1)/(y_srswor$SAnumberTotal-1),
+               nrow = length(pk),
+               ncol = length(pk))
+diag(PI)<-pk
+```
+
+
+
+```{r}
+htestimate(y,N,pk=pk, PI=PI, method = "ht")
+```
+
+```{r}
+
+e<-estimMC(y_srswor$studyVariable, y_srswor$numberSampled,y_srswor$SAnumberTotal )
+e
+sqrt(e$var)
+```
+
+
+
+### With Replacment (SRSWR)
+
+
+```{r}
+## SRSWR
+# Sample the data using single stage simple random sampling with replacement (SRSWR)
+numberOfSamples <- 50
+y_srswr <- myTestData[sample(nrow(myTestData),numberOfSamples, replace = TRUE),]
+y_srswr$SAselectionMethod <- 'SRSWR'
+y_srswr$SAnumberSampled <- numberOfSamples
+y_srswr$SAnumberTotal <- nrow(myTestData)
+# Get correctly named fields in our sample data
+y_srswr$studyVariable <- y_srswr$discardedWeight
+y_srswr$numberSampled <- y_srswr$SAnumberSampled
+y_srswr$numberTotal <- y_srswr$SAnumberTotal
+```
+
+
+```{r}
+# Estimte the total discards
+mcPopulationEstimator(y_srswr)
+
+# What are the actual total discards of the population?
+sum(myTestData$discardedWeight)
+
+# Calculate the variance of our estimate
+mcVarianceEstimator(y_srswr)
+```
+
+```{r}
+N<-nrow(myTestData)
+y<-y_srswr$studyVariable
+pk <- y_srswr$numberSampled/y_srswr$SAnumberTotal
+PI<-matrix(y_srswr$numberSampled/y_srswr$SAnumberTotal*(y_srswr$numberSampled-1)/(y_srswr$SAnumberTotal-1),
+               nrow = length(pk),
+               ncol = length(pk))
+diag(PI)<-pk
+```
+
+```{r}
+htestimate(y,N,pk=pk, PI=PI, method = "ht")
+```
+
+
+```{r}
+htestimate(y,N,pk=pk, PI=PI, method = "hh")
+```
+
+```{r}
+e<-estimMC(y_srswr$studyVariable, y_srswr$numberSampled,y_srswr$SAnumberTotal, method = "SRSWR")
+e
+```
+```{r}
+sqrt(e$var.total)
+```
+```{r}
+tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
+  x
+```
+
+```{r}
+x<-estimMC(c(1,1,1,1),c(4,4,4,4),c(4,4,4,4))
+x
+sum(1/diag(x$PI))
+```
+
+```{r}
+x<-estimMC(c(3,4,4,5),c(4,4,4,4),c(4,4,4,4))
+x
+sum(1/diag(x$PI))
+```
+
+```{r}
+tot<-8
+items <- c(3,4,4,5)
+elems <- length(items)
+x<-estimMC(c(3,4,4,5),rep(elems, elems),rep(tot, elems))
+x
+sum(1/diag(x$PI))
+```
+
+
+
+
+

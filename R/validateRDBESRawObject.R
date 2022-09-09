@@ -5,7 +5,7 @@
 #' the data types of the required columns are correct, or FALSE if you don't
 #' care. Default value is FALSE.
 #' @param verbose (Optional) Set to TRUE if you want informative text printed
-#' out, or FALSE if you don't.  The default is TRUE.
+#' out, or FALSE if you don't.  The default is FALSE.
 #'
 #' @return TRUE if object is valid, FALSE is object is not valid
 #' @export
@@ -18,7 +18,7 @@
 #'
 validateRDBESRawObject <- function(objectToCheck,
                                 checkDataTypes = FALSE,
-                                verbose = TRUE) {
+                                verbose = FALSE) {
   validRDBESRawObject <- TRUE
   warningText <- NA
 
@@ -50,7 +50,7 @@ validateRDBESRawObject <- function(objectToCheck,
     validRDBESRawObject <- FALSE
     print(paste(names(objectToCheck), collapse = ","))
     warningText <- paste("objectToCheck is a list but does not contain ",
-      "all the required names",
+      "all the required names ",
       paste(names(objectToCheck), collapse = ","),
       sep = ""
     )

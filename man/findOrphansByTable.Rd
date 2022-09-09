@@ -5,7 +5,7 @@
 \title{Internal function to identify orphan records in a given
 RDBESRawObject table}
 \usage{
-findOrphansByTable(tableToCheck, objectToCheck, foreignKeyIds, verbose = TRUE)
+findOrphansByTable(tableToCheck, objectToCheck, foreignKeyIds, verbose = FALSE)
 }
 \arguments{
 \item{tableToCheck}{The two letter code for the table to check}

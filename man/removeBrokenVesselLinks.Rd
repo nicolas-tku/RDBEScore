@@ -5,7 +5,7 @@
 \title{Remove rows which are not pointing to a valid VesselDetails (VD) records i.e.
 those rows which have a value of VDid that does not exist in the VD table.}
 \usage{
-removeBrokenVesselLinks(objectToCheck, verbose = TRUE)
+removeBrokenVesselLinks(objectToCheck, verbose = FALSE)
 }
 \arguments{
 \item{objectToCheck}{an RDBESRawObject.}

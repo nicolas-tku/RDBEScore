@@ -13,7 +13,7 @@
 findOrphansByTable <- function(tableToCheck,
                                objectToCheck,
                                foreignKeyIds,
-                               verbose = TRUE) {
+                               verbose = FALSE) {
   if (verbose) {
     print(paste0("Checking table ", tableToCheck))
   }

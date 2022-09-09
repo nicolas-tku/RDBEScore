@@ -21,6 +21,6 @@ Generate vector of selection or inclusion probabilities
 }
 \examples{
 \dontrun{
-generateProbs(x=y, probType="inclusion")
+generateProbs(x = y, probType = "inclusion")
 }
 }
