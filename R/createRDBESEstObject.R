@@ -82,6 +82,29 @@ createRDBESEstObject <- function(rdbesPrepObject,
       print("Checking for sub-sampling")
     }
 
+    # The latest RDBES downloads don't have a field for SAparentID
+    # If we don't have a field for SAparentID we need to make one
+    # using the SAparentSequenceNumber
+    if (!"SAparentID" %in%  names(rdbesPrepObjectCopy[["SA"]])){
+      # Find the SAid for a given value of SAparSequNum
+      myResults <- sapply(rdbesPrepObjectCopy[["SA"]]$SAparSequNum,function(x){
+        valueToReturn <- NA
+        if (!is.na(x)){
+          valueToReturn <-
+            rdbesPrepObjectCopy[["SA"]][rdbesPrepObjectCopy[["SA"]]$SAseqNum ==
+                                          x,]
+          if (nrow(valueToReturn) == 1){
+            valueToReturn <- valueToReturn$SAid
+          } else {
+            warning("Could not find unique matching parent seqence number")
+          }
+        }
+        valueToReturn
+      })
+      rdbesPrepObjectCopy[["SA"]]$SAparentID <- myResults
+    }
+
+
     subSampleLevels <- lapply(rdbesPrepObjectCopy[["SA"]][, SAid],
       getSubSampleLevel,
       SAdata = rdbesPrepObjectCopy[["SA"]]
