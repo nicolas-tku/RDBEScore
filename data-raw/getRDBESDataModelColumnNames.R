@@ -1,6 +1,6 @@
 library(openxlsx)
 
-rdbesDataModel <- "data-raw\\RDBES Data Model.xlsx"
+rdbesDataModel <- "data-raw\\RDBES Data Model CS.xlsx"
 rdbesDataModelVDSL <- "data-raw\\RDBES Data Model VD SL.xlsx"
 rdbesDataModelCLCE <- "data-raw\\RDBES Data Model CL CE.xlsx"
 
@@ -109,6 +109,9 @@ mapColNamesFieldR$Table.Prefix == "SA" &
 mapColNamesFieldR[
   mapColNamesFieldR$Table.Prefix == "SA" &
     mapColNamesFieldR$Field.Name == "SAsequenceNumber","RDataType"] <- "numeric"
+mapColNamesFieldR[
+  mapColNamesFieldR$Table.Prefix == "SA" &
+    mapColNamesFieldR$Field.Name == "SAparentSequenceNumber","RDataType"] <- "numeric"
 
 # Save the data
 save(mapColNamesFieldR,file=outFile)
