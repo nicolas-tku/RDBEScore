@@ -45,6 +45,13 @@ combineRDBESRawObjects <- function(rdbesRawObject1, rdbesRawObject2) {
         ),
         use.names = T, fill = T
         )
+
+      # De-duplicate the resulting SL,VD, CL, and CE tables
+      if (myTable %in% c('VD','SL','CL','CE')){
+        myRDBESRawObject[[myTable]] <-
+          dplyr::distinct(myRDBESRawObject[[myTable]], .keep_all = TRUE)
+      }
+
     }
   }
 
