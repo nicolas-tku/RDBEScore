@@ -1,0 +1,4 @@
+DEid,DErecordType,DEsamplingScheme,DEsamplingSchemeType,DEyear,DEstratumName,DEhierarchyCorrect,DEhierarchy,DEsampled,DEreasonNotSampled
+4116,DE,National Routine,NatPilCF,1965,DE_stratum1_H7,Y,7,Y,
+4117,DE,National Routine,NatPilCF,1965,DE_stratum2_H7,Y,7,Y,
+4118,DE,National Routine,NatPilCF,1965,DE_stratum3_H7,Y,7,Y,
