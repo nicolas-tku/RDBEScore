@@ -26,12 +26,12 @@ library(icesRDBES)
 
 ```{r}
 #directory holding the files
-ddir <- "../tests/testthat/h1_v_1_19/"
+ddir <- "../tests/testthat/h1_v_1_19_13/"
 
 #the files to import
-zipFiles <- c("H1_2021_000_example.zip",
-             "HSL_2021_002_example.zip",
-             "HVD_2021_001_example.zip",
+zipFiles <- c("H1_2022_10_05.zip",
+             "HSL_2022_10_05.zip",
+             "HVD_2022_10_05.zip",
              "VesselSelection.csv")
 
 #adding full path
@@ -60,7 +60,7 @@ importedTables <- importRDBESDownloadData(zipFiles[3:4])
 names(importedTables[!unlist(lapply(importedTables, is.null))])
 ```
 
-It can also handle overwriting zip file original files with files apearing later in the list. However each overvrite results in a warning!
+It can also handle overwriting zip file original files with files apearing later in the list. However each overwrite results in a warning!
 
 
 ```{r}
