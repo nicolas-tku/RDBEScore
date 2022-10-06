@@ -1,7 +1,7 @@
 test_that("doEstimationForAllStrata can run on an object from an H1 data extract
           without warnings or errors",  {
 
-  myPath <- ".\\h1_v_1_19"
+  myPath <- ".\\h1_v_1_19_13"
   myH1RawObject <-
      createRDBESRawObject(rdbesExtractPath = myPath)
 

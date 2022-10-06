@@ -15,6 +15,7 @@ test_that("importing zipped H1 example data works", {
                                     castToCorrectDataTypes = TRUE)
 
   expect_equal(genObj, expObj)
+
 })
 
 test_that("importing some data that is not zipped H1 example data works", {
