@@ -132,7 +132,7 @@ test_that("createRDBESEstObject can correctly create an object when there is no 
     myRawObject["BV"] <- list(NULL)
 
     myEstObject <- createRDBESEstObject(myRawObject, hierarchyToUse = 1)
-    expect_equal(nrow(myEstObject),20)
+    expect_equal(nrow(myEstObject),10)
 
 })
 test_that("createRDBESEstObject can correctly create an object when there is no FM data",  {
@@ -152,12 +152,11 @@ test_that("createRDBESEstObject can correctly create an object when there is no 
   myRawObject[["SA"]]$SAlowHierarchy <- "C"
   myRawObject["FM"] <- list(NULL)
 
-  myRawObject[["BV"]][1:20,"SAid"]<-33933
-  myRawObject[["BV"]][21:40,"SAid"]<-34908
+  myRawObject[["BV"]][,"SAid"]<-644939
   myRawObject[["BV"]]$FMid <- NA
 
   myEstObject <- createRDBESEstObject(myRawObject, hierarchyToUse = 1)
-  expect_equal(nrow(myEstObject),40)
+  expect_equal(nrow(myEstObject),20)
 
 })
 test_that("createRDBESEstObject can correctly create an object when there is no FM or BV data",  {
