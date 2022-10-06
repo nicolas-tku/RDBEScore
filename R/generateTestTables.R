@@ -69,7 +69,7 @@ makeTbl <- function(tblName, prevTbls = list(),
 #' @export
 #'
 #' @examples
-#' generateTestTbls(c("A", "B", "C"), seletionMethod = "SRSWOR")
+#' generateTestTbls(c("A", "B", "C"), selMeth = "SRSWOR")
 #' generateTestTbls(LETTERS[1:5]) # makes 5 tables with method CENSUS
 generateTestTbls <- function(tblNames, prevTbls = list(), ...) {
   tbl <- makeTbl(tblNames[1], prevTbls, ...)
