@@ -97,8 +97,10 @@ createRDBESRawObject <- function(rdbesExtractPath = NA,
           data.table::setDT(myList[[myFile]])
 
         # Change database field names to R names where we can
-        myNames <- icesRDBES::mapColNamesFieldR[
-          icesRDBES::mapColNamesFieldR$Table.Prefix == myFile, ]
+        #myNames <- icesRDBES::mapColNamesFieldR[
+        #  icesRDBES::mapColNamesFieldR$Table.Prefix == myFile, ]
+        myNames <- mapColNamesFieldR[
+                      mapColNamesFieldR$Table.Prefix == myFile, ]
         myNameMatches <- match(
           trimws(tolower(names(myList[[myFile]]))),
           trimws(tolower(myNames$Field.Name))

@@ -22,7 +22,8 @@ validateRDBESRawObject <- function(objectToCheck,
   validRDBESRawObject <- TRUE
   warningText <- NA
 
-  allowedNamesInList <- unique(icesRDBES::mapColNamesFieldR$Table.Prefix)
+  #allowedNamesInList <- unique(icesRDBES::mapColNamesFieldR$Table.Prefix)
+  allowedNamesInList <- unique(mapColNamesFieldR$Table.Prefix)
 
   # CHECK 1 Have we just been passed NA?
   if (length(is.na(objectToCheck)) == 1) {
