@@ -52,7 +52,7 @@ for (i in 1:2) {
 # Get rid of NA field names
 mapColNamesFieldR <- mapColNames[!is.na(mapColNames$Field.Name),]
 
-# Fix for one issue
+# Fix for two issues
 mapColNamesFieldR[mapColNamesFieldR$R.Name == "Clid","Field.Name"] <- "CLid"
 mapColNamesFieldR[mapColNamesFieldR$R.Name == "Clid","R.Name"] <- "CLid"
 
