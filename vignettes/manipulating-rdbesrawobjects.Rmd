@@ -33,7 +33,7 @@ getwd()
 
 # Hierarchy 1 demo data
 myH1RawObject <-
-     createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19")
+     createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19_13")
 
 # Number of rows in each non-null table
 unlist(lapply(myH1RawObject, nrow))
@@ -42,7 +42,7 @@ validateRDBESRawObject(myH1RawObject, verbose = FALSE)
 
 # Hierarchy 5 demo data
 myH5RawObject <-
-     createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h5_v_1_19")
+     createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h5_v_1_19_13")
 
 # Number of rows in each non-null table
 unlist(lapply(myH5RawObject, nrow))
@@ -74,7 +74,7 @@ RDBESRawObjects can be filtered using the filterRDBESRawObject() function - this
 
 ```{r filter}
 myH1RawObject <-
-createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19")
+createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19_13")
 
 # Number of rows in each non-null table
 unlist(lapply(myH1RawObject, nrow))
@@ -125,7 +125,7 @@ Finally you can also remove any records that are not linking to an entry in the 
 
 ```{r clean3}
 
-myFields <- c("SLspecListName")
+myFields <- c("SLspeclistName")
 myValues <- c("ZW_1965_SpeciesList" )
 myFilteredObjectValidSpeciesLinks <- filterRDBESRawObject(myFilteredObjectValidVesselLinks,
                                          fieldsToFilter = myFields,

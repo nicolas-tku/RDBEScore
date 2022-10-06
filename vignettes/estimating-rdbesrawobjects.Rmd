@@ -29,7 +29,7 @@ library(icesRDBES)
 First we'll load some example data from the RDBES and check it's valid.  It's a good idea to check your RDBESRawObjects are valid after any manipulations you perform.
 
 ```{r load}
-h1d <- createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19")
+h1d <- createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19_13")
 h1dValid <- validateRDBESRawObject(h1d, verbose = FALSE)
 
 ```
@@ -39,7 +39,7 @@ h1dValid <- validateRDBESRawObject(h1d, verbose = FALSE)
 
 Let's first estimate the last level values for a single VSid so that estimation is done for each top level record (i.e. as the data is)
 ```{r}
-FMidSel <- "254505"
+FMidSel <- "1445683"
 BV <- h1d$BV[h1d$BV$FMid == FMidSel,]
 
 estimMC(as.numeric(BV$BVvalueMeas),
@@ -328,7 +328,7 @@ head(h1d[[estimTables[1]]])
 So we are estimating for a single Vessel the "BVvalueMeas" 
 
 ```{r}
-startEstim <- list(parentIdCol = "VSid", ids=c(4874))
+startEstim <- list(parentIdCol = "VSid", ids=c(63301))
 res<-doMultiStageEstimation(tbls=h1d[estimTables], startEstim, target = "BVvalueMeas")
 
 warning("Variance is not corrected for  upper levels for variance correctly")
