@@ -96,7 +96,9 @@ createRDBESEstObject <- function(rdbesPrepObject,
           if (nrow(valueToReturn) == 1){
             valueToReturn <- valueToReturn$SAid
           } else {
-            warning("Could not find unique matching parent seqence number")
+            warning(paste0("Could not find unique matching parent sequence ",
+            "number - sub-sampling has not been processed correctly"))
+            valueToReturn <- NA
           }
         }
         valueToReturn
