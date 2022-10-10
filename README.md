@@ -73,7 +73,7 @@ The current development version can be installed using:
 
 ```R
 library(remotes)
-install_github("ices-tools-prod/icesRDBES@development")
+install_github("ices-tools-prod/icesRDBES@dev")
 ```
 ## Precommit-hook framework
 
