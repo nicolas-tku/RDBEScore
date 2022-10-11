@@ -1,17 +1,18 @@
 #' Filter an RDBESRawObject
 #'
 #' The returned object will include all rows which either: a) do not included
-#' any of the field names in fieldsToFilter, or b) do include the field names
-#' and have one of the allowed values in valuesToFilter `killOrphans` allows you
-#' to remove orphaned rows if set to `TRUE`. Change to `FALSE` to reverse this
-#' behaviour.
+#' any of the field names in `fieldsToFilter`, or b) do include the field names
+#' and have one of the allowed values in `valuesToFilter`.
 #'
-#' @param rdbesRawObjectToFilter The RDBESRawObject to filter
+#' `killOrphans` allows you to remove orphaned rows if set to `TRUE`. The
+#' default is `FALSE`.
+#'
+#' @param rdbesRawObjectToFilter The `RDBESRawObject` to filter
 #' @param fieldsToFilter A vector of the field names you wish to check
 #' @param valuesToFilter A vector of the field values you wish to filter for
-#' @param killOrphans Controls if orphan rows are removed. Default is `TRUE`.
+#' @param killOrphans Controls if orphan rows are removed. Default is `FALSE`.
 #'
-#' @return the filtered input object of the same *class* as
+#' @return the filtered input object of the same class as
 #'   `rdbesRawObjectToFilter`
 #'
 #' @export
@@ -34,7 +35,7 @@
 filterRDBESRawObject <- function(rdbesRawObjectToFilter,
                                  fieldsToFilter,
                                  valuesToFilter,
-                                 killOrphans = TRUE) {
+                                 killOrphans = FALSE) {
 
   # Check we have a valid RDBESRawObject before doing anything else
   if (!validateRDBESRawObject(rdbesRawObjectToFilter, verbose = FALSE)) {

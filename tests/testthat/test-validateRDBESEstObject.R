@@ -16,7 +16,7 @@ test_that("validateRDBESEstObject returns T for valid empty object",  {
 })
 test_that("validateRDBESEstObject returns T for valid object from H1 data",  {
 
-  myObject <- createRDBESRawObject(rdbesExtractPath = ".\\h1_v_1_19_13")
+  myObject <- createRDBESRawObject(rdbesExtractPath = "./h1_v_1_19_13")
   myEStObj <- createRDBESEstObject(myObject,1)
   myReturn <- validateRDBESEstObject(myEStObj)
   expect_true(myReturn)
@@ -24,7 +24,7 @@ test_that("validateRDBESEstObject returns T for valid object from H1 data",  {
 })
 test_that("validateRDBESEstObject returns T for valid object from H5 data",  {
 
-  myObject <- createRDBESRawObject(rdbesExtractPath = ".\\h5_v_1_19_13")
+  myObject <- createRDBESRawObject(rdbesExtractPath = "./h5_v_1_19_13")
   myEStObj <- createRDBESEstObject(myObject,5)
   myReturn <- validateRDBESEstObject(myEStObj)
   expect_true(myReturn)

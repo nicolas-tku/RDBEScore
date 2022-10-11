@@ -9,7 +9,7 @@ test_that("findAndKillOrphans runs without errors on an empty RDBESRawObject",  
 })
 test_that("findAndKillOrphans runs without errors on an RDBESRawObject with no orphans",  {
 
-  myH1RawObject <- createRDBESRawObject(rdbesExtractPath = ".\\h1_v_1_19_13")
+  myH1RawObject <- createRDBESRawObject(rdbesExtractPath = "./h1_v_1_19_13")
 
   expect_error(findAndKillOrphans(objectToCheck = myH1RawObject,
                                   verbose = FALSE),NA)
@@ -17,7 +17,7 @@ test_that("findAndKillOrphans runs without errors on an RDBESRawObject with no o
 })
 test_that("findAndKillOrphans removes orphans on an filtered RDBESRawObject",  {
 
-  myH1RawObject <- createRDBESRawObject(rdbesExtractPath = ".\\h1_v_1_19_13")
+  myH1RawObject <- createRDBESRawObject(rdbesExtractPath = "./h1_v_1_19_13")
 
   # remove all the VS rows (but not any other rows)
   myFields <- c("VSunitName")

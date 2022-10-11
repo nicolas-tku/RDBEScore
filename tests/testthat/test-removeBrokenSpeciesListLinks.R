@@ -1,7 +1,7 @@
 test_that("removeBrokenSpeciesListLinks runs without errors
           or warnings when there are no invalid species list links",  {
 
-    myPath <- ".\\h1_v_1_19_13"
+    myPath <- "./h1_v_1_19_13"
     myH1RawObject <-
     createRDBESRawObject(rdbesExtractPath = myPath)
 
@@ -14,7 +14,7 @@ test_that("removeBrokenSpeciesListLinks runs without errors
 test_that("removeBrokenSpeciesListLinks prduces an error
           if the SL table is NULL",  {
 
-    myPath <- ".\\h1_v_1_19_13"
+    myPath <- "./h1_v_1_19_13"
     myH1RawObject <-
     createRDBESRawObject(rdbesExtractPath = myPath)
     myH1RawObject["SL"] <- list(NULL)
@@ -28,7 +28,7 @@ test_that("removeBrokenSpeciesListLinks prduces an error
 test_that("removeBrokenSpeciesListLinks runs without errors
           or warnings when there are invalid species list links",  {
 
-    myPath <- ".\\h1_v_1_19_13"
+    myPath <- "./h1_v_1_19_13"
     myH1RawObject <-
       createRDBESRawObject(rdbesExtractPath = myPath)
     myFields <- c("SLspeclistName")

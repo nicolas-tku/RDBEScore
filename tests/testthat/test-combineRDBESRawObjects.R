@@ -5,7 +5,7 @@ test_that("combineRDBESRawObjects returns error for NA",  {
 })
 test_that("combineRDBESRawObjects returns invalid rdbesRawObject when supplied with duplicate rdbesRawObjects",  {
 
-  myPath <- ".\\h1_v_1_19_13"
+  myPath <- "./h1_v_1_19_13"
   myObject1 <- createRDBESRawObject(rdbesExtractPath = myPath)
   myObject2 <- createRDBESRawObject(rdbesExtractPath = myPath)
 
@@ -20,8 +20,8 @@ test_that("combineRDBESRawObjects returns invalid rdbesRawObject when supplied w
 })
 test_that("combineRDBESRawObjects returns valid rdbesRawObject when supplied with valid, different rdbesRawObjects",  {
 
-  myObject1 <- createRDBESRawObject(rdbesExtractPath = ".\\h1_v_1_19_13")
-  myObject2 <- createRDBESRawObject(rdbesExtractPath = ".\\h5_v_1_19_13")
+  myObject1 <- createRDBESRawObject(rdbesExtractPath = "./h1_v_1_19_13")
+  myObject2 <- createRDBESRawObject(rdbesExtractPath = "./h5_v_1_19_13")
 
   # Check these are valid objects before we try and combine them
   expect_true(validateRDBESRawObject(myObject1))

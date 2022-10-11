@@ -17,7 +17,7 @@ test_that("validateRDBESRawObject returns T for valid empty object",  {
 })
 test_that("validateRDBESRawObject returns T for valid object from H1 data",  {
 
-  myObject <- createRDBESRawObject(rdbesExtractPath = ".\\h1_v_1_19_13")
+  myObject <- createRDBESRawObject(rdbesExtractPath = "./h1_v_1_19_13")
   myReturn <- validateRDBESRawObject(objectToCheck = myObject,
                                      verbose = FALSE)
   expect_true(myReturn)
@@ -25,7 +25,7 @@ test_that("validateRDBESRawObject returns T for valid object from H1 data",  {
 })
 test_that("validateRDBESRawObject returns T for valid object from H1 data (also checking data types)",  {
 
-  myObject <- createRDBESRawObject(rdbesExtractPath = ".\\h1_v_1_19_13")
+  myObject <- createRDBESRawObject(rdbesExtractPath = "./h1_v_1_19_13")
   myReturn <- validateRDBESRawObject(objectToCheck = myObject,
                                      checkDataTypes = TRUE,
                                      verbose = FALSE)
@@ -34,7 +34,7 @@ test_that("validateRDBESRawObject returns T for valid object from H1 data (also 
 })
 test_that("validateRDBESRawObject returns T for valid object from H5 data",  {
 
-  myObject <- createRDBESRawObject(rdbesExtractPath = ".\\h5_v_1_19_13")
+  myObject <- createRDBESRawObject(rdbesExtractPath = "./h5_v_1_19_13")
   myReturn <- validateRDBESRawObject(objectToCheck = myObject,
                                      verbose = FALSE)
   expect_true(myReturn)
@@ -42,7 +42,7 @@ test_that("validateRDBESRawObject returns T for valid object from H5 data",  {
 })
 test_that("validateRDBESRawObject returns T for valid object from H5 data (also checking data types)",  {
 
-  myObject <- createRDBESRawObject(rdbesExtractPath = ".\\h5_v_1_19_13")
+  myObject <- createRDBESRawObject(rdbesExtractPath = "./h5_v_1_19_13")
   myReturn <- validateRDBESRawObject(objectToCheck = myObject,
                                      checkDataTypes = TRUE,
                                      verbose = FALSE)
@@ -67,7 +67,7 @@ test_that("validateRDBESRawObject returns F for object that is not a list",  {
 
 test_that("validateRDBESRawObject returns F for object with extra name",  {
 
-  myObject <- createRDBESRawObject(rdbesExtractPath = ".\\h1_v_1_19_13")
+  myObject <- createRDBESRawObject(rdbesExtractPath = "./h1_v_1_19_13")
   myObject[['XX']] <- F
   myReturn <- validateRDBESRawObject(objectToCheck = myObject,
                                      verbose = FALSE)
@@ -76,7 +76,7 @@ test_that("validateRDBESRawObject returns F for object with extra name",  {
 })
 test_that("validateRDBESRawObject returns F for object without all names",  {
 
-  myObject <- createRDBESRawObject(rdbesExtractPath = ".\\h1_v_1_19_13")
+  myObject <- createRDBESRawObject(rdbesExtractPath = "./h1_v_1_19_13")
   myObject[['DE']] <- NULL
   myReturn <- validateRDBESRawObject(objectToCheck = myObject,
                                      verbose = FALSE)
@@ -86,7 +86,7 @@ test_that("validateRDBESRawObject returns F for object without all names",  {
 test_that("validateRDBESRawObject returns F for object with a required field
           removed",  {
 
-  myObject <- createRDBESRawObject(rdbesExtractPath = ".\\h1_v_1_19_13")
+  myObject <- createRDBESRawObject(rdbesExtractPath = "./h1_v_1_19_13")
   myObject[['DE']]$DEsampScheme <- NULL
   myReturn <- validateRDBESRawObject(objectToCheck = myObject,
                                      verbose = FALSE)
@@ -95,7 +95,7 @@ test_that("validateRDBESRawObject returns F for object with a required field
 })
 test_that("validateRDBESRawObject returns F for object with duplicate rows",  {
 
-  myObject <- createRDBESRawObject(rdbesExtractPath = ".\\h1_v_1_19_13")
+  myObject <- createRDBESRawObject(rdbesExtractPath = "./h1_v_1_19_13")
   myObject[['DE']] <- data.table::rbindlist(list(myObject[['DE']],myObject[['DE']]))
   myReturn <- validateRDBESRawObject(objectToCheck = myObject,
                                      verbose = FALSE)
@@ -104,7 +104,7 @@ test_that("validateRDBESRawObject returns F for object with duplicate rows",  {
 })
 test_that("validateRDBESRawObject returns F for object with duplicate DEid values",  {
 
-  myObject <- createRDBESRawObject(rdbesExtractPath = ".\\h1_v_1_19_13")
+  myObject <- createRDBESRawObject(rdbesExtractPath = "./h1_v_1_19_13")
   myObject[['DE']][,"DEid"]  <- replicate(nrow(myObject[['DE']]),1)
   myReturn <- validateRDBESRawObject(objectToCheck = myObject,
                                      verbose = FALSE)
@@ -113,7 +113,7 @@ test_that("validateRDBESRawObject returns F for object with duplicate DEid value
 })
 test_that("validateRDBESRawObject returns F for object with invalid data types (when checking data types)",  {
 
-  myObject <- createRDBESRawObject(rdbesExtractPath = ".\\h1_v_1_19_13")
+  myObject <- createRDBESRawObject(rdbesExtractPath = "./h1_v_1_19_13")
   myObject[["DE"]]$DEid <- as.character(myObject[["DE"]]$DEid)
   myObject[["SD"]]$SDid <- as.character(myObject[["SD"]]$SDid)
   myReturn <- validateRDBESRawObject(objectToCheck = myObject,
@@ -124,7 +124,7 @@ test_that("validateRDBESRawObject returns F for object with invalid data types (
 })
 test_that("validateRDBESRawObject returns F for object with with duplicate DEid values and invalid data types (when checking data types)",  {
 
-  myObject <- createRDBESRawObject(rdbesExtractPath = ".\\h1_v_1_19_13")
+  myObject <- createRDBESRawObject(rdbesExtractPath = "./h1_v_1_19_13")
   myObject[['DE']][,"DEid"]  <- replicate(nrow(myObject[['DE']]),1)
   myObject[["DE"]]$DEid <- as.character(myObject[["DE"]]$DEid)
   myObject[["SD"]]$SDid <- as.character(myObject[["SD"]]$SDid)

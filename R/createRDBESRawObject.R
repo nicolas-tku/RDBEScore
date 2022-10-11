@@ -73,7 +73,7 @@ createRDBESRawObject <- function(rdbesExtractPath = NA,
     # Determine the files which actually exist
     filesWhichExist <- names(
       fileNames[file.exists(
-        paste(rdbesExtractPath, "\\", fileNames, sep = "")
+        paste(rdbesExtractPath, "/", fileNames, sep = "")
       )]
     )
 
@@ -88,7 +88,7 @@ createRDBESRawObject <- function(rdbesExtractPath = NA,
         # Read the file
         myList[[myFile]] <-
           utils::read.csv(
-            paste(rdbesExtractPath, "\\", fileNames[myFile],  sep = ""),
+            paste(rdbesExtractPath, "/", fileNames[myFile],  sep = ""),
             header = TRUE, sep = ",", stringsAsFactors = FALSE
           )
 

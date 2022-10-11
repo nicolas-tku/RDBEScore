@@ -1,7 +1,7 @@
 test_that("createRDBESEstObject can create an object from an H1 data extract
           with no warnings or errors",  {
 
-  myPath <- ".\\h1_v_1_19_13"
+  myPath <- "./h1_v_1_19_13"
   myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
 
   myEstObject <- expect_warning(createRDBESEstObject(myRawObject,1),NA)
@@ -21,7 +21,7 @@ test_that("createRDBESEstObject can create an object from an H1 data extract
 test_that("createRDBESEstObject can create an object from an H5 data extract
           with no warnings or errors",  {
 
-  myPath <- ".\\h5_v_1_19_13"
+  myPath <- "./h5_v_1_19_13"
   myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
 
   myEstObject <- expect_warning(createRDBESEstObject(myRawObject,5),NA)
@@ -60,7 +60,7 @@ test_that("createRDBESEstObject can create an object from an empty H1 data extra
 test_that("createRDBESEstObject can create an object from an H1 data extract with sub-sampling
           with no warnings or errors",  {
 
-  myPath <- ".\\h1_v_1_19_13"
+  myPath <- "./h1_v_1_19_13"
   myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
 
   # Put some sub-sampling in the test data
@@ -90,7 +90,7 @@ test_that("createRDBESEstObject can create an object from an H1 data extract wit
 })
 test_that("createRDBESEstObject fails when an invalid hierarchy is requested",  {
 
-  myPath <- ".\\h1_v_1_19_13"
+  myPath <- "./h1_v_1_19_13"
   myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
   myEstObject <- expect_error(createRDBESEstObject(myRawObject,99),"An invalid value was used for the 'hierarchyToUse' parameter - createRDBESEstObject will not proceed")
 
@@ -98,7 +98,7 @@ test_that("createRDBESEstObject fails when an invalid hierarchy is requested",  
 test_that("createRDBESEstObject can create an object from an H1 data extract
           with no warnings or errors, stopping at VS",  {
 
-    myPath <- ".\\h1_v_1_19_13"
+    myPath <- "./h1_v_1_19_13"
     myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
 
     myEstObject <- expect_warning(createRDBESEstObject(myRawObject,1,stopTable = "VS"),NA)
@@ -116,7 +116,7 @@ test_that("createRDBESEstObject can create an object from an H1 data extract
 })
 test_that("createRDBESEstObject can correctly create an object when there is no BV data",  {
 
-    myPath <- ".\\h1_v_1_19_13"
+    myPath <- "./h1_v_1_19_13"
     myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
 
     # Filter the object
@@ -137,7 +137,7 @@ test_that("createRDBESEstObject can correctly create an object when there is no 
 })
 test_that("createRDBESEstObject can correctly create an object when there is no FM data",  {
 
-  myPath <- ".\\h1_v_1_19_13"
+  myPath <- "./h1_v_1_19_13"
   myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
 
   # Filter the object
@@ -161,7 +161,7 @@ test_that("createRDBESEstObject can correctly create an object when there is no 
 })
 test_that("createRDBESEstObject can correctly create an object when there is no FM or BV data",  {
 
-  myPath <- ".\\h1_v_1_19_13"
+  myPath <- "./h1_v_1_19_13"
   myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
 
   # Filter the object
@@ -183,7 +183,7 @@ test_that("createRDBESEstObject can correctly create an object when there is no 
 })
 test_that("createRDBESEstObject creates the correct number of rows when there is sub-sampling present (1)",  {
 
-  myPath <- ".\\h1_v_1_19_13"
+  myPath <- "./h1_v_1_19_13"
   myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
 
   # Filter the object
@@ -222,7 +222,7 @@ test_that("createRDBESEstObject creates the correct number of rows when there is
 })
 test_that("createRDBESEstObject creates the correct number of rows when there is sub-sampling present (2)",  {
 
-  myPath <- ".\\h1_v_1_19_13"
+  myPath <- "./h1_v_1_19_13"
   myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
 
   # Filter the object
