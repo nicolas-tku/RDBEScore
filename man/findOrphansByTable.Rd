@@ -3,14 +3,14 @@
 \name{findOrphansByTable}
 \alias{findOrphansByTable}
 \title{Internal function to identify orphan records in a given
-RDBESRawObject table}
+RDBESDataObject table}
 \usage{
 findOrphansByTable(tableToCheck, objectToCheck, foreignKeyIds, verbose = FALSE)
 }
 \arguments{
 \item{tableToCheck}{The two letter code for the table to check}
 
-\item{objectToCheck}{An RDBESRawObject}
+\item{objectToCheck}{An RDBESDataObject}
 
 \item{foreignKeyIds}{A vetor of the foreign key field names to check}
 
@@ -23,5 +23,5 @@ letter table identifier, and their orphan status.
 }
 \description{
 Internal function to identify orphan records in a given
-RDBESRawObject table
+RDBESDataObject table
 }

@@ -1,28 +1,28 @@
-test_that("findAndKillOrphans runs without errors on an empty RDBESRawObject",  {
+test_that("findAndKillOrphans runs without errors on an empty RDBESDataObject",  {
 
-  myEmptyObject <- createRDBESRawObject()
+  myEmptyObject <- createRDBESDataObject()
 
   expect_error(findAndKillOrphans(objectToCheck = myEmptyObject,
                                   verbose = FALSE),NA)
 
 
 })
-test_that("findAndKillOrphans runs without errors on an RDBESRawObject with no orphans",  {
+test_that("findAndKillOrphans runs without errors on an RDBESDataObject with no orphans",  {
 
-  myH1RawObject <- createRDBESRawObject(rdbesExtractPath = "./h1_v_1_19_13")
+  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
 
   expect_error(findAndKillOrphans(objectToCheck = myH1RawObject,
                                   verbose = FALSE),NA)
 
 })
-test_that("findAndKillOrphans removes orphans on an filtered RDBESRawObject",  {
+test_that("findAndKillOrphans removes orphans on an filtered RDBESDataObject",  {
 
-  myH1RawObject <- createRDBESRawObject(rdbesExtractPath = "./h1_v_1_19_13")
+  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
 
   # remove all the VS rows (but not any other rows)
   myFields <- c("VSunitName")
   myValues <- c("blah" )
-  myFilteredObject <- filterRDBESRawObject(myH1RawObject,
+  myFilteredObject <- filterRDBESDataObject(myH1RawObject,
                                            fieldsToFilter = myFields,
                                            valuesToFilter = myValues )
 

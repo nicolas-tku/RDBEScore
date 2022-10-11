@@ -11,7 +11,7 @@
 #' @examples
 #' \dontrun{
 #' myH1RawObject <-
-#'   createRDBESRawObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
+#'   createRDBESDataObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
 #' myH1EstObj <- createRDBESEstObject(myH1RawObject, 1)
 #' }
 createRDBESEstObject <- function(rdbesPrepObject,
@@ -19,7 +19,7 @@ createRDBESEstObject <- function(rdbesPrepObject,
                                  stopTable = NULL,
                                  verbose = FALSE) {
 
-  if (!validateRDBESRawObject(rdbesPrepObject, verbose = FALSE)) {
+  if (!validateRDBESDataObject(rdbesPrepObject, verbose = FALSE)) {
     stop(paste0(
       "rdbesPrepObject is not valid ",
       "- createRDBESEstObject will not proceed"

@@ -1,13 +1,13 @@
 #' Checks the data types of the columns in an
-#' rdbesRawObject against an expected list of data types.  Any differences
+#' RDBESDataObject against an expected list of data types.  Any differences
 #' are returned
 #'
-#' @param objectToCheck An rdbesRawObject to check
+#' @param objectToCheck An RDBESDataObject to check
 #'
 #' @return A data frame containing any data type differences (an empty data
 #' frame if there are no differences)
 #'
-validateRDBESRawObjectDataTypes <- function(objectToCheck){
+validateRDBESDataObjectDataTypes <- function(objectToCheck){
 
   # Get the data types of all our columns
   myDataTypes <- lapply(objectToCheck, function(x){

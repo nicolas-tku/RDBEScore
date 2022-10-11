@@ -3,13 +3,13 @@ library(dplyr)
 ## Step 1) load nad prepare some test data
 
 myH1RawObject <-
-  createRDBESRawObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
+  createRDBESDataObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
 
 #Filter our data for WGRDBES-EST TEST 1, 1965, H1
 myValues <- c(1965,1,"WGRDBES-EST TEST 1",1019159)
 myFields <- c("DEyear","DEhierarchy","DEsampScheme","SAspeCode")
 
-myH1RawObject <- filterRDBESRawObject(myH1RawObject,
+myH1RawObject <- filterRDBESDataObject(myH1RawObject,
                                            fieldsToFilter = myFields,
                                            valuesToFilter = myValues )
 myH1RawObject <- findAndKillOrphans(myH1RawObject)

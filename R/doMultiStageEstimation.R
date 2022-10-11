@@ -1,11 +1,11 @@
 #' Generate Multi-Level Estimations
 #'
 #' Generates mean and variance estimations for a list of related data tables.
-#' The input data tables is expected to follow the structure of RDBESrawObject.
+#' The input data tables is expected to follow the structure of RDBESDataObject.
 #' The mean an variance estimators are calculated for the target variable.
 #'
 #' @param tbls a named list of data tables that follow the structure of
-#' RDBESrawObject
+#' RDBESDataObject
 #' @inheritParams estimate
 #' @inheritDotParams estimate
 #'

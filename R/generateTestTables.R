@@ -58,7 +58,7 @@ makeTbl <- function(tblName, prevTbls = list(),
 #' Generate a List of Related Data Tables
 #'
 #' Generates a named list of data tables that follow the structure of
-#' RDBESrawObject. The tables only have columns required for testing
+#' RDBESDataObject. The tables only have columns required for testing
 #' The generate tables
 #'
 #' @param tblNames character vector of table names to be created

@@ -5,7 +5,7 @@
 #'
 #' @param rdbesExtractPath (Optional) The path to the csv files produced as an
 #' extract by the ICES RDBES.  If no path is suppled then an empty
-#' rdbesRawObject will be returned.
+#' RDBESDataObject will be returned.
 #' @param listOfFileNames (Optional) A names list of file names - the list names
 #' shoudl be the two-letter code for the relevent table e.g.
 #' list("DE" = "DE.csv",... ).  If the parameter is not supplied then the
@@ -16,14 +16,14 @@
 #' FALSE then the column data types will be determined by how the csv files
 #' are read in.  The default is TRUE
 #'
-#' @return A rdbesRawObject.  If a path to RDBES extract files is provided then
+#' @return A RDBESDataObject.  If a path to RDBES extract files is provided then
 #' it will contain the data from those files.  If no path is supplied then
-#' an empty rdbesRawObject will be returned.
+#' an empty RDBESDataObject will be returned.
 #' @export
 #'
 #' @examples
-#' myEmptyRDBESObject <- createRDBESRawObject()
-createRDBESRawObject <- function(rdbesExtractPath = NA,
+#' myEmptyRDBESObject <- createRDBESDataObject()
+createRDBESDataObject <- function(rdbesExtractPath = NA,
                                  listOfFileNames = NA,
                                  castToCorrectDataTypes = TRUE) {
 
@@ -122,8 +122,8 @@ createRDBESRawObject <- function(rdbesExtractPath = NA,
 
   }
 
-  # Create an rdbesRawObject using the constructor
-  myRDBESRawObject <- icesRDBES::newRDBESRawObject(DE = myList[["DE"]],
+  # Create an RDBESDataObject using the constructor
+  myRDBESDataObject <- icesRDBES::newRDBESDataObject(DE = myList[["DE"]],
                                         SD = myList[["SD"]],
                                         VS = myList[["VS"]],
                                         FT = myList[["FT"]],
@@ -144,10 +144,10 @@ createRDBESRawObject <- function(rdbesExtractPath = NA,
 
   if (castToCorrectDataTypes){
     # Ensure all the columns are the correct data type
-    myRDBESRawObject <- setRDBESRawObjectDataTypes(myRDBESRawObject)
+    myRDBESDataObject <- setRDBESDataObjectDataTypes(myRDBESDataObject)
 
   }
 
   # Return the object
-  myRDBESRawObject
+  myRDBESDataObject
 }

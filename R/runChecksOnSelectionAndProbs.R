@@ -23,8 +23,8 @@
 runChecksOnSelectionAndProbs <- function(x, verbose = TRUE) {
 
 
-  # Check we have a valid RDBESRawObject before doing anything else
-  if (!validateRDBESRawObject(x, verbose = FALSE)) {
+  # Check we have a valid RDBESDataObject before doing anything else
+  if (!validateRDBESDataObject(x, verbose = FALSE)) {
     stop(paste0(
       "x is not valid ",
       "- runChecksOnSelectionAndProbs will not proceed"

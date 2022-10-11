@@ -1,19 +1,19 @@
-#' For a given rdbesRawObject convert the required
+#' For a given RDBESDataObject convert the required
 #' columns to the correct data types.  (This function can cause an error if we
 #' have data in the columns that can't be cast to the desired data type.)
 #'
-#' @param rdbesRawObjectToConvert list - the raw item for conversion
+#' @param RDBESDataObjectToConvert list - the raw item for conversion
 #'
-#' @return An rdbesRawObject with the correct date types for the required
+#' @return An RDBESDataObject with the correct date types for the required
 #' fields
 #'
 #' @import data.table
-setRDBESRawObjectDataTypes <- function(rdbesRawObjectToConvert){
+setRDBESDataObjectDataTypes <- function(RDBESDataObjectToConvert){
 
   # For each entry in our list convert the columns to the correct format
   # This could cause an error if we have data in the columns that can't be
   # cast to the desired data type
-  alteredObject <- lapply(rdbesRawObjectToConvert,function(x){
+  alteredObject <- lapply(RDBESDataObjectToConvert,function(x){
       # Only process the non-null entries
       if (!is.null(x)){
         # Assume the first field name accurately gives us the table name
@@ -52,14 +52,14 @@ setRDBESRawObjectDataTypes <- function(rdbesRawObjectToConvert){
   )
 
   # Update the original object so we don't lose its class type
-  for (myTable in names(rdbesRawObjectToConvert)){
+  for (myTable in names(RDBESDataObjectToConvert)){
     if (!is.null(alteredObject[[myTable]])){
-      rdbesRawObjectToConvert[[myTable]] <- alteredObject[[myTable]]
+      RDBESDataObjectToConvert[[myTable]] <- alteredObject[[myTable]]
     }
 
   }
 
-  rdbesRawObjectToConvert
+  RDBESDataObjectToConvert
 
 
 }

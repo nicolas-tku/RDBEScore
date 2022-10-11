@@ -1,4 +1,4 @@
-#' Filter an RDBESRawObject
+#' Filter an RDBESDataObject
 #'
 #' The returned object will include all rows which either: a) do not included
 #' any of the field names in `fieldsToFilter`, or b) do include the field names
@@ -7,13 +7,13 @@
 #' `killOrphans` allows you to remove orphaned rows if set to `TRUE`. The
 #' default is `FALSE`.
 #'
-#' @param rdbesRawObjectToFilter The `RDBESRawObject` to filter
+#' @param RDBESDataObjectToFilter The `RDBESDataObject` to filter
 #' @param fieldsToFilter A vector of the field names you wish to check
 #' @param valuesToFilter A vector of the field values you wish to filter for
 #' @param killOrphans Controls if orphan rows are removed. Default is `FALSE`.
 #'
 #' @return the filtered input object of the same class as
-#'   `rdbesRawObjectToFilter`
+#'   `RDBESDataObjectToFilter`
 #'
 #' @export
 #' @md
@@ -22,41 +22,41 @@
 #' \dontrun{
 #'
 #' myH1RawObject <-
-#'   createRDBESRawObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
+#'   createRDBESDataObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
 #'
 #' myFields <- c("SDctry", "VDctry", "VDflgCtry", "FTarvLoc")
 #' myValues <- c("ZW", "ZWBZH", "ZWVFA")
 #'
-#' myFilteredObject <- filterRDBESRawObject(myH1RawObject,
+#' myFilteredObject <- filterRDBESDataObject(myH1RawObject,
 #'   fieldsToFilter = myFields,
 #'   valuesToFilter = myValues
 #' )
 #' }
-filterRDBESRawObject <- function(rdbesRawObjectToFilter,
+filterRDBESDataObject <- function(RDBESDataObjectToFilter,
                                  fieldsToFilter,
                                  valuesToFilter,
                                  killOrphans = FALSE) {
 
-  # Check we have a valid RDBESRawObject before doing anything else
-  if (!validateRDBESRawObject(rdbesRawObjectToFilter, verbose = FALSE)) {
+  # Check we have a valid RDBESDataObject before doing anything else
+  if (!validateRDBESDataObject(RDBESDataObjectToFilter, verbose = FALSE)) {
     stop(paste0(
-      "rdbesRawObjectToFilter is not valid ",
-      "- filterRDBESRawObject will not proceed"
+      "RDBESDataObjectToFilter is not valid ",
+      "- filterRDBESDataObject will not proceed"
     ))
   }
 
   # Check if the requested columns actually exist in the object
-  allColNames <- unlist(lapply(rdbesRawObjectToFilter, names))
+  allColNames <- unlist(lapply(RDBESDataObjectToFilter, names))
   missingFields <- fieldsToFilter[!fieldsToFilter %in% allColNames]
   if (length(missingFields) > 0) {
     warning(paste0(
       "The following fields were not found in the ",
-      "RDBESRawObject: ",
+      "RDBESDataObject: ",
       missingFields
     ))
   }
 
-  alteredObject <- lapply(rdbesRawObjectToFilter, function(x) {
+  alteredObject <- lapply(RDBESDataObjectToFilter, function(x) {
     foundNames <- names(x)[which(names(x) %in% fieldsToFilter)]
     if (length(foundNames) > 0) {
       x <-
@@ -66,15 +66,15 @@ filterRDBESRawObject <- function(rdbesRawObjectToFilter,
   })
 
   # Update the original object so we don't lose its class type
-  for (myTable in names(rdbesRawObjectToFilter)) {
+  for (myTable in names(RDBESDataObjectToFilter)) {
     if (!is.null(alteredObject[[myTable]])) {
-      rdbesRawObjectToFilter[[myTable]] <- alteredObject[[myTable]]
+      RDBESDataObjectToFilter[[myTable]] <- alteredObject[[myTable]]
     }
   }
 
   # remove orphans
-  if (killOrphans == TRUE) rdbesRawObjectToFilter <- findAndKillOrphans(rdbesRawObjectToFilter, verbose = FALSE)
+  if (killOrphans == TRUE) RDBESDataObjectToFilter <- findAndKillOrphans(RDBESDataObjectToFilter, verbose = FALSE)
 
   #
-  return(rdbesRawObjectToFilter)
+  return(RDBESDataObjectToFilter)
 }

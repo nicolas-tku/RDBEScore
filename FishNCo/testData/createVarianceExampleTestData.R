@@ -3,13 +3,13 @@ library(dplyr)
 
 
 # Load the test data
-testData <- icesRDBES::createRDBESRawObject("./FishNCo/testData/RegionalTestData")
+testData <- icesRDBES::createRDBESDataObject("./FishNCo/testData/RegionalTestData")
 
 
 # show the non-null table names
 names(testData[!unlist(lapply(testData, is.null))])
 # validate the data
-icesRDBES::validateRDBESRawObject(testData, verbose = FALSE)
+icesRDBES::validateRDBESDataObject(testData, verbose = FALSE)
 
 # make some changs to our test data so that we can estimate
 testData[['SA']]$SAselectMeth = 'SRSWOR'
@@ -69,7 +69,7 @@ testData[['SD']] <-
 myFields <- c("DEhierarchy")
 myValues <- c(1) # filter values here
 
-myFilteredTestData <- icesRDBES::filterRDBESRawObject(testData,
+myFilteredTestData <- icesRDBES::filterRDBESDataObject(testData,
                                                       fieldsToFilter = myFields,
                                                       valuesToFilter = myValues )
 
@@ -79,7 +79,7 @@ myFilteredTestData <-
 
 # Generate estimates for all strata
 StrataEst <-
-  doEstimationForAllStrata(rdbesRawObjectForEstim = myFilteredTestData ,
+  doEstimationForAllStrata(RDBESDataObjectForEstim = myFilteredTestData ,
                            hierarchyToUse = 1)
 
 saveRDS(StrataEst, file = "./FishNCo/testData/StrataEst.rds")

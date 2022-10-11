@@ -26,7 +26,7 @@ library(icesRDBES)
 
 ## Prerequisites
 
-First we'll load some example data from the RDBES and check it's valid.  It's a good tip to check your RDBESRawObjects are valid after any manipulations you perform.
+First we'll load some example data from the RDBES and check it's valid.  It's a good tip to check your RDBESDataObjects are valid after any manipulations you perform.
 
 ```{r load}
 
@@ -36,7 +36,7 @@ getwd()
 #load("../tests/testthat/h7_v_1_19/testDataPreparationFunctions.Rdata")
 #myRawObject <- myH7RawObject
 myRawObject <-
-     createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h7_v_1_19_13")
+     createRDBESDataObject(rdbesExtractPath = "..\\tests\\testthat\\h7_v_1_19_13")
 
 # Temp fixes to change data to lower hierarchy C - function won't deal with A, or B yet
 myRawObject[["BV"]] <- dplyr::distinct(myRawObject[["BV"]], FMid, .keep_all = TRUE)
@@ -46,7 +46,7 @@ temp <- dplyr::left_join(myRawObject[["BV"]][,c("BVid","FMid")],
 myRawObject[["BV"]]$SAid <- temp$SAid
 myRawObject[["BV"]]$FMid <- NA
 myRawObject[["SA"]]$SAlowHierarchy <- "C"
-myRawObject <- filterRDBESRawObject(myRawObject,c("DEstratumName"), c("DE_stratum1_H7"))
+myRawObject <- filterRDBESDataObject(myRawObject,c("DEstratumName"), c("DE_stratum1_H7"))
 myRawObject <- findAndKillOrphans(myRawObject)
 myRawObject[["BV"]]$BVnumTotal <- 10
 myRawObject[["BV"]]$BVnumSamp <- 10
@@ -54,7 +54,7 @@ myRawObject[["BV"]]$BVnumSamp <- 10
 # Number of rows in each non-null table
 unlist(lapply(myRawObject, nrow))
 
-validateRDBESRawObject(myRawObject)
+validateRDBESDataObject(myRawObject)
 
 
 ```
@@ -90,7 +90,7 @@ First, we'll change some data related to selection methods and stratification.
 	
 	#myRawObject$BV$BVselectMeth<-"SRSWOR"
 	
-	validateRDBESRawObject(myRawObject)
+	validateRDBESDataObject(myRawObject)
 	
 	runChecksOnSelectionAndProbs(myRawObject)
 
@@ -146,7 +146,7 @@ We're still missing some numSamp values - let's add these and try again.
 Success! We now have a prepared object - let's check our object is still valid.
 
 ```{r checkValid1}
-  validateRDBESRawObject(myH7PrepObject)
+  validateRDBESDataObject(myH7PrepObject)
 ```
 
 
@@ -171,7 +171,7 @@ Generate true zeroes using the data from the SL table.
 Finally, let's check our object is still valid.
 
 ```{r checkValid2}
-  validateRDBESRawObject(myH7PrepObjectWithZeroes)
+  validateRDBESDataObject(myH7PrepObjectWithZeroes)
 ```
 
 

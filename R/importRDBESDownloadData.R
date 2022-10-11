@@ -2,7 +2,7 @@
 #'
 #' Read the .zip files and/or .csv files downloadable from the ICES RDBES
 #' web page. The function accepts a list of paths to csv and zip files. Unzips
-#' an then uses \code{\link{createRDBESRawObject}}
+#' an then uses \code{\link{createRDBESDataObject}}
 #'
 #' @param filenames - vector of paths pointing to files that should be imported
 #' @param castToCorrectDataTypes (Optional) If TRUE then the function
@@ -14,7 +14,7 @@
 #' The table that are not in input data are NULL
 #' @export
 #'
-#' @seealso \code{\link{createRDBESRawObject}}
+#' @seealso \code{\link{createRDBESDataObject}}
 #'
 #' @examples
 #' files <- c("./tests/testthat/h1_v_1_19/H1_2021_000_example.zip")
@@ -65,7 +65,7 @@ importRDBESDownloadData <- function(filenames,
 
   # the files are not used currently but can be if we want to
   files <- unique(unlist(sapply(filenames, unzipFile, tmp)))
-  res <- icesRDBES::createRDBESRawObject(tmp,
+  res <- icesRDBES::createRDBESDataObject(tmp,
                               castToCorrectDataTypes = castToCorrectDataTypes)
   unlink(tmp, recursive = T)
   res

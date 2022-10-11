@@ -1,9 +1,9 @@
 ---
-title: "Manipulating RDBESRawObjects"
+title: "Manipulating RDBESDataObjects"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Manipulating RDBESRawObjects}
+  %\VignetteIndexEntry{Manipulating RDBESDataObjects}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 ## Introduction 
 
-The aim of this document is to illustrate some of the ways of manipulating RDBESRawObjects.
+The aim of this document is to illustrate some of the ways of manipulating RDBESDataObjects.
 
 ```{r}
 library(icesRDBES)
@@ -25,7 +25,7 @@ library(icesRDBES)
 
 ## Prerequisites
 
-First we'll load some example data from the RDBES and check it's valid.  It's a good idea to check your RDBESRawObjects are valid after any manipulations you perform.
+First we'll load some example data from the RDBES and check it's valid.  It's a good idea to check your RDBESDataObjects are valid after any manipulations you perform.
 
 ```{r load}
 
@@ -33,48 +33,48 @@ getwd()
 
 # Hierarchy 1 demo data
 myH1RawObject <-
-     createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19_13")
+     createRDBESDataObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19_13")
 
 # Number of rows in each non-null table
 unlist(lapply(myH1RawObject, nrow))
 
-validateRDBESRawObject(myH1RawObject, verbose = FALSE)
+validateRDBESDataObject(myH1RawObject, verbose = FALSE)
 
 # Hierarchy 5 demo data
 myH5RawObject <-
-     createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h5_v_1_19_13")
+     createRDBESDataObject(rdbesExtractPath = "..\\tests\\testthat\\h5_v_1_19_13")
 
 # Number of rows in each non-null table
 unlist(lapply(myH5RawObject, nrow))
 
-validateRDBESRawObject(myH5RawObject, verbose = FALSE)
+validateRDBESDataObject(myH5RawObject, verbose = FALSE)
 
 
 ```
 
 ## Combining RBDESRawObjects
 
-RDBESRawObjects can be combined using the combineRDBESRawObjects() function.  This might be required when different sampling schemes are used to collect on-shore and at-sea samples - it will often be required to combine all the data together before further analysis.
+RDBESDataObjects can be combined using the combineRDBESDataObjects() function.  This might be required when different sampling schemes are used to collect on-shore and at-sea samples - it will often be required to combine all the data together before further analysis.
 
 ```{r combine}
 
-myCombinedRawObject <- combineRDBESRawObjects(rdbesRawObject1=myH1RawObject,
-                                              rdbesRawObject2=myH5RawObject)
+myCombinedRawObject <- combineRDBESDataObjects(RDBESDataObject1=myH1RawObject,
+                                              RDBESDataObject2=myH5RawObject)
 
 # Number of rows in each non-null table
 unlist(lapply(myCombinedRawObject, nrow))
 
-validateRDBESRawObject(myCombinedRawObject, verbose = FALSE)
+validateRDBESDataObject(myCombinedRawObject, verbose = FALSE)
 ```
 
-## Filtering RDBESRawObjects
+## Filtering RDBESDataObjects
 
-RDBESRawObjects can be filtered using the filterRDBESRawObject() function - this allows the RDBESRawObject to be filtered by any field.  A typical use of filtering might be to extract all data collected in a particular ICES division.  
+RDBESDataObjects can be filtered using the filterRDBESDataObject() function - this allows the RDBESDataObject to be filtered by any field.  A typical use of filtering might be to extract all data collected in a particular ICES division.  
 
 
 ```{r filter}
 myH1RawObject <-
-createRDBESRawObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19_13")
+createRDBESDataObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19_13")
 
 # Number of rows in each non-null table
 unlist(lapply(myH1RawObject, nrow))
@@ -82,14 +82,14 @@ unlist(lapply(myH1RawObject, nrow))
 myFields <- c("SDctry","VDctry","VDflgCtry","FTarvLoc")
 myValues <- c("ZW","ZWBZH","ZWVFA" )
 
-myFilteredObject <- filterRDBESRawObject(myH1RawObject,
+myFilteredObject <- filterRDBESDataObject(myH1RawObject,
                                          fieldsToFilter = myFields,
                                          valuesToFilter = myValues )
 
 # Number of rows in each non-null table
 unlist(lapply(myFilteredObject, nrow))
 
-validateRDBESRawObject(myFilteredObject, verbose = FALSE)
+validateRDBESDataObject(myFilteredObject, verbose = FALSE)
 ```
 It is important to note that filtering is likely to result in "orphan" rows being produced so it is usual to also apply the findAndKillOrphans() function to the filtered data to remove these records.
 
@@ -98,7 +98,7 @@ It is important to note that filtering is likely to result in "orphan" rows bein
 myFilteredObjectNoOrphans <- findAndKillOrphans(objectToCheck = myFilteredObject,
                                         verbose = FALSE)
 
-validateRDBESRawObject(myFilteredObjectNoOrphans, verbose = FALSE)
+validateRDBESDataObject(myFilteredObjectNoOrphans, verbose = FALSE)
 
 
 ```
@@ -109,7 +109,7 @@ You can also remove any records that are not linking to a row in the VesselDetai
 
 myFields <- c("VDlenCat")
 myValues <- c("18-<24" )
-myFilteredObject <- filterRDBESRawObject(myFilteredObjectNoOrphans,
+myFilteredObject <- filterRDBESDataObject(myFilteredObjectNoOrphans,
                                          fieldsToFilter = myFields,
                                          valuesToFilter = myValues )
 
@@ -117,7 +117,7 @@ myFilteredObjectValidVesselLinks <- removeBrokenVesselLinks(
                                   objectToCheck = myFilteredObject,
                                   verbose = FALSE)
 
-validateRDBESRawObject(myFilteredObjectValidVesselLinks, verbose = FALSE)
+validateRDBESDataObject(myFilteredObjectValidVesselLinks, verbose = FALSE)
 
 ```
 
@@ -127,7 +127,7 @@ Finally you can also remove any records that are not linking to an entry in the 
 
 myFields <- c("SLspeclistName")
 myValues <- c("ZW_1965_SpeciesList" )
-myFilteredObjectValidSpeciesLinks <- filterRDBESRawObject(myFilteredObjectValidVesselLinks,
+myFilteredObjectValidSpeciesLinks <- filterRDBESDataObject(myFilteredObjectValidVesselLinks,
                                          fieldsToFilter = myFields,
                                          valuesToFilter = myValues )
 
@@ -135,7 +135,7 @@ myFilteredObjectValidSpeciesLinks <- removeBrokenSpeciesListLinks(
                                   objectToCheck = myFilteredObjectValidSpeciesLinks,
                                   verbose = FALSE)
 
-validateRDBESRawObject(myFilteredObjectValidSpeciesLinks, verbose = FALSE)
+validateRDBESDataObject(myFilteredObjectValidSpeciesLinks, verbose = FALSE)
 
 ```
 

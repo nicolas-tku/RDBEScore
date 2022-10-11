@@ -1,8 +1,8 @@
 #' Internal function to identify orphan records in a given
-#' RDBESRawObject table
+#' RDBESDataObject table
 #'
 #' @param tableToCheck The two letter code for the table to check
-#' @param objectToCheck An RDBESRawObject
+#' @param objectToCheck An RDBESDataObject
 #' @param foreignKeyIds A vetor of the foreign key field names to check
 #' @param verbose (Optional) If set to TRUE more detailed text will be printed
 #' out by the function.  Default is TRUE.

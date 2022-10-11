@@ -1,11 +1,11 @@
-#' Internal function to remove orphan records from an RDBESRawObject
+#' Internal function to remove orphan records from an RDBESDataObject
 #'
-#' @param objectToCheck an RDBESRawObject
+#' @param objectToCheck an RDBESDataObject
 #' @param orphansToRemove The output from the findOrphansByTable function (A
 #' data frame with the primary keys of the table checked, the two
 #' letter table identifier, and their orphan status.)
 #'
-#' @return RDBESRawObject with orphan records removed
+#' @return RDBESDataObject with orphan records removed
 #'
 killOrphans <- function(objectToCheck, orphansToRemove) {
   for (myTable in unique(orphansToRemove$Table)) {

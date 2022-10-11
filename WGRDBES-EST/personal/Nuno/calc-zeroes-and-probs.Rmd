@@ -48,7 +48,7 @@ These should be added to the icesRDBES package which will make this step unneces
 
 ## Prerequisites
 
-First we'll load some example data from the RDBES and check it's valid.  It's a good tip to check your RDBESRawObjects are valid after any manipulations you perform.
+First we'll load some example data from the RDBES and check it's valid.  It's a good tip to check your RDBESDataObjects are valid after any manipulations you perform.
 
 ```{r load}
 
@@ -60,7 +60,7 @@ load ("data/testDataPreparationFunctions.Rdata")
 # Number of rows in each non-null table
 unlist(lapply(myH7RawObject, nrow))
 
-validateRDBESRawObject(myH7RawObject, verbose = TRUE)
+validateRDBESDataObject(myH7RawObject, verbose = TRUE)
 
 
 ```
@@ -150,7 +150,7 @@ Generate true zeroes using the data from the SL table.
 Finally, let's check our object is still valid. (It won't be until Nuno changes his function code :-) )
 
 ```{r checkValid}
-  validateRDBESRawObject(myH7PrepObject2, verbose = TRUE)
+  validateRDBESDataObject(myH7PrepObject2, verbose = TRUE)
 ```
 
 

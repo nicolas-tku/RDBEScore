@@ -1,4 +1,4 @@
-test_that("checkRDBESRawObjectDataTypes returns an empty list for an object with valid data types",  {
+test_that("checkRDBESDataObjectDataTypes returns an empty list for an object with valid data types",  {
 
   myDE <- data.frame("DEid" = c(1L,2L),
                      "DErecType" = c("DE","DE"),
@@ -16,11 +16,11 @@ test_that("checkRDBESRawObjectDataTypes returns an empty list for an object with
     myObject <- list()
     myObject[["DE"]] <- myDE
 
-    myDiffs <- validateRDBESRawObjectDataTypes(myObject)
+    myDiffs <- validateRDBESDataObjectDataTypes(myObject)
     numberOfDifferences <- nrow(myDiffs)
     expect_equal(numberOfDifferences,0)
 })
-test_that("checkRDBESRawObjectDataTypes returns 2 differences for an object with 2 invalid data types",  {
+test_that("checkRDBESDataObjectDataTypes returns 2 differences for an object with 2 invalid data types",  {
 
   myDE <- data.frame("DEid" = c("1","2"), # WRONG
                      "DErecType" = c("DE","DE"),
@@ -39,7 +39,7 @@ test_that("checkRDBESRawObjectDataTypes returns 2 differences for an object with
   myObject <- list()
   myObject[["DE"]] <- myDE
 
-  myDiffs <- validateRDBESRawObjectDataTypes(myObject)
+  myDiffs <- validateRDBESDataObjectDataTypes(myObject)
   numberOfDifferences <- nrow(myDiffs)
   expect_equal(numberOfDifferences,2)
 })

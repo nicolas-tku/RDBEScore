@@ -1,7 +1,7 @@
 #' Estimate totals and means, and try to generate samples variances for all
-#' strata in an RDBESRawObject
+#' strata in an RDBESDataObject
 #'
-#' @param rdbesRawObjectForEstim The RDBESRawObject to generate estimates for
+#' @param RDBESDataObjectForEstim The RDBESDataObject to generate estimates for
 #' @param hierarchyToUse The number of the RDBES hierarchy to estimate for
 #' @param verbose (Optional) If set to TRUE more detailed text will be printed
 #' out by the function.  Default is TRUE.
@@ -13,33 +13,33 @@
 #' \dontrun{
 #'
 #' myH1RawObject <-
-#'   createRDBESRawObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
+#'   createRDBESDataObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
 #'
 #' # Update our test data with some random sample measurements
 #' myH1RawObject[["SA"]]$SAsampWtLive <-
 #'   round(runif(n = nrow(myH1RawObject[["SA"]]), min = 1, max = 100))
 #'
 #' myStrataEst <- doEstimationForAllStrata(
-#'   rdbesRawObjectForEstim = myH1RawObject,
+#'   RDBESDataObjectForEstim = myH1RawObject,
 #'   hierarchyToUse = 1
 #' )
 #' }
-doEstimationForAllStrata <- function(rdbesRawObjectForEstim,
+doEstimationForAllStrata <- function(RDBESDataObjectForEstim,
                                      hierarchyToUse,
                                      verbose = TRUE) {
 
   # For testing
-  # rdbesRawObjectForEstim <- myFilteredTestData
+  # RDBESDataObjectForEstim <- myFilteredTestData
   # hierarchyToUse <- 1
   # verbose <- TRUE
 
   # TODO - function does not handle sub-sampling at the moment
 
-  # Check we have a valid RDBESRawObject before doing anything else
-  if (!validateRDBESRawObject(rdbesRawObjectForEstim, verbose = FALSE)) {
+  # Check we have a valid RDBESDataObject before doing anything else
+  if (!validateRDBESDataObject(RDBESDataObjectForEstim, verbose = FALSE)) {
     stop(paste0(
-      "rdbesRawObjectForEstim is not valid ",
-      "- filterRDBESRawObject will not proceed"
+      "RDBESDataObjectForEstim is not valid ",
+      "- filterRDBESDataObject will not proceed"
     ))
   }
 
@@ -83,7 +83,7 @@ doEstimationForAllStrata <- function(rdbesRawObjectForEstim,
     }
 
     # Get our data
-    myTable <- rdbesRawObjectForEstim[[currentTable]][, ..varsNeeded]
+    myTable <- RDBESDataObjectForEstim[[currentTable]][, ..varsNeeded]
     # Get the parent table ID
     names(myTable)[names(myTable) == paste0(parentTable, "id")] <-
       paste0(currentTable, "parentTableID")

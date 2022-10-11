@@ -4,11 +4,11 @@ library(icesRDBES)
 #options(dplyr.summarise.inform = FALSE)
 
 # Load the test data
-testData <- createRDBESRawObject("\\\\galwayfs03\\fishdata\\FishnCo_Project\\Outsourcing\\Obj5\\BiasReport\\FISHNCO_Function\\testData")
+testData <- createRDBESDataObject("\\\\galwayfs03\\fishdata\\FishnCo_Project\\Outsourcing\\Obj5\\BiasReport\\FISHNCO_Function\\testData")
 # show the non-null table names
 names(testData[!unlist(lapply(testData, is.null))])
 # validate the data
-validateRDBESRawObject(testData, verbose = FALSE)
+validateRDBESDataObject(testData, verbose = FALSE)
 
 
 # make some changs to our test data so that we can estimate
@@ -50,7 +50,7 @@ myValues <- c(2019,1)
 myFields <- c("DEyear","DEhierarchy")
 
 
-myFilteredTestData <- filterRDBESRawObject(testData,
+myFilteredTestData <- filterRDBESDataObject(testData,
                                           fieldsToFilter = myFields,
                                           valuesToFilter = myValues )
 # Remove any orphan records we created during the filtering
@@ -59,19 +59,19 @@ myFilteredTestData <- findAndKillOrphans(myFilteredTestData, verbose = FALSE)
 
 
 # Generate estimates for all strata
-myStrataEst <- doEstimationForAllStrata(rdbesRawObjectForEstim = myFilteredTestData ,
+myStrataEst <- doEstimationForAllStrata(RDBESDataObjectForEstim = myFilteredTestData ,
                                         hierarchyToUse = 1)
 
 ## OK, do the same as above but with the basic test data from the package
 
 myH1RawObject <-
-      createRDBESRawObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
+      createRDBESDataObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
 
 # Update our test data with some random sample measurements (it didn't include these)
 myH1RawObject[['SA']]$SAsampWtLive <- round(runif(n=nrow(myH1RawObject[['SA']]),min = 1, max = 100))
 
 # Generate estimates for all strata
-myStrataEst <- doEstimationForAllStrata(rdbesRawObjectForEstim = myH1RawObject,
+myStrataEst <- doEstimationForAllStrata(RDBESDataObjectForEstim = myH1RawObject,
                                         hierarchyToUse = 1)
 
 

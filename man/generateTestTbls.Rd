@@ -32,7 +32,7 @@ a list of named data.table's
 }
 \description{
 Generates a named list of data tables that follow the structure of
-RDBESrawObject. The tables only have columns required for testing
+RDBESDataObject. The tables only have columns required for testing
 The generate tables
 }
 \examples{

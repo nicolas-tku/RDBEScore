@@ -4,7 +4,7 @@ installr::check.for.updates.R(notify_user = TRUE, GUI = TRUE,
 
 # load data	
 	# info: object myH1RawObject in file "testData.Rdata" is an 
-		# anonymized extract of RDBES data after filterRDBESRawObject & findAndKillOrphans
+		# anonymized extract of RDBES data after filterRDBESDataObject & findAndKillOrphans
 	load ("data/testData.Rdata")
 
 # load new or modified functions [they are exemplified below]
@@ -60,8 +60,8 @@ installr::check.for.updates.R(notify_user = TRUE, GUI = TRUE,
 
 # other
 	# check why [is it table var prefixes? do we need them back? create a addPrefixToVarNames if so]
-		icesRDBES::validateRDBESRawObject(myH7PrepObject2, verbose = TRUE)
-		icesRDBES::validateRDBESRawObject(myH7PrepObject, verbose = FALSE)
+		icesRDBES::validateRDBESDataObject(myH7PrepObject2, verbose = TRUE)
+		icesRDBES::validateRDBESDataObject(myH7PrepObject, verbose = FALSE)
 
 	
 

@@ -2,7 +2,7 @@ test_that("createRDBESEstObject can create an object from an H1 data extract
           with no warnings or errors",  {
 
   myPath <- "./h1_v_1_19_13"
-  myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
+  myRawObject <- createRDBESDataObject(rdbesExtractPath = myPath)
 
   myEstObject <- expect_warning(createRDBESEstObject(myRawObject,1),NA)
   myEstObject <- expect_error(createRDBESEstObject(myRawObject,1),NA)
@@ -22,7 +22,7 @@ test_that("createRDBESEstObject can create an object from an H5 data extract
           with no warnings or errors",  {
 
   myPath <- "./h5_v_1_19_13"
-  myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
+  myRawObject <- createRDBESDataObject(rdbesExtractPath = myPath)
 
   myEstObject <- expect_warning(createRDBESEstObject(myRawObject,5),NA)
   myEstObject <- expect_error(createRDBESEstObject(myRawObject,5),NA)
@@ -41,7 +41,7 @@ test_that("createRDBESEstObject can create an object from an H5 data extract
 test_that("createRDBESEstObject can create an object from an empty H1 data extract
           with no warnings or errors",  {
 
-  myRawObject <- createRDBESRawObject()
+  myRawObject <- createRDBESDataObject()
 
   myEstObject <- expect_warning(createRDBESEstObject(myRawObject,1),NA)
   myEstObject <- expect_error(createRDBESEstObject(myRawObject,1),NA)
@@ -61,7 +61,7 @@ test_that("createRDBESEstObject can create an object from an H1 data extract wit
           with no warnings or errors",  {
 
   myPath <- "./h1_v_1_19_13"
-  myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
+  myRawObject <- createRDBESDataObject(rdbesExtractPath = myPath)
 
   # Put some sub-sampling in the test data
   # Remove column because it seems to be logical data type
@@ -91,7 +91,7 @@ test_that("createRDBESEstObject can create an object from an H1 data extract wit
 test_that("createRDBESEstObject fails when an invalid hierarchy is requested",  {
 
   myPath <- "./h1_v_1_19_13"
-  myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
+  myRawObject <- createRDBESDataObject(rdbesExtractPath = myPath)
   myEstObject <- expect_error(createRDBESEstObject(myRawObject,99),"An invalid value was used for the 'hierarchyToUse' parameter - createRDBESEstObject will not proceed")
 
 })
@@ -99,7 +99,7 @@ test_that("createRDBESEstObject can create an object from an H1 data extract
           with no warnings or errors, stopping at VS",  {
 
     myPath <- "./h1_v_1_19_13"
-    myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
+    myRawObject <- createRDBESDataObject(rdbesExtractPath = myPath)
 
     myEstObject <- expect_warning(createRDBESEstObject(myRawObject,1,stopTable = "VS"),NA)
     myEstObject <- expect_error(createRDBESEstObject(myRawObject,1,stopTable = "VS"),NA)
@@ -117,14 +117,14 @@ test_that("createRDBESEstObject can create an object from an H1 data extract
 test_that("createRDBESEstObject can correctly create an object when there is no BV data",  {
 
     myPath <- "./h1_v_1_19_13"
-    myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
+    myRawObject <- createRDBESDataObject(rdbesExtractPath = myPath)
 
     # Filter the object
-    myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "DEid", valuesToFilter = 4110)
-    myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "VSid", valuesToFilter = 63301)
-    myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "FTunitName", valuesToFilter = "FT_unit_1")
-    myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "FOunitName", valuesToFilter = "FO_unit_1")
-    myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "SSid", valuesToFilter = 110946)
+    myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "DEid", valuesToFilter = 4110)
+    myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "VSid", valuesToFilter = 63301)
+    myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "FTunitName", valuesToFilter = "FT_unit_1")
+    myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "FOunitName", valuesToFilter = "FO_unit_1")
+    myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "SSid", valuesToFilter = 110946)
     myRawObject <- findAndKillOrphans(myRawObject)
 
     # get rid of BV data
@@ -138,14 +138,14 @@ test_that("createRDBESEstObject can correctly create an object when there is no 
 test_that("createRDBESEstObject can correctly create an object when there is no FM data",  {
 
   myPath <- "./h1_v_1_19_13"
-  myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
+  myRawObject <- createRDBESDataObject(rdbesExtractPath = myPath)
 
   # Filter the object
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "DEid", valuesToFilter = 4110)
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "VSid", valuesToFilter = 63301)
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "FTunitName", valuesToFilter = "FT_unit_1")
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "FOunitName", valuesToFilter = "FO_unit_1")
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "SSid", valuesToFilter = 110946)
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "DEid", valuesToFilter = 4110)
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "VSid", valuesToFilter = 63301)
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "FTunitName", valuesToFilter = "FT_unit_1")
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "FOunitName", valuesToFilter = "FO_unit_1")
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "SSid", valuesToFilter = 110946)
   myRawObject <- findAndKillOrphans(myRawObject)
 
   # get rid of FM data
@@ -162,14 +162,14 @@ test_that("createRDBESEstObject can correctly create an object when there is no 
 test_that("createRDBESEstObject can correctly create an object when there is no FM or BV data",  {
 
   myPath <- "./h1_v_1_19_13"
-  myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
+  myRawObject <- createRDBESDataObject(rdbesExtractPath = myPath)
 
   # Filter the object
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "DEid", valuesToFilter = 4110)
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "VSid", valuesToFilter = 63301)
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "FTunitName", valuesToFilter = "FT_unit_1")
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "FOunitName", valuesToFilter = "FO_unit_1")
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "SSid", valuesToFilter = 110946)
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "DEid", valuesToFilter = 4110)
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "VSid", valuesToFilter = 63301)
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "FTunitName", valuesToFilter = "FT_unit_1")
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "FOunitName", valuesToFilter = "FO_unit_1")
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "SSid", valuesToFilter = 110946)
   myRawObject <- findAndKillOrphans(myRawObject)
 
   # get rid of FM and BV data
@@ -184,14 +184,14 @@ test_that("createRDBESEstObject can correctly create an object when there is no 
 test_that("createRDBESEstObject creates the correct number of rows when there is sub-sampling present (1)",  {
 
   myPath <- "./h1_v_1_19_13"
-  myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
+  myRawObject <- createRDBESDataObject(rdbesExtractPath = myPath)
 
   # Filter the object
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "DEid", valuesToFilter = 4110)
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "VSid", valuesToFilter = 63301)
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "FTunitName", valuesToFilter = "FT_unit_1")
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "FOunitName", valuesToFilter = "FO_unit_1")
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "SSid", valuesToFilter = 110946)
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "DEid", valuesToFilter = 4110)
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "VSid", valuesToFilter = 63301)
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "FTunitName", valuesToFilter = "FT_unit_1")
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "FOunitName", valuesToFilter = "FO_unit_1")
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "SSid", valuesToFilter = 110946)
   myRawObject <- findAndKillOrphans(myRawObject)
 
   # Introduce sub-sampling - only the lowest level has data
@@ -223,14 +223,14 @@ test_that("createRDBESEstObject creates the correct number of rows when there is
 test_that("createRDBESEstObject creates the correct number of rows when there is sub-sampling present (2)",  {
 
   myPath <- "./h1_v_1_19_13"
-  myRawObject <- createRDBESRawObject(rdbesExtractPath = myPath)
+  myRawObject <- createRDBESDataObject(rdbesExtractPath = myPath)
 
   # Filter the object
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "DEid", valuesToFilter = 4110)
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "VSid", valuesToFilter = 63301)
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "FTunitName", valuesToFilter = "FT_unit_1")
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "FOunitName", valuesToFilter = "FO_unit_1")
-  myRawObject <- filterRDBESRawObject(myRawObject, fieldsToFilter = "SSid", valuesToFilter = 110946)
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "DEid", valuesToFilter = 4110)
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "VSid", valuesToFilter = 63301)
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "FTunitName", valuesToFilter = "FT_unit_1")
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "FOunitName", valuesToFilter = "FO_unit_1")
+  myRawObject <- filterRDBESDataObject(myRawObject, fieldsToFilter = "SSid", valuesToFilter = 110946)
   myRawObject <- findAndKillOrphans(myRawObject)
 
   # Introduce sub-sampling - the upper and lowest level of sampling have data

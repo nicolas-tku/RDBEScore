@@ -8,7 +8,7 @@ doMultiStageEstimation(tbls, estimRes, target, ...)
 }
 \arguments{
 \item{tbls}{a named list of data tables that follow the structure of
-RDBESrawObject}
+RDBESDataObject}
 
 \item{estimRes}{a list of 2 values. First, named **parentIdCol**, indicates
 the column to use for sub-setting the data  and the second is a vector of
@@ -33,7 +33,7 @@ estimation data on uppre tables included
 }
 \description{
 Generates mean and variance estimations for a list of related data tables.
-The input data tables is expected to follow the structure of RDBESrawObject.
+The input data tables is expected to follow the structure of RDBESDataObject.
 The mean an variance estimators are calculated for the target variable.
 }
 \examples{

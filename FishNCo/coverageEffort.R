@@ -148,8 +148,8 @@ coverageEffort <- function(dataToPlot,
 
   # We'll convert the CS data into a RDBESEstObject to
   # make it easier to handle here
-  if (!validateRDBESRawObject(dataToPlot)){
-    stop("dataToPlot is not a valid RDBESRawObject")
+  if (!validateRDBESDataObject(dataToPlot)){
+    stop("dataToPlot is not a valid RDBESDataObject")
   }
   hierarchiesInData <- unique(dataToPlot[["DE"]]$DEhierarchy)
   if (length(hierarchiesInData)!=1) {

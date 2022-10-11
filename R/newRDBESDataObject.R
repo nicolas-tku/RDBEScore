@@ -1,4 +1,4 @@
-#' Constructor for RDBESRawObject class
+#' Constructor for RDBESDataObject class
 #'
 #' @param DE Data table of RDBES DE data or null
 #' @param SD Data table of RDBES DE data or null
@@ -21,7 +21,7 @@
 #' @return a named list
 #' @export
 #'
-newRDBESRawObject <- function(DE = NULL,
+newRDBESDataObject <- function(DE = NULL,
                               SD = NULL,
                               VS = NULL,
                               FT = NULL,
@@ -80,7 +80,7 @@ newRDBESRawObject <- function(DE = NULL,
             CE = CE)
 
   # Set the class of the object
-  class(x) <- c("RDBESRawObject","list")
+  class(x) <- c("RDBESDataObject","list")
 
   x
 

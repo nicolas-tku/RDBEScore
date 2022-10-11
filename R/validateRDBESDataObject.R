@@ -1,6 +1,6 @@
-#' Check whether an rdbesRawObject is in a valid format
+#' Check whether an RDBESDataObject is in a valid format
 #'
-#' @param objectToCheck rdbesRawObject i.e. a list of data.tables
+#' @param objectToCheck RDBESDataObject i.e. a list of data.tables
 #' @param checkDataTypes (Optional) Set to TRUE if you want to check that
 #' the data types of the required columns are correct, or FALSE if you don't
 #' care. Default value is FALSE.
@@ -9,17 +9,17 @@
 #'
 #' @return TRUE if object is valid, FALSE is object is not valid
 #' @export
-#' @aliases checkRDBESRawObject
+#' @aliases checkRDBESDataObject
 #' @examples
 #' \dontrun{
 #' myH1RawObject <-
-#' createRDBESRawObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
-#' validateRDBESRawObject(myH1RawObject)}
+#' createRDBESDataObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
+#' validateRDBESDataObject(myH1RawObject)}
 #'
-validateRDBESRawObject <- function(objectToCheck,
+validateRDBESDataObject <- function(objectToCheck,
                                 checkDataTypes = FALSE,
                                 verbose = FALSE) {
-  validRDBESRawObject <- TRUE
+  validRDBESDataObject <- TRUE
   warningText <- NA
 
   #allowedNamesInList <- unique(icesRDBES::mapColNamesFieldR$Table.Prefix)
@@ -28,27 +28,27 @@ validateRDBESRawObject <- function(objectToCheck,
   # CHECK 1 Have we just been passed NA?
   if (length(is.na(objectToCheck)) == 1) {
     if (is.na(objectToCheck)) {
-      validRDBESRawObject <- FALSE
+      validRDBESDataObject <- FALSE
       warningText <- "objectToCheck is NA"
     }
-  # CHECK 2 Is this an object of class rdbesRawObject?  It should be!
-  } else if (! 'RDBESRawObject' %in% class(objectToCheck)) {
-    validRDBESRawObject <- FALSE
-    warningText <- "objectToCheck is not of the class RDBESRawObject"
+  # CHECK 2 Is this an object of class RDBESDataObject?  It should be!
+  } else if (! 'RDBESDataObject' %in% class(objectToCheck)) {
+    validRDBESDataObject <- FALSE
+    warningText <- "objectToCheck is not of the class RDBESDataObject"
   # CHECK 3 Is this a list?  It should be!
   } else if (!(is.list(objectToCheck) & inherits(objectToCheck, "list"))) {
-    validRDBESRawObject <- FALSE
+    validRDBESDataObject <- FALSE
     warningText <- "objectToCheck does not inherit from list"
     # CHECK 4 Does this list have any names that aren't allowed?
   } else if (!all(names(objectToCheck) %in% allowedNamesInList)) {
-    validRDBESRawObject <- FALSE
+    validRDBESDataObject <- FALSE
     warningText <- paste("objectToCheck is a list but has extra names ",
       paste(names(objectToCheck), collapse = ","),
       sep = ""
     )
     # CHECK 5 Does the list have an entry for all the required names?
   } else if (!all(allowedNamesInList %in% names(objectToCheck))) {
-    validRDBESRawObject <- FALSE
+    validRDBESDataObject <- FALSE
     print(paste(names(objectToCheck), collapse = ","))
     warningText <- paste("objectToCheck is a list but does not contain ",
       "all the required names ",
@@ -73,7 +73,7 @@ validateRDBESRawObject <- function(objectToCheck,
       )]
     # CHECK 6 Are there any entries which aren't NULL or data tables?
     if (length(badEntries) > 0) {
-      validRDBESRawObject <- FALSE
+      validRDBESDataObject <- FALSE
       warningText <-
         paste("objectToCheck is a list but contains some entries which are ",
           "not NULL or data tables",
@@ -87,7 +87,7 @@ validateRDBESRawObject <- function(objectToCheck,
       if (length(nullEntries)>0){
         if (verbose){
           print(paste("Note that ",names(nullEntries)
-                     ," is NULL but this is allowed in an RDBESRawObject"
+                     ," is NULL but this is allowed in an RDBESDataObject"
                   , sep = ""))
         }
       }
@@ -100,17 +100,17 @@ validateRDBESRawObject <- function(objectToCheck,
 
         # Call a function to check whether the required field names
         # are present and that there aren't duplicates
-        myReturnValue <- validateRDBESRawObjectContent(nonNullEntries)
+        myReturnValue <- validateRDBESDataObjectContent(nonNullEntries)
         warningText <- myReturnValue[["warningText"]]
-        validRDBESRawObject <- myReturnValue[["validRDBESRawObject"]]
+        validRDBESDataObject <- myReturnValue[["validRDBESDataObject"]]
 
         # If we also want to check the data types of the columns
         # then go ahead and call the function to do that
         if (checkDataTypes){
-          myDiffs <- validateRDBESRawObjectDataTypes(nonNullEntries)
+          myDiffs <- validateRDBESDataObjectDataTypes(nonNullEntries)
           numberOfDifferences <- nrow(myDiffs)
           if (numberOfDifferences >0 ){
-            validRDBESRawObject <- FALSE
+            validRDBESDataObject <- FALSE
             if(is.na(warningText)){
               warningText <- ""
             } else {
@@ -136,9 +136,9 @@ validateRDBESRawObject <- function(objectToCheck,
   }
 
   # Return the validation result
-  validRDBESRawObject
+  validRDBESDataObject
 }
 
-#' @rdname validateRDBESRawObject
+#' @rdname validateRDBESDataObject
 #' @export
-checkRDBESRawObject <- validateRDBESRawObject
+checkRDBESDataObject <- validateRDBESDataObject

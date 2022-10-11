@@ -1,6 +1,6 @@
 test_that("validateRDBESEstObject does not produce errors or warnings",  {
 
-  myEmptyObject <- createRDBESRawObject()
+  myEmptyObject <- createRDBESDataObject()
   myEStObj <- createRDBESEstObject(myEmptyObject,1)
 
   expect_warning(validateRDBESEstObject(myEStObj),NA)
@@ -8,7 +8,7 @@ test_that("validateRDBESEstObject does not produce errors or warnings",  {
 })
 test_that("validateRDBESEstObject returns T for valid empty object",  {
 
-  myEmptyObject <- createRDBESRawObject()
+  myEmptyObject <- createRDBESDataObject()
   myEStObj <- createRDBESEstObject(myEmptyObject,1)
   myReturn <- validateRDBESEstObject(myEStObj)
   expect_true(myReturn)
@@ -16,7 +16,7 @@ test_that("validateRDBESEstObject returns T for valid empty object",  {
 })
 test_that("validateRDBESEstObject returns T for valid object from H1 data",  {
 
-  myObject <- createRDBESRawObject(rdbesExtractPath = "./h1_v_1_19_13")
+  myObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
   myEStObj <- createRDBESEstObject(myObject,1)
   myReturn <- validateRDBESEstObject(myEStObj)
   expect_true(myReturn)
@@ -24,7 +24,7 @@ test_that("validateRDBESEstObject returns T for valid object from H1 data",  {
 })
 test_that("validateRDBESEstObject returns T for valid object from H5 data",  {
 
-  myObject <- createRDBESRawObject(rdbesExtractPath = "./h5_v_1_19_13")
+  myObject <- createRDBESDataObject(rdbesExtractPath = "./h5_v_1_19_13")
   myEStObj <- createRDBESEstObject(myObject,5)
   myReturn <- validateRDBESEstObject(myEStObj)
   expect_true(myReturn)
@@ -51,9 +51,9 @@ test_that("validateRDBESEstObject returns F for an incorrectly defined class",  
   expect_false(myReturn)
 
 })
-test_that("validateRDBESEstObject returns F for an RDBESRawObject",  {
+test_that("validateRDBESEstObject returns F for an RDBESDataObject",  {
 
-  myEmptyObject <- createRDBESRawObject()
+  myEmptyObject <- createRDBESDataObject()
   myReturn <- validateRDBESEstObject(myEmptyObject)
   expect_false(myReturn)
 

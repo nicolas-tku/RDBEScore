@@ -1,15 +1,15 @@
 #' check RDBES Raw Object Content
 #'  Private function to do some basic checks on
-#' the content of the rdbesRawObject (e.g. all required field names are
-#' present).  Function is only used by checkRDBESRawObject and should only
+#' the content of the RDBESDataObject (e.g. all required field names are
+#' present).  Function is only used by checkRDBESDataObject and should only
 #' be passed a list of non-null objects
 #'
-#' @param objectToCheck - rdbesRawObject i.e. a list of data.tables
+#' @param objectToCheck - RDBESDataObject i.e. a list of data.tables
 #'
 #' @return list with  first element as the object and the second the warnings
 #'
-validateRDBESRawObjectContent <- function(objectToCheck) {
-  validRDBESRawObject <- TRUE
+validateRDBESDataObjectContent <- function(objectToCheck) {
+  validRDBESDataObject <- TRUE
   warningText <- NA
 
   # For each entry see if they have the required field names
@@ -40,7 +40,7 @@ validateRDBESRawObjectContent <- function(objectToCheck) {
 
   # CHECK 6 Check if there are any entries which have invalid field names
   if (length(badEntries) > 0) {
-    validRDBESRawObject <- FALSE
+    validRDBESDataObject <- FALSE
     warningText <-
       paste("objectToCheck contains the following tables which don't ",
         "contain all required fields: ",
@@ -57,7 +57,7 @@ validateRDBESRawObjectContent <- function(objectToCheck) {
     ]
 
     if (length(tablesWithDupes) > 0) {
-      validRDBESRawObject <- FALSE
+      validRDBESDataObject <- FALSE
       warningText <-
         paste("objectToCheck contains the following tables which have ",
           "duplicate rows: ",
@@ -79,7 +79,7 @@ validateRDBESRawObjectContent <- function(objectToCheck) {
 
       # CHECK 8 See if the XXid fields contain duplicates
       if (length(badEntries) > 0) {
-        validRDBESRawObject <- FALSE
+        validRDBESDataObject <- FALSE
         warningText <-
           paste("objectToCheck contains the following tables which have ",
             "duplicated values in their XXid field: ",
@@ -91,5 +91,5 @@ validateRDBESRawObjectContent <- function(objectToCheck) {
   } # 1
 
   # Return our outcome as a list
-  list("validRDBESRawObject" = validRDBESRawObject, "warningText" = warningText)
+  list("validRDBESDataObject" = validRDBESDataObject, "warningText" = warningText)
 }
