@@ -36,6 +36,6 @@ RDBESrawObject. The tables only have columns required for testing
 The generate tables
 }
 \examples{
-generateTestTbls(c("A", "B", "C"), seletionMethod = "SRSWOR")
+generateTestTbls(c("A", "B", "C"), selMeth = "SRSWOR")
 generateTestTbls(LETTERS[1:5]) # makes 5 tables with method CENSUS
 }
