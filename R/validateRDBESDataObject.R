@@ -57,7 +57,7 @@ validateRDBESDataObject <- function(objectToCheck,
     )
   } else { #1
 
-     # Get any objectToCheck entries which aren't null or data tables
+    # Get any objectToCheck entries which aren't null or data tables
     badEntries <- objectToCheck[!
     sapply(
       objectToCheck,
@@ -67,7 +67,7 @@ validateRDBESDataObject <- function(objectToCheck,
           returnValue <- TRUE
         } else if ("data.table" %in% class(x)) {
           returnValue <- TRUE
-        }
+        } 
         returnValue
       }
       )]
@@ -84,11 +84,21 @@ validateRDBESDataObject <- function(objectToCheck,
 
       # Print out null entries for information
       nullEntries <- objectToCheck[sapply(objectToCheck, is.null)]
+      emptyTables <- objectToCheck[unlist(sapply(objectToCheck, 
+                                          function(x){nrow(x) == 0}))]
       if (length(nullEntries)>0){
         if (verbose){
           print(paste("Note that ",names(nullEntries)
                      ," is NULL but this is allowed in an RDBESDataObject"
                   , sep = ""))
+        }
+      }
+      
+      if (length(emptyTables)>0){
+        if (verbose){
+          print(paste("Note that ",names(emptyTables)
+                      ," has 0 rows but this is allowed in an RDBESDataObject"
+                      , sep = ""))
         }
       }
 
