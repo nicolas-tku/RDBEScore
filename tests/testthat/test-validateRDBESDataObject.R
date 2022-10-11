@@ -138,7 +138,7 @@ test_that("validateRDBESDataObject returns F for object with with duplicate DEid
 })
 
 test_that("validateRDBESDataObject prints empty table note",  {
-  
+
   myObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
   myObject[['FT']] <-   myObject[['FT']][FALSE,]
   expect_output(validateRDBESDataObject(objectToCheck = myObject,
