@@ -1,3 +1,5 @@
+capture.output({  ## suppresses printing of console output when running test()
+
 test_that("createRDBESEstObject can create an object from an H1 data extract
           with no warnings or errors",  {
 
@@ -266,3 +268,5 @@ test_that("createRDBESEstObject creates the correct number of rows when there is
   expect_equal(nrow(myEstObject),20)
 
 })
+
+}) ## end capture.output

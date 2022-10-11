@@ -1,3 +1,5 @@
+capture.output({  ## suppresses printing of console output when running test()
+
 test_that("removeBrokenSpeciesListLinks runs without errors
           or warnings when there are no invalid species list links",  {
 
@@ -42,3 +44,5 @@ test_that("removeBrokenSpeciesListLinks runs without errors
                                     ,NA)
 
 })
+
+}) ## end capture.output

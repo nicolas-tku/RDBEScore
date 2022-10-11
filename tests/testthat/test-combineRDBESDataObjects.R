@@ -1,8 +1,11 @@
+capture.output({  ## suppresses printing of console output when running test()
+
 test_that("combineRDBESDataObjects returns error for NA",  {
 
     expect_error(combineRDBESDataObjects(RDBESDataObject1=NA,
                                         RDBESDataObject2=NA),"At least one of the RDBESDataObjects is not valid - mergeRDBESDataObjects will not proceed")
 })
+
 test_that("combineRDBESDataObjects returns invalid RDBESDataObject when supplied with duplicate RDBESDataObjects",  {
 
   myPath <- "./h1_v_1_19_13"
@@ -18,6 +21,7 @@ test_that("combineRDBESDataObjects returns invalid RDBESDataObject when supplied
 
   expect_false(validateRDBESDataObject(myCombinedObject))
 })
+
 test_that("combineRDBESDataObjects returns valid RDBESDataObject when supplied with valid, different RDBESDataObjects",  {
 
   myObject1 <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
@@ -31,8 +35,6 @@ test_that("combineRDBESDataObjects returns valid RDBESDataObject when supplied w
                                              RDBESDataObject2=myObject2)
 
   expect_true(validateRDBESDataObject(myCombinedObject))
-
 })
 
-
-
+}) ## end capture.output

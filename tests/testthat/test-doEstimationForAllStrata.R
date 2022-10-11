@@ -1,3 +1,5 @@
+capture.output({  ## suppresses printing of console output when running test()
+
 test_that("doEstimationForAllStrata can run on an object from an H1 data extract
           without warnings or errors",  {
 
@@ -23,3 +25,5 @@ test_that("doEstimationForAllStrata can run on an object from an H1 data extract
 
 
 })
+
+}) ## end capture.output

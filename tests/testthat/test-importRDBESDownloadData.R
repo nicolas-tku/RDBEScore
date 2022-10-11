@@ -1,3 +1,5 @@
+capture.output({  ## suppresses printing of console output when running test()
+
 # common parameters
 ddir <- "./h1_v_1_19_13/"
 expObj <- readRDS(paste0(ddir, "h1_RDBESDataObject.rds"))
@@ -58,3 +60,5 @@ test_that("Overwriting a table from a zip file produces a warning", {
     "Overwriting file: VesselDetails.csv, this might be intended!"
   )
 })
+
+}) ## end capture.output

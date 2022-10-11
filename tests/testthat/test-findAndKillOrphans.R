@@ -1,3 +1,5 @@
+capture.output({  ## suppresses printing of console output when running test()
+
 test_that("findAndKillOrphans runs without errors on an empty RDBESDataObject",  {
 
   myEmptyObject <- createRDBESDataObject()
@@ -46,3 +48,5 @@ test_that("findAndKillOrphans removes orphans on an filtered RDBESDataObject",  
   expect_equal(nrow(myObjectNoOrphans[["BV"]]),0)
 
 })
+
+}) ## end capture.output

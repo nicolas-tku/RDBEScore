@@ -1,3 +1,5 @@
+capture.output({  ## suppresses printing of console output when running test()
+
 test_that("checkRDBESDataObjectDataTypes returns an empty list for an object with valid data types",  {
 
   myDE <- data.frame("DEid" = c(1L,2L),
@@ -43,3 +45,5 @@ test_that("checkRDBESDataObjectDataTypes returns 2 differences for an object wit
   numberOfDifferences <- nrow(myDiffs)
   expect_equal(numberOfDifferences,2)
 })
+
+}) ## end capture.output

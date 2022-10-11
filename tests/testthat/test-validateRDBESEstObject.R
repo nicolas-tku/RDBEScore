@@ -1,3 +1,5 @@
+capture.output({  ## suppresses printing of console output when running test()
+
 test_that("validateRDBESEstObject does not produce errors or warnings",  {
 
   myEmptyObject <- createRDBESDataObject()
@@ -58,3 +60,5 @@ test_that("validateRDBESEstObject returns F for an RDBESDataObject",  {
   expect_false(myReturn)
 
 })
+
+}) ## end capture.output

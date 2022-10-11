@@ -1,4 +1,4 @@
-# testthat::test_file("./test-filterRDBESDataObject.R")
+capture.output({  ## suppresses printing of console output when running test()
 
 test_that("filterRDBESDataObject returns the correct result for single field/value", {
   myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
@@ -124,3 +124,5 @@ test_that("filterRDBESDataObject does not removes orphans when killOrphans = FAL
     nrow(myH1RawObject$BV)
   )
 })
+
+}) ## end capture.output

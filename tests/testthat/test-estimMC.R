@@ -1,3 +1,5 @@
+capture.output({  ## suppresses printing of console output when running test()
+
 ## ------------SRSWOR-----------------------------
 varSRSWOR <- function(y, n, N) {
   meanY <- mean(y)
@@ -567,3 +569,5 @@ test_that(paste("UPSWR", testMain), {
   expect_equal(round(x$est.total,1), 1749.0)
   expect_equal(round(x$var.total,1), 49471.5)
 })
+
+}) ## end capture.output

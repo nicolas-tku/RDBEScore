@@ -1,6 +1,6 @@
+capture.output({  ## suppresses printing of console output when running test()
+
 test_that("getTablesInRDBESHierarchy fails for non-int hierarchy parameter H1",  {
-
-
   expect_error(getTablesInRDBESHierarchy("H1"),"hierarchy parameter must be an integer")
 })
 
@@ -47,4 +47,4 @@ test_that("getTablesInRDBESHierarchy works for hierachy 7 excluding tables not i
 
 })
 
-
+}) ## end capture.output

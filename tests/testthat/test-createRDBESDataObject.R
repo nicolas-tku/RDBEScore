@@ -1,3 +1,5 @@
+capture.output({  ## suppresses printing of console output when running test()
+
 test_that("createRDBESDataObject can create an empty object without errors
           or warnings",  {
 
@@ -71,3 +73,5 @@ test_that("createRDBESDataObject creates an object with the correct data types",
 
 
 })
+
+}) ## end capture.output
