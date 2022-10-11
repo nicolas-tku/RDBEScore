@@ -13,9 +13,6 @@ getSubSampleLevel(SAdata, SAidToCheck, subSampleLevel = 1)
 
 \item{subSampleLevel}{The currrent level of sampling}
 }
-\value{
-
-}
 \description{
 Private function to get sub-sample level and top-level SAid for SA data
 }

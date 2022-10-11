@@ -12,9 +12,6 @@ validateRDBESEstObject(objectToCheck, verbose = FALSE)
 \item{verbose}{(Optional) Set to TRUE if you want informative text printed
 out, or FALSE if you don't.  The default is FALSE.}
 }
-\value{
-
-}
 \description{
 Check whether an object is a valid RDBESEstObject
 }

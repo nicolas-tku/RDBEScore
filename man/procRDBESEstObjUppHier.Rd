@@ -25,9 +25,6 @@ procRDBESEstObjUppHier(
 
 \item{targetTables}{The RDBES tables we are interested in}
 }
-\value{
-
-}
 \description{
 Private function to process the upper hierarchies when creating
 the RDBESEstObject

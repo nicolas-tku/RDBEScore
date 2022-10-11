@@ -2,9 +2,9 @@
 % Please edit documentation in R/estimMC.R
 \name{estimMC}
 \alias{estimMC}
-\title{Multiple Count Estimator for Population Total}
+\title{Multiple Count Estimator for Population Total and Variance}
 \usage{
-estimMC(y, sampled, total, method = "SRSWOR")
+estimMC(y, sampled, total, method = "SRSWOR", selProb = NULL, incProb = NULL)
 }
 \arguments{
 \item{y}{numeric variable to be estimated}
@@ -14,13 +14,18 @@ estimMC(y, sampled, total, method = "SRSWOR")
 \item{total}{numeric total number of units int the population}
 
 \item{method}{character selection method code e.g SRSWOR}
+
+\item{selProb}{the selection probabilities (if known)}
+
+\item{incProb}{the inclusion probabilities (if known)}
 }
 \value{
-list of 5 elements including the population mean, total
-(and their variance) and the I order inclusion probabilities
+list of 7 elements including the population mean, total
+(and their variance), the algorithm name used and the I order
+inclusion probabilities
 }
 \description{
-Multiple Count Estimator for Population Total
+Multiple Count Estimator for Population Total and Variance
 }
 \examples{
 estimMC(c(3, 4, 4, 5), c(4, 4, 4, 4), c(8, 8, 8, 8))
