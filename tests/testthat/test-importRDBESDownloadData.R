@@ -7,9 +7,7 @@ expObj <- readRDS(paste0(ddir, "h1_RDBESDataObject.rds"))
 
 test_that("importing zipped H1 example data works", {
   zipFiles <- c(
-    "H1_2022_10_05.zip",
-    "HSL_2022_10_05.zip",
-    "HVD_2022_10_05.zip"
+    "H1_2022_10_05.zip"
   )
 
   genObj <- importRDBESDownloadData(paste0(ddir, zipFiles),
@@ -48,7 +46,7 @@ test_that("importing subset H1 example data works", {
   expect_equal(genObj$SL, expObj$SL)
 })
 
-test_that("Overwriting a table from a zip file produces a warning", {
+test_that("Overwriting a table from a csv file produces a warning", {
   zipFiles <- c(
     "HVD_2022_10_05.zip",
     "VesselDetails.csv"
@@ -58,6 +56,20 @@ test_that("Overwriting a table from a zip file produces a warning", {
     importRDBESDownloadData(paste0(ddir, zipFiles),
                             castToCorrectDataTypes = FALSE),
     "Overwriting file: VesselDetails.csv, this might be intended!"
+  )
+})
+
+
+test_that("Overwriting a table from a zip file produces a warning", {
+  zipFiles <- c(
+    "HVD_2022_10_05.zip",
+    "H1_2022_10_05.zip"
+  )
+
+  expect_warning(
+    importRDBESDownloadData(paste0(ddir, zipFiles),
+                            castToCorrectDataTypes = FALSE),
+    "Duplicate unzipped files detected in"
   )
 })
 
