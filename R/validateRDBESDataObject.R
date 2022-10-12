@@ -94,7 +94,7 @@ validateRDBESDataObject <- function(objectToCheck,
         }
       }
 
-      if (length(emptyTables)>0){
+      if (any(emptyTables)){
         if (verbose){
           print(paste("Note that ",names(emptyTables[emptyTables])
                       ," has 0 rows but this is allowed in an RDBESDataObject"
