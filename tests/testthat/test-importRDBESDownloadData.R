@@ -48,10 +48,24 @@ test_that("importing subset H1 example data works", {
   expect_equal(genObj$SL, expObj$SL)
 })
 
-test_that("Overwriting a table from a zip file produces a warning", {
+test_that("Overwriting a table from a csv file produces a warning", {
   zipFiles <- c(
     "HVD_2022_10_05.zip",
     "VesselDetails.csv"
+  )
+
+  expect_warning(
+    importRDBESDownloadData(paste0(ddir, zipFiles),
+                            castToCorrectDataTypes = FALSE),
+    "Overwriting file: VesselDetails.csv, this might be intended!"
+  )
+})
+
+
+test_that("Overwriting a table from a zip file produces a warning", {
+  zipFiles <- c(
+    "HVD_2022_10_05.zip",
+    "H1_2022_10_05.zip"
   )
 
   expect_warning(
