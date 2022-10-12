@@ -16,7 +16,10 @@ knitr::opts_chunk$set(
 
 ## Introduction 
 
-The aim of this document is to outline a basic workflow of importing data downloaded from the ICES Regional Database & Estimation System (RDBES) for using this package.
+The aim of this document is to outline the basic workflow of importing data downloaded from the [ICES Regional Database & Estimation System (RDBES)](https://sboxrdbes.ices.dk/#/) into `R` using the `icesRDBES` package.
+
+
+## Load the package
 
 ```{r setup}
 library(icesRDBES)
@@ -30,32 +33,35 @@ ddir <- "../tests/testthat/h1_v_1_19_13/"
 
 #the files to import
 zipFiles <- c("H1_2022_10_05.zip",
-             "HSL_2022_10_05.zip",
-             "HVD_2022_10_05.zip",
-             "VesselSelection.csv")
+              "HSL_2022_10_05.zip",
+              "HVD_2022_10_05.zip",
+              "VesselSelection.csv")
 
 #adding full path
 zipFiles <- paste0(ddir, zipFiles)
 ```
 
 
-It can import both zipped files from the RDBES download
-```{r}
-importedTables <- importRDBESDownloadData(zipFiles[2])
-#print the not NULL table names
-names(importedTables[!unlist(lapply(importedTables, is.null))])
-```
-or unpacked .csv files
+It can directly import the `.zip` archive from the RDBES download containing all mandatory Hierarchy tables plus VD and SL:
 
 ```{r}
-importedTables <- importRDBESDownloadData(zipFiles[4])
+importedH1 <- importRDBESDownloadData("../tests/testthat/h1_v_1_19_13/H1_2022_10_05.zip")
 #print the not NULL table names
-names(importedTables[!unlist(lapply(importedTables, is.null))])
+names(importedH1[!unlist(lapply(importedH1, is.null))])
 ```
+
+It can import the VD or SL tables `.zip` archives, but will include all other tables as `NULL`:
+
+```{r}
+importedSL <- importRDBESDownloadData("../tests/testthat/h1_v_1_19_13/HSL_2022_10_05.zip")
+#print the not NULL table names
+str(importedSL)
+```
+
 or a combination of both
 
 ```{r}
-importedTables <- importRDBESDownloadData(zipFiles[3:4])
+importedTables <- importRDBESDownloadData(zipFiles[1:3])
 #print the not NULL table names
 names(importedTables[!unlist(lapply(importedTables, is.null))])
 ```
@@ -69,9 +75,19 @@ importedTables <- importRDBESDownloadData(zipFiles)
 names(importedTables[!unlist(lapply(importedTables, is.null))])
 ```
 
+
+It can also import the unzipped `.csv` files with the default RDBES names:
+
+```{r}
+importedH5 <- createRDBESDataObject("../tests/testthat/h5_v_1_19_13")
+#print the not NULL table names
+names(importedTables[!unlist(lapply(importedTables, is.null))])
+```
+
+
 ## Object class
 
-It should be noted that the objects created are of the S3 class "RDBESRawObject"
+It should be noted that the objects created are of the S3 class "RDBESDataObject"
 
 ```{r}
 importedTables <- importRDBESDownloadData(zipFiles)
@@ -79,11 +95,11 @@ class(importedTables)
 ```
 
 
-RDBESRawObject structure can be validated using the validateRDBESRawObject() function.
+RDBESDataObject structure can be validated using the validateRDBESDataObject() function.
 
 ```{r}
 importedTables <- importRDBESDownloadData(zipFiles)
-validateRDBESRawObject(importedTables, verbose = FALSE)
+validateRDBESDataObject(importedTables, verbose = FALSE)
 ```
 
 

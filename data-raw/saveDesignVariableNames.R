@@ -9,7 +9,7 @@ designVariables <- c(
   "incProbCluster", "samp", "noSampReason"
 )
 
-outFile <- "data\\designVariables.RData"
+#outFile <- "data\\designVariables.RData"
 
 # Save the data
-save(designVariables,file=outFile)
+usethis::use_data(designVariables)

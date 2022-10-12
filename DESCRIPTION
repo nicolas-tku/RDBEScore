@@ -17,5 +17,6 @@ Suggests:
 Depends: 
     R (>= 3.5.0)
 Imports: 
-    dplyr, data.table
+    dplyr, 
+    data.table
 VignetteBuilder: knitr

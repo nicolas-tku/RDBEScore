@@ -13,7 +13,7 @@ setRDBESDataObjectDataTypes <- function(RDBESDataObjectToConvert){
   # For each entry in our list convert the columns to the correct format
   # This could cause an error if we have data in the columns that can't be
   # cast to the desired data type
-  alteredObject <- lapply(RDBESDataObjectToConvert,function(x){
+  alteredObject <- lapply(RDBESDataObjectToConvert, function(x){
       # Only process the non-null entries
       if (!is.null(x)){
         # Assume the first field name accurately gives us the table name
@@ -36,8 +36,9 @@ setRDBESDataObjectDataTypes <- function(RDBESDataObjectToConvert){
         colsToChange <- names(x)[names(x) %in% myCols]
         if (length(colsToChange)>0){
           x[, colsToChange] <-
-            x[, lapply(.SD, as.integer), .SDcols = colsToChange]
+            x[, lapply(.SD, as.integer.or.dbl), .SDcols = colsToChange]
         }
+
         # Change to character
         myCols <-
           requiredColumns[requiredColumns$RDataType == "character","R.Name"]
@@ -50,6 +51,7 @@ setRDBESDataObjectDataTypes <- function(RDBESDataObjectToConvert){
       x
     }
   )
+
 
   # Update the original object so we don't lose its class type
   for (myTable in names(RDBESDataObjectToConvert)){
