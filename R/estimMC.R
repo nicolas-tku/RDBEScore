@@ -108,7 +108,8 @@ estimMC <- function(y, sampled, total, method = "SRSWOR", selProb = NULL,
 
   # Calculate the means
   est.mean <- estimResult$est.total / mean(total)
-  var.mean <- estimResult$var.total / sum(total) * mean(sampled)
+  #var.mean <- estimResult$var.total / sum(total) * mean(sampled)
+  var.mean <- estimResult$var.total / max(total)^2
 
 
   return(list(

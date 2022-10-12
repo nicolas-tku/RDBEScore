@@ -73,7 +73,7 @@ test_that(paste("mean variance is correct if", testMain), {
   items <- c(3, 4, 4, 5)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
-  expected <- varSRSWOR(items, elems, tot) / tot
+  expected <- varSRSWOR(items, elems, tot) / tot^2
   expect_equal(x$var.mean, expected)
 })
 
@@ -140,7 +140,7 @@ test_that(paste("mean variance is correct if", testMain), {
   items <- c(3, 4)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems))
-  expected <- varSRSWOR(items, elems, tot) / tot
+  expected <- varSRSWOR(items, elems, tot) / tot^2
   expect_equal(x$var.mean, expected)
 
 })
@@ -204,7 +204,7 @@ test_that(paste("mean variance if", testMain), {
   items <- c(3, 4, 4, 5)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expected <- varSRSWR(items, elems, tot) / tot
+  expected <- varSRSWR(items, elems, tot) / tot^2
   expect_equal(x$var.mean, expected)
 })
 
@@ -258,7 +258,7 @@ test_that(paste("mean variance is correct if", testMain), {
   items <- c(3, 4, 4, 5)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expected <- varSRSWR(items, elems, tot) / tot
+  expected <- varSRSWR(items, elems, tot) / tot^2
   expect_equal(x$var.mean, expected)
 })
 
@@ -309,7 +309,7 @@ test_that(paste("mean variance is correct if", testMain), {
   items <- c(3, 4)
   elems <- length(items)
   x <- estimMC(items, rep(elems, elems), rep(tot, elems), "SRSWR")
-  expected <- varSRSWR(items, elems, tot) / tot
+  expected <- varSRSWR(items, elems, tot) / tot^2
   expect_equal(x$var.mean, expected)
 })
 
