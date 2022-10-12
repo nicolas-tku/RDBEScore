@@ -1,4 +1,15 @@
-#' Check whether an RDBESDataObject is in a valid format
+#' Check Whether an `RDBESDataObject` is in a Valid Format
+#'
+#' Perform basic checks on a object.
+#'
+#' It checks the `RDBESDataObject` if:
+#' * Is this an object of class RDBESDataObject
+#' * Tables don't have column names that aren't allowed
+#' * Tables have all the required  column names
+#'
+#' It does not check if the data is valid.
+#' The RDBES upload system preforms an extensive set of checks on the
+#' uploaded data.
 #'
 #' @param objectToCheck RDBESDataObject i.e. a list of data.tables
 #' @param checkDataTypes (Optional) Set to TRUE if you want to check that
@@ -8,6 +19,7 @@
 #' out, or FALSE if you don't.  The default is FALSE.
 #'
 #' @return TRUE if object is valid, FALSE is object is not valid
+#' @md
 #' @export
 #' @aliases checkRDBESDataObject
 #' @examples
@@ -57,7 +69,7 @@ validateRDBESDataObject <- function(objectToCheck,
     )
   } else { #1
 
-     # Get any objectToCheck entries which aren't null or data tables
+    # Get any objectToCheck entries which aren't null or data tables
     badEntries <- objectToCheck[!
     sapply(
       objectToCheck,
@@ -84,11 +96,21 @@ validateRDBESDataObject <- function(objectToCheck,
 
       # Print out null entries for information
       nullEntries <- objectToCheck[sapply(objectToCheck, is.null)]
+      emptyTables <- unlist(sapply(objectToCheck,
+                                          function(x){nrow(x) == 0}))
       if (length(nullEntries)>0){
         if (verbose){
           print(paste("Note that ",names(nullEntries)
                      ," is NULL but this is allowed in an RDBESDataObject"
                   , sep = ""))
+        }
+      }
+
+      if (any(emptyTables)){
+        if (verbose){
+          print(paste("Note that ",names(emptyTables[emptyTables])
+                      ," has 0 rows but this is allowed in an RDBESDataObject"
+                      , sep = ""))
         }
       }
 

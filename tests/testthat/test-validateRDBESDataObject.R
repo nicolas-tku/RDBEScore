@@ -1,6 +1,6 @@
 capture.output({  ## suppresses printing of console output when running test()
 
-test_that("validateDBEobject does not produce errors or warnings",  {
+test_that("validateRDBESobject does not produce errors or warnings",  {
 
   myEmptyObject <- createRDBESDataObject()
 
@@ -134,6 +134,15 @@ test_that("validateRDBESDataObject returns F for object with with duplicate DEid
                                      checkDataTypes = TRUE,
                                      verbose = FALSE)
   expect_false(myReturn)
+
+})
+
+test_that("validateRDBESDataObject prints empty table note",  {
+
+  myObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
+  myObject[['FT']] <-   myObject[['FT']][FALSE,]
+  expect_output(validateRDBESDataObject(objectToCheck = myObject,
+                                      verbose = TRUE), regexp = "Note that FT has 0 rows")
 
 })
 
