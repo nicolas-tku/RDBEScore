@@ -24,6 +24,11 @@ procRDBESEstObjUppHier(
 \item{i}{Integer to keep track of where we are in the list of tables}
 
 \item{targetTables}{The RDBES tables we are interested in}
+
+\item{verbose}{logical. Output messages to console.}
+}
+\value{
+Whoever revises this function please specify what it returns here
 }
 \description{
 Private function to process the upper hierarchies when creating

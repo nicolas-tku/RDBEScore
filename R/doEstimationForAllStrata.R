@@ -221,7 +221,7 @@ doEstimationForAllStrata <- function(RDBESDataObjectForEstim,
 #'
 #' @param x The input
 #'
-#' @return
+#' @return Whoever revises this function please specify what it returns here
 #'
 getEstimForStratum <- function(x) {
   myReturnValues <- data.frame(

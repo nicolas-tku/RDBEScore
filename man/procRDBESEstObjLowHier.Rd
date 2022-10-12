@@ -9,6 +9,8 @@ procRDBESEstObjLowHier(rdbesPrepObject, verbose = FALSE)
 }
 \arguments{
 \item{rdbesPrepObject}{A prepared RDBESRawObj}
+
+\item{verbose}{logical. Output messages to console.}
 }
 \value{
 allLower - the FM and BV tables combined
