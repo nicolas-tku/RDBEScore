@@ -3,7 +3,7 @@
 \name{validateRDBESDataObject}
 \alias{validateRDBESDataObject}
 \alias{checkRDBESDataObject}
-\title{Check whether an RDBESDataObject is in a valid format}
+\title{Check Whether an \code{RDBESDataObject} is in a Valid Format}
 \usage{
 validateRDBESDataObject(objectToCheck, checkDataTypes = FALSE, verbose = FALSE)
 
@@ -23,7 +23,19 @@ out, or FALSE if you don't.  The default is FALSE.}
 TRUE if object is valid, FALSE is object is not valid
 }
 \description{
-Check whether an RDBESDataObject is in a valid format
+Perform basic checks on a object.
+}
+\details{
+It checks the \code{RDBESDataObject} if:
+\itemize{
+\item Is this an object of class RDBESDataObject
+\item Tables don't have column names that aren't allowed
+\item Tables have all the required  column names
+}
+
+It does not check if the data is valid.
+The RDBES upload system preforms an extensive set of checks on the
+uploaded data.
 }
 \examples{
 \dontrun{
