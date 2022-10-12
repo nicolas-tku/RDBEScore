@@ -15,7 +15,7 @@ Suggests:
     rmarkdown,
     testthat
 Depends: 
-    R (>= 3.5.0)u
+    R (>= 3.5.0)
 Imports: 
     dplyr, 
     data.table
