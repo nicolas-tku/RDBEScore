@@ -7,9 +7,7 @@ expObj <- readRDS(paste0(ddir, "h1_RDBESDataObject.rds"))
 
 test_that("importing zipped H1 example data works", {
   zipFiles <- c(
-    "H1_2022_10_05.zip",
-    "HSL_2022_10_05.zip",
-    "HVD_2022_10_05.zip"
+    "H1_2022_10_05.zip"
   )
 
   genObj <- importRDBESDownloadData(paste0(ddir, zipFiles),
