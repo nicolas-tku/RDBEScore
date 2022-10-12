@@ -16,6 +16,10 @@ createRDBESEstObject(
 create an estimation object}
 
 \item{hierarchyToUse}{The upper RDBES hiearchy to use}
+
+\item{stopTable}{PLEASE DOCUMENT THIS}
+
+\item{verbose}{PLEASE DOCUMENT THIS}
 }
 \value{
 An object of class RDBESEstObject ready for us in design based

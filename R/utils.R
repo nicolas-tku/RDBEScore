@@ -11,6 +11,7 @@
 #' @param x vector to be coerced to integers or doubles
 #'
 #' @return a vector of integers or doubles
+#' @importFrom stats na.omit
 #' @keywords internal
 
 as.integer.or.dbl <- function(x){
@@ -22,3 +23,17 @@ as.integer.or.dbl <- function(x){
 
   return(out)
 }
+
+# Deal with "no visible binding for global variable.." warnings in R CMD CHECK
+globalVariables(c("mapColNamesFieldR", "mapColNamesFieldR", "SAid",
+                  "rdbesEstimObj", "..targetProbColumns",
+                  "..targetProbColumns2", "finalInclusionProb_to_su1",
+                  "targetValue", "su1unitName", "su1inclusionProb",
+                  "..target_prob_columns2", "su1selectionProb",
+                  "..varsNeeded", "%>%", "parentTableID", "est.total",
+                  "recType", "parentTableStratum", "stratumName",
+                  "parentIDandStratum", "studyVariable", "..myColNames",
+                  "..methColNames", "tblName"))
+
+
+

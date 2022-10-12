@@ -3,6 +3,8 @@
 #' @param rdbesPrepObject The prepared RDBES object that should be used to
 #' create an estimation object
 #' @param hierarchyToUse The upper RDBES hiearchy to use
+#' @param stopTable PLEASE DOCUMENT THIS
+#' @param verbose PLEASE DOCUMENT THIS
 #'
 #' @return An object of class RDBESEstObject ready for us in design based
 #' estimation
@@ -317,6 +319,7 @@ createRDBESEstObject <- function(rdbesPrepObject,
 #' the RDBESEstObject
 #'
 #' @param rdbesPrepObject A prepared RDBESRawObj
+#' @param verbose logical. Output messages to console.
 #'
 #' @return allLower - the FM and BV tables combined
 #'
@@ -456,8 +459,9 @@ procRDBESEstObjLowHier <- function(rdbesPrepObject,
 #' @param hierarchyToUse The hierarchy we are using
 #' @param targetTables The RDBES tables we are interested in
 #' @param i Integer to keep track of where we are in the list of tables
+#' @param verbose logical. Output messages to console.
 #'
-#' @return
+#' @return Whoever revises this function please specify what it returns here
 #'
 procRDBESEstObjUppHier <- function(myRDBESEstObj = NULL,
                                    rdbesPrepObject,
@@ -572,7 +576,7 @@ procRDBESEstObjUppHier <- function(myRDBESEstObj = NULL,
 #' @param SAidToCheck The SAid to check
 #' @param subSampleLevel The currrent level of sampling
 #'
-#' @return
+#' @return Whoever revises this function please specify what it returns here
 #'
 getSubSampleLevel <- function(SAdata, SAidToCheck, subSampleLevel = 1) {
 

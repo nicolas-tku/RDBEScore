@@ -16,7 +16,7 @@ removePrefixFromVarNames <- function(x) {
   for (i in names(x)) {
     print(i)
     if (!is.null(x[[i]])) {
-      targetNames <- !grepl(names(x[[i]]), pat = paste0(i, "id"))
+      targetNames <- !grepl(names(x[[i]]), pattern = paste0(i, "id"))
       colnames(x[[i]])[targetNames] <- gsub(i, "", names(x[[i]])[targetNames])
     }
   }
@@ -30,7 +30,7 @@ handlePrefixInVarNames <- function(x, type) {
     for (i in names(x)) {
     print(i)
     if (!is.null(x[[i]])) {
-      targetNames <- !grepl(names(x[[i]]), pat = paste0(i, "id"))
+      targetNames <- !grepl(names(x[[i]]), pattern = paste0(i, "id"))
       colnames(x[[i]])[targetNames] <- gsub(i, "", names(x[[i]])[targetNames])
     }
   }
@@ -41,7 +41,7 @@ handlePrefixInVarNames <- function(x, type) {
     for (i in names(x)) {
     print(i)
     if (!is.null(x[[i]])) {
-      targetNames <- !grepl(names(x[[i]]), pat = paste0(i, "id"))
+      targetNames <- !grepl(names(x[[i]]), pattern = paste0(i, "id"))
       colnames(x[[i]])[targetNames] <- gsub(i, "", names(x[[i]])[targetNames])
     }
   }
