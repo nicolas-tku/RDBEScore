@@ -24,13 +24,21 @@ importRDBESDownloadData <- function(filenames,
   randInt <- paste0(sample(1:100, 3), collapse = "")
   tmp <- paste0(tempdir(), "/downloadImport", randInt)
   dir.create(tmp)
-
+  all_unzipped <- c()
   unzipFile <- function(x, tmp) {
     if (!file.exists(x)) {
       return()
     }
     if (is.zip(x)) {
-      return(utils::unzip(x, exdir = tmp))
+      unzipped <- utils::unzip(x, exdir= tmp)
+      unzipped <- basename(unzipped)
+      unzipped <- unzipped[grep("*.csv", unzipped)]
+      intersected <- intersect(unzipped, all_unzipped)
+      if(length(intersected) != 0) {
+        warning(paste0("Duplicate unzipped files detected in ", x,":\n", paste0("\t", unzipped, collapse="\n")))
+      }
+      all_unzipped <<- c(all_unzipped, unzipped)
+      return(unzipped)
     }
     if (fileExt(x) == "csv") {
       newName <- paste0(tmp, "/", basename(x))

@@ -405,7 +405,54 @@ test_that(paste("all inputs must be numeric"), {
   expect_error(estimMC(1:5, rep(elems, elems), rep("4", elems)))
 })
 
+test_that(paste("sampled and total must be provided for SRSWR"), {
+  tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  expect_error(estimMC(items,rep(NA, elems), rep(NA, elems),"SRSWR"),"sampled and total must be provided - NAs not allowed!")
+})
 
+test_that(paste("sampled and total must be provided for SRSWOR"), {
+  tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  expect_error(estimMC(items,rep(NA, elems), rep(NA, elems),"SRSWOR"),"sampled and total must be provided - NAs not allowed!")
+})
+
+test_that(paste("sampled and total must be provided for CENSUS"), {
+  tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  expect_error(estimMC(items,rep(NA, elems), rep(NA, elems),"CENSUS"),"sampled and total must be provided - NAs not allowed!")
+})
+
+test_that(paste("incProb must be provided for UPSWOR - NAs"), {
+  tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  expect_error(estimMC(items, rep(elems, elems), rep(tot, elems),"UPSWOR", NA, NA), "incProb must be provided - NAs or NULL not allowed!")
+})
+
+test_that(paste("incProb must be provided for UPSWOR - NULL"), {
+  tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  expect_error(estimMC(items, rep(elems, elems), rep(tot, elems),"UPSWOR"), "incProb must be provided - NAs or NULL not allowed!")
+})
+
+test_that(paste("selProb must be provided for UPSWR - NAs"), {
+  tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  expect_error(estimMC(items, rep(elems, elems), rep(tot, elems),"UPSWR", NA, NA), "selProb must be provided - NAs or NULL not allowed!")
+})
+
+test_that(paste("selProb must be provided for UPSWR - NAs"), {
+  tot <- 4
+  items <- c(3, 4, 4, 5)
+  elems <- length(items)
+  expect_error(estimMC(items, rep(elems, elems), rep(tot, elems),"UPSWR"), "selProb must be provided - NAs or NULL not allowed!")
+})
 
 ### ------------PROBABILITIES-----------------------------
 testMain <- "UPSWOR 50% of elements in sample - use equal probabilites"

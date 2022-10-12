@@ -37,6 +37,12 @@ estimMC <- function(y, sampled, total, method = "SRSWOR", selProb = NULL,
   }
   # TODO include also quasi random
   if (grepl("^SRS", method) || grepl("^CENSUS$", method)) {
+
+
+    if (any(is.na(sampled) | is.na(total))  ){
+      stop("sampled and total must be provided - NAs not allowed!")
+    }
+
     enk <- sampled / total
     if (grepl("WOR$", method) || grepl("^CENSUS$", method)) {
       enkl <- enk %*% t((sampled - 1) / (total - 1))
@@ -51,7 +57,13 @@ estimMC <- function(y, sampled, total, method = "SRSWOR", selProb = NULL,
 
   if (grepl("^UPS", method)) {
 
+
     if (grepl("WOR$", method)) {
+
+      if (( length(incProb) == 0 && is.null(incProb)) || (any(is.na(incProb)))){
+        stop("incProb must be provided - NAs or NULL not allowed!")
+      }
+
       enk <- incProb
       print(paste0("UPSWOR variance calculation requires second order",
       " inclusion probabilities which are not available in the RDBES -",
@@ -60,6 +72,11 @@ estimMC <- function(y, sampled, total, method = "SRSWOR", selProb = NULL,
     }
 
     if (grepl("WR$", method)) {
+
+      if (( length(selProb) == 0 && is.null(selProb)) || (any(is.na(selProb)))){
+        stop("selProb must be provided - NAs or NULL not allowed!")
+      }
+
       enk <- n * selProb
       enkl <- enk %*% t((n-1) * selProb)
     }
