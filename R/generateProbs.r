@@ -46,6 +46,9 @@ generateProbs <- function(x, probType) {
       if (sum(is.na(vecProb)) > 0) stop("cannot proceed: NAs in sampProb")
       vecProb <- vecProb
     }
+    if (a == "CENSUS"){
+      vecProb <- rep(1,length(vecProb))
+    }
     x[[vecProbColNames]] <- vecProb
   }
 
@@ -67,6 +70,9 @@ generateProbs <- function(x, probType) {
       if (a %in% c("UPSWR", "UPSWOR")) {
         if (sum(is.na(vecProb)) > 0) stop("cannot proceed: NAs in sampProb")
         vecProb <- vecProb
+      }
+      if (a == "CENSUS"){
+        vecProb <- rep(1,length(vecProb))
       }
     }
     x[[vecProbColNames]] <- vecProb

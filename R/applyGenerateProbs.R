@@ -59,7 +59,7 @@ applyGenerateProbs <- function(x, probType, overwrite,
   # aspects needing development
   if (any(!is.na(x[["SA"]]$SAparentID))) stop("multiple sub-sampling present
                                                 in SA: not yet developed")
-  if (nrow(x[["SA"]]) >= 1 && x[["SA"]]$SAlowHierarchy %in% c("A", "B")) {
+  if (nrow(x[["SA"]]) >= 1 && any(x[["SA"]]$SAlowHierarchy %in% c("A", "B"))) {
     stop("lower hierarchy A and B present: not yet developed")
   }
 
@@ -67,24 +67,29 @@ applyGenerateProbs <- function(x, probType, overwrite,
   for (i in targetTables) {
     print(i)
 
-    # following code will be worth setting in data.table
-    ls1 <- split(x[[i]], x[[i]][[eval(noquote(parentId[targetTables == i]))]])
-    ls2 <- lapply(ls1, function(x, ...) {
-      # aspects needing development
-      if (length(unique(x$stratumName)) > 1 | any(x$stratification == "Y")) {
-        stop("stratification present: not yet developed")
-      }
-      if (length(unique(x$clusterName)) > 1 | any(x$clustering == "Y")) {
-        stop("clustering present: not yet developed")
-      }
-      print(paste0(
-        parentId[targetTables == i], ": ",
-        x[[parentId[targetTables == i]]][1]
-      ))
-      x <- generateProbs(x, probType)
-      x
-    })
-    x[[i]] <- data.table::setDT(do.call("rbind", ls2))
+    # Only process if the table has rows
+    if (nrow(x[[i]]) > 0 ){
+
+      # following code will be worth setting in data.table
+      ls1 <- split(x[[i]], x[[i]][[eval(noquote(parentId[targetTables == i]))]])
+      ls2 <- lapply(ls1, function(x, ...) {
+        # aspects needing development
+        if (length(unique(x$stratumName)) > 1 | any(x$stratification == "Y")) {
+          stop("stratification present: not yet developed")
+        }
+        if (length(unique(x$clusterName)) > 1 | any(x$clustering == "Y")) {
+          stop("clustering present: not yet developed")
+        }
+        print(paste0(
+          parentId[targetTables == i], ": ",
+          x[[parentId[targetTables == i]]][1]
+        ))
+        x <- generateProbs(x, probType)
+        x
+      })
+      x[[i]] <- data.table::setDT(do.call("rbind", ls2))
+
+    }
   }
 
   print("========end generateProbs=======")
