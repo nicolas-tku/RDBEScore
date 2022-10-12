@@ -13,6 +13,7 @@
 #' }
 #' @source \url{https://github.com/davidcurrie2001/MI_RDBES_ExchangeFiles}
 "tablesInRDBESHierarchies"
+
 #' A dataset containing test RDBES data for H1 in the DBErawObj structure
 #'
 #' @format A list containing entries required for H1 RDBES data:
@@ -32,6 +33,7 @@
 #' }
 #' @source \url{https://github.com/davidcurrie2001/MI_RDBES_ExchangeFiles}
 "h1DBErawObj"
+
 #' A dataset containing test RDBES data for H1
 #'
 #' @format A list containing entries required for H1 RDBES data:
@@ -51,6 +53,7 @@
 #' }
 #' @source \url{https://github.com/davidcurrie2001/MI_RDBES_ExchangeFiles}
 "h1Example"
+
 #' A dataset containing the mapping from database column names
 #' to R field names
 #'
@@ -66,6 +69,7 @@
 #' }
 #' @source \url{https://sboxrdbes.ices.dk}
 "mapColNamesFieldR"
+
 #' One quarter of sample data from swedish shrimp landings of the
 #' SWE_OTB_CRU_32-69_0_0 fishery
 #'
@@ -75,22 +79,24 @@
 #' purposes only.
 #'
 #' @format A data frame with 10 rows and 95 variables:
-#' \describe{
-#'   \item{DEsamplingScheme}{Sampling Scheme}
-#'   \item{DEyear}{Year of data collection}
-#'   \item{DEstratumName}{Fishery code}
-#'   \item{DEhierarchyCorrect}{Design Variable of RDBES. More details in RDBES documentation}
-#'   \item{DEhierarchy}{Design Variable of RDBES. More details in RDBES documentation}
-#'   \item{DEsampled}{Design Variable of RDBES. More details in RDBES documentation}
-#'   \item{DEreasonNotSampled}{Design Variable of RDBES. More details in RDBES documentation}
-#'   \item{SDcountry}{Country that collected the data}
-#'   \item{SDinstitution}{Institution that collected the data}
-#'   \item{su1, su2, su3, su4, su5}{sampling units of RDBES. More details in RDBES documentation}
-#'   \item{XXXnumberSampled, ...}{Design Variables of RDBES. More details in RDBES documentation}
-#'   \item{targetValue}{estimate of weight landed in each haul (in kg)}
-#' }
+#'
+#'   - DEsamplingScheme - Sampling Scheme
+#'   - DEyear - Year of data collection
+#'   - DEstratumName - Fishery code
+#'   - DEhierarchyCorrect - Design Variable of RDBES. More details in RDBES documentation
+#'   - DEhierarchy - Design Variable of RDBES. More details in RDBES documentation
+#'   - DEsampled - Design Variable of RDBES. More details in RDBES documentation
+#'   - DEreasonNotSampled - Design Variable of RDBES. More details in RDBES documentation
+#'   - SDcountry - Country that collected the data
+#'   - SDinstitution - Institution that collected the data
+#'   - su1, su2, su3, su4, su5 - sampling units of RDBES. More details in RDBES documentation
+#'   - XXXnumberSampled, ... - Design Variables of RDBES. More details in RDBES documentation
+#'   - targetValue - estimate of weight landed in each haul (in kg)
+#'   - plus XX other columns
+#'
 #' @source Nuno Prista @ SLU Aqua, 2022
 "shrimps"
+
 #' One quarter of sample data from swedish shrimp catches of the
 #' SWE_OTB_CRU_32-69_0_0 fishery
 #'
@@ -101,23 +107,25 @@
 #' purposes only.
 #'
 #' @format A data frame with 10 rows and 95 variables:
-#' \describe{
-#'   \item{DEsamplingScheme}{Sampling Scheme}
-#'   \item{DEyear}{Year of data collection}
-#'   \item{DEstratumName}{Fishery code}
-#'   \item{DEhierarchyCorrect}{Design Variable of RDBES. More details in RDBES documentation}
-#'   \item{DEhierarchy}{Design Variable of RDBES. More details in RDBES documentation}
-#'   \item{DEsampled}{Design Variable of RDBES. More details in RDBES documentation}
-#'   \item{DEreasonNotSampled}{Design Variable of RDBES. More details in RDBES documentation}
-#'   \item{SDcountry}{Country that collected the data}
-#'   \item{SDinstitution}{Institution that collected the data}
-#'   \item{su1, su2, su3, su4, su5}{sampling units of RDBES. More details in RDBES documentation}
-#'   \item{XXXnumberSampled, ...}{Design Variables of RDBES. More details in RDBES documentation}
-#'   \item{su5stratumName}{sieve fraction}
-#'   \item{targetValue}{estimate of weight fraction in each haul (in kg)}
-#' }
+#'
+#'   - DEsamplingScheme - Sampling Scheme
+#'   - DEyear - Year of data collection
+#'   - DEstratumName - Fishery code
+#'   - DEhierarchyCorrect - Design Variable of RDBES. More details in RDBES documentation
+#'   - DEhierarchy - Design Variable of RDBES. More details in RDBES documentation
+#'   - DEsampled - Design Variable of RDBES. More details in RDBES documentation
+#'   - DEreasonNotSampled - Design Variable of RDBES. More details in RDBES documentation
+#'   - SDcountry - Country that collected the data
+#'   - SDinstitution - Institution that collected the data
+#'   - su1, su2, su3, su4, su5 - sampling units of RDBES. More details in RDBES documentation
+#'   - XXXnumberSampled, ... - Design Variables of RDBES. More details in RDBES documentation
+#'   - su5stratumName - sieve fraction
+#'   - targetValue - estimate of weight fraction in each haul (in kg)
+#'   - plus XX other columns
+#'
 #' @source Nuno Prista @ SLU Aqua, 2022
 "shrimpsStrat"
+
 #' A dataset containing the RDBES "design variable" names
 #'
 #' @format A vector containing the short R names of the RDBES design variables

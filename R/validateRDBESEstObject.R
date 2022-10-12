@@ -4,7 +4,8 @@
 #' @param verbose (Optional) Set to TRUE if you want informative text printed
 #' out, or FALSE if you don't.  The default is FALSE.
 #'
-#' @return
+#' @return Whoever revises this function please specify what it returns here
+#'
 #' @export
 #'
 #' @examples
