@@ -71,7 +71,7 @@ test_that("Overwriting a table from a zip file produces a warning", {
   expect_warning(
     importRDBESDownloadData(paste0(ddir, zipFiles),
                             castToCorrectDataTypes = FALSE),
-    "Overwriting file: VesselDetails.csv, this might be intended!"
+    "Duplicate unzipped files detected in"
   )
 })
 
