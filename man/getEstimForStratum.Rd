@@ -7,7 +7,7 @@
 getEstimForStratum(x)
 }
 \arguments{
-\item{x}{}
+\item{x}{The input}
 }
 \description{
 Private function used by doEstimationForAllStrata to get the estimates

@@ -33,7 +33,7 @@ getwd()
 
 # Hierarchy 1 demo data
 myH1RawObject <-
-     createRDBESDataObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19_13")
+     createRDBESDataObject(rdbesExtractPath = "../tests/testthat/h1_v_1_19_13")
 
 # Number of rows in each non-null table
 unlist(lapply(myH1RawObject, nrow))
@@ -42,7 +42,7 @@ validateRDBESDataObject(myH1RawObject, verbose = FALSE)
 
 # Hierarchy 5 demo data
 myH5RawObject <-
-     createRDBESDataObject(rdbesExtractPath = "..\\tests\\testthat\\h5_v_1_19_13")
+     createRDBESDataObject(rdbesExtractPath = "../tests/testthat/h5_v_1_19_13")
 
 # Number of rows in each non-null table
 unlist(lapply(myH5RawObject, nrow))
@@ -74,7 +74,7 @@ RDBESDataObjects can be filtered using the filterRDBESDataObject() function - th
 
 ```{r filter}
 myH1RawObject <-
-createRDBESDataObject(rdbesExtractPath = "..\\tests\\testthat\\h1_v_1_19_13")
+createRDBESDataObject(rdbesExtractPath = "../tests/testthat/h1_v_1_19_13")
 
 # Number of rows in each non-null table
 unlist(lapply(myH1RawObject, nrow))

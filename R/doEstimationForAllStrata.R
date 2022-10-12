@@ -219,7 +219,7 @@ doEstimationForAllStrata <- function(RDBESDataObjectForEstim,
 
 #' Private function used by doEstimationForAllStrata to get the estimates
 #'
-#' @param x
+#' @param x The input
 #'
 #' @return
 #'

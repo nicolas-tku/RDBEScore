@@ -15,7 +15,8 @@ Suggests:
     rmarkdown,
     testthat
 Depends: 
-    R (>= 3.5.0)
+    R (>= 3.5.0)u
 Imports: 
-    dplyr, data.table
+    dplyr, 
+    data.table
 VignetteBuilder: knitr

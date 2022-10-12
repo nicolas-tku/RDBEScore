@@ -36,7 +36,7 @@ setRDBESDataObjectDataTypes <- function(RDBESDataObjectToConvert){
         colsToChange <- names(x)[names(x) %in% myCols]
         if (length(colsToChange)>0){
           x[, colsToChange] <-
-            x[, lapply(.SD, icesRDBES:::as.integer.or.dbl), .SDcols = colsToChange]
+            x[, lapply(.SD, as.integer.or.dbl), .SDcols = colsToChange]
         }
 
         # Change to character

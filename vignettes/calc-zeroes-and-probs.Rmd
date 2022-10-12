@@ -36,7 +36,7 @@ getwd()
 #load("../tests/testthat/h7_v_1_19/testDataPreparationFunctions.Rdata")
 #myRawObject <- myH7RawObject
 myRawObject <-
-     createRDBESDataObject(rdbesExtractPath = "..\\tests\\testthat\\h7_v_1_19_13")
+     createRDBESDataObject(rdbesExtractPath = "../tests/testthat/h7_v_1_19_13")
 
 # Temp fixes to change data to lower hierarchy C - function won't deal with A, or B yet
 myRawObject[["BV"]] <- dplyr::distinct(myRawObject[["BV"]], FMid, .keep_all = TRUE)

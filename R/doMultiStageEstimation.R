@@ -57,7 +57,7 @@ estimate <- function(tbl, estimRes, target,
   if (length(tblName) > 1) {
     stop("Mixed table")
   }
-  cols <- icesRDBES:::getColnames(tblName)
+  cols <- getColnames(tblName)
   missingCols <- setdiff(cols, colnames(tbl))
   isTarget <- length(setdiff(target, colnames(tbl))) == 0
   data <- tbl[get(parentIdCol) %in% ids, ]
