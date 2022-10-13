@@ -4,33 +4,36 @@
 
 	rm(list=ls())
 	library(data.table)
-	
-	# load textbook data 	
+
+	# load textbook data
 		library(survey)
 		data(api)
 		dataset<-apistrat
 		target_var<-"enroll"
-	
+
 	# name your project (will be used in filenames for CS, SL and VD)
 		project_name_outputs <- "WGRDBES-EST_TEST_Pckg_Survey_data_apistrat_H1"
+  #nameof the directory where the outputs are saved currently one folder above
+		# of the working deirectory
+		base_dir_outputs <- "../"
 
 	# select a year for upload
 		DEyear<-1968
 		SDinstitution <- 4484
 		DEsamplingScheme<-"SWE_CommEMAtSea_RouCF"
-		Basedir <- "./exampleData/textBooks/"
+		Basedir <- "./data-raw/exampleData/textBooks/"
 		VD_base <- readRDS(paste0(Basedir,"VD_base.rds"))
 		SL_base <- readRDS(paste0(Basedir,"SL_base.rds"))
-	
-	
+
+
 #========================
-# Outline of Hierarchy 1 
+# Outline of Hierarchy 1
 	# Design
 	# Sampling details
 	# Vessel Selection
 	# Fishing Trip
 	# Fishing Operation
-	# Species Selection 
+	# Species Selection
 	# Sample
 	# Length
 		# Biological variables
@@ -41,7 +44,7 @@
 	#DE
 #===============
 
-                                                  
+
 # 1                                     DEid [] - int
 # 2                         DErecordType [M] - string
 # 3             DEsamplingScheme [M] - SamplingScheme
@@ -53,11 +56,11 @@
 # 9                    DEsampled [DV,M] - YesNoFields
 # 10 DEreasonNotSampled [DV,O] - ReasonForNotSampling
 
-DE_df_base<-expand.grid(DEyear=DEyear, 
+DE_df_base<-expand.grid(DEyear=DEyear,
 						DEstratumName="U",stringsAsFactors=F)
 
 DE_df<-data.frame(
-		  DEid = 1:nrow(DE_df_base), 
+		  DEid = 1:nrow(DE_df_base),
 		  DErecordType = "DE",
 		  DEsamplingScheme = DEsamplingScheme,
 		  DEsamplingSchemeType = "NatRouCF",
@@ -66,10 +69,10 @@ DE_df<-data.frame(
 		  DEhierarchyCorrect = "Y",
 		  DEhierarchy = 1,
 		  DEsampled = "Y",
-		  DEreasonNotSampled = ""  
+		  DEreasonNotSampled = ""
 			)
 
-#===============	
+#===============
 	#SD
 #===============
 
@@ -86,11 +89,11 @@ SD_df<-data.frame(
   SDrecordType="SD",
   SDcountry="ZW",
   SDinstitution=as.integer(SDinstitution),
-  stringsAsFactors=FALSE 
+  stringsAsFactors=FALSE
 )
 
-#===============	
-	#VS 
+#===============
+	#VS
 #===============
 
                                                              # x
@@ -122,13 +125,13 @@ SD_df<-data.frame(
 
 #check_All_fields("VS")
 
-# adds VSid to dataset 
-	dataset$VSid <- 1:nrow(dataset)	
+# adds VSid to dataset
+	dataset$VSid <- 1:nrow(dataset)
 
 # creates a dummyVD and adds dataset
 	# restricts VD_base to what is needed
 	VD_base <- VD_base[1:nrow(dataset),]
-	
+
 	dataset$VSencryptedVesselCode<-VD_base$VDencryptedVesselCode
 	# should be 0
 	test<-sum(duplicated(dataset$VSencryptedVesselCode))==0
@@ -168,8 +171,8 @@ VS_df$VSnumberSampled<-sampSize[VS_df$VSstratumName]
 strataSize<-c('E' = 4421, 'M' = 1018, 'H' = 755)
 VS_df$VSnumberTotal<-strataSize[VS_df$VSstratumName]
 
-#===============	
-	#FT 
+#===============
+	#FT
 #===============
 
 # 1                                               FTid [M] - int
@@ -211,46 +214,46 @@ VS_df$VSnumberTotal<-strataSize[VS_df$VSstratumName]
 
 
 FT_df <- data.frame(
-  FTid = dataset$VSid,#[M] - int                                     
-  OSid = "",#  [M/O] - int                                    
-  VSid = dataset$VSid, #[M/O]    
-  VDid = "", #[M] - int                                      
-  SDid = "", #[M/O] - int                                    
-  FOid = "", #[M/O] - int                                    
-  TEid = "", #[M/O] - int                                    
-  FTrecordType='FT', #[M] - string                           
+  FTid = dataset$VSid,#[M] - int
+  OSid = "",#  [M/O] - int
+  VSid = dataset$VSid, #[M/O]
+  VDid = "", #[M] - int
+  SDid = "", #[M/O] - int
+  FOid = "", #[M/O] - int
+  TEid = "", #[M/O] - int
+  FTrecordType='FT', #[M] - string
   FTencryptedVesselCode = dataset$VSencryptedVesselCode, #[M]
-  FTsequenceNumber = as.integer(1:nrow(dataset)), #[M] - string                       
-  FTstratification = "N", #[DV,M] - RS_Stratification         
-  FTstratumName = "U", #[DV,M] - string       
-  FTclustering = "N", #[DV,M] - RS_Clustering                 
-  FTclusterName = "U", #[DV,M] - string                       
-  FTsampler = "Observer", #[M] - RS_Sampler                          
-  FTsamplingType = "AtSea" , #[M] - RS_SamplingType                
-  FTnumberOfHaulsOrSets = 1, #[O] - int                           
-  FTdepartureLocation="ZWHWN", #[O] - Harbour_LOCODE            
-  FTdepartureDate=seq(from = as.Date("1968-01-01", format='%Y-%m-%d'), by=1, length.out=nrow(dataset)), #[M/O] - date                        
-  FTdepartureTime="", #[O] - time                          
-  FTarrivalLocation = "ZWHWN", #[M] - Harbour_LOCODE 
-  FTarrivalDate=seq(from = as.Date("1968-01-01", format='%Y-%m-%d'), by=1, length.out=nrow(dataset)), #[M] - date                            
-  FTarrivalTime="", #[O] - time                            
-  FTnumberTotal= 1, #[DV,O] - int                          
-  FTnumberSampled=1, #[DV,O] - int                        
-  FTselectionProb=1, #[DV,O] - DecimalPrec10              
-  FTinclusionProb=1, #[DV,O] - DecimalPrec10              
-  FTselectionMethod="CENSUS", #[DV,M] - RS_SelectionMethod       
-  FTunitName = dataset$VSid, #[DV,M] - string                          
+  FTsequenceNumber = as.integer(1:nrow(dataset)), #[M] - string
+  FTstratification = "N", #[DV,M] - RS_Stratification
+  FTstratumName = "U", #[DV,M] - string
+  FTclustering = "N", #[DV,M] - RS_Clustering
+  FTclusterName = "U", #[DV,M] - string
+  FTsampler = "Observer", #[M] - RS_Sampler
+  FTsamplingType = "AtSea" , #[M] - RS_SamplingType
+  FTnumberOfHaulsOrSets = 1, #[O] - int
+  FTdepartureLocation="ZWHWN", #[O] - Harbour_LOCODE
+  FTdepartureDate=seq(from = as.Date("1968-01-01", format='%Y-%m-%d'), by=1, length.out=nrow(dataset)), #[M/O] - date
+  FTdepartureTime="", #[O] - time
+  FTarrivalLocation = "ZWHWN", #[M] - Harbour_LOCODE
+  FTarrivalDate=seq(from = as.Date("1968-01-01", format='%Y-%m-%d'), by=1, length.out=nrow(dataset)), #[M] - date
+  FTarrivalTime="", #[O] - time
+  FTnumberTotal= 1, #[DV,O] - int
+  FTnumberSampled=1, #[DV,O] - int
+  FTselectionProb=1, #[DV,O] - DecimalPrec10
+  FTinclusionProb=1, #[DV,O] - DecimalPrec10
+  FTselectionMethod="CENSUS", #[DV,M] - RS_SelectionMethod
+  FTunitName = dataset$VSid, #[DV,M] - string
   FTselectionMethodCluster="", #[DV,O] - RS_SelectionMethod
-  FTnumberTotalClusters="", #[DV,O] - int                  
-  FTnumberSampledClusters="", #[DV,O] - int                
-  FTselectionProbCluster="", #[DV,O] - DecimalPrec10       
-  FTinclusionProbCluster="", #[DV,O] - DecimalPrec10       
-  FTsampled="Y", #[DV,M] - YesNoFields                      
+  FTnumberTotalClusters="", #[DV,O] - int
+  FTnumberSampledClusters="", #[DV,O] - int
+  FTselectionProbCluster="", #[DV,O] - DecimalPrec10
+  FTinclusionProbCluster="", #[DV,O] - DecimalPrec10
+  FTsampled="Y", #[DV,M] - YesNoFields
   FTreasonNotSampled= "", #[DV,O] - RS_ReasonForNotSampling
  stringsAsFactors=FALSE)
 
 
-#===============	
+#===============
 	#FO
 #===============
 
@@ -315,7 +318,7 @@ FT_df <- data.frame(
 
 # programme specific view: trip/landing event [size reduction]
 	FO_base<-FD2extract[['STATION']]
-	
+
 	# read in Katja's output and get FOmetier6
 		aux<-read.csv(paste0("inputs_CS/dataCall2022/RDBES_metiers_from_Katja/fd2_metier_results_all_columns_CommAtSea_Hlab_2021_2022-09-22.csv"))
 		if(all(tapply(aux$metier_level_6_new, aux$haul_id, function(x) length(unique(x)))==1))
@@ -361,7 +364,7 @@ FO_df <- data.frame(
 	FOnationalFishingActivity = "",
 	FOmetier5 = "",
 	FOmetier6 = "OTT_CRU_70-89_2_35",#M
-	FOgear = "OTT",#M 
+	FOgear = "OTT",#M
 	FOmeshSize = "",
 	FOselectionDevice = "",
 	FOselectionDeviceMeshSize = "",
@@ -389,9 +392,9 @@ stringsAsFactors=FALSE
 )
 
 
-#===============	
+#===============
 	#SS
-#===============	
+#===============
 
 # 1                                                SSid [] - int
 # 2                                             LEid [M/O] - int
@@ -441,13 +444,13 @@ SS_df<-data.frame(
 	SSstratification = "N", #M
 	SSstratumName = "U", #M
 	SSclustering = "N", #M
-	SSclusterName = "U", #M	
+	SSclusterName = "U", #M
 	SSobservationActivityType = "Sort", #M
 	SScatchFraction = "Lan", #M
 	SSobservationType = "Volume", #M
 	SSsampler = "Observer", #M
-	SSspeciesListName = project_name_outputs, #M 
-	SSuseForCalculateZero = "N", #M 
+	SSspeciesListName = project_name_outputs, #M
+	SSuseForCalculateZero = "N", #M
 	SStimeTotal = "",
 	SStimeSampled = "",
 	SSnumberTotal = 1,
@@ -465,9 +468,9 @@ SS_df<-data.frame(
 	SSreasonNotSampled = ""
 )
 
-#===============	
+#===============
 	#SA
-#===============	
+#===============
 
 # 1                                            SAid [] - int
 # 2                                            SSid [] - int
@@ -568,9 +571,9 @@ SA_df<-data.frame(
 
 
 
-#===============	
+#===============
 	#Builds final format
-#===============	
+#===============
 
 RDBESlist = list(DE = DE_df,SD = SD_df, VS = VS_df, FT = FT_df, FO = FO_df, SS = SS_df, SA = SA_df)
 
@@ -600,14 +603,14 @@ key<-c(a$DEindex[match(DE_df$DEid,a$DEid)],
 a$SDindex[match(SD_df$SDid,a$SDid)],
 a$VSindex[match(VS_df$VSid,a$VSid)],
 a$FTindex[match(FT_df$FTid,a$FTid)],
-a$FOindex[match(FO_df$FOid,a$FOid)], 
-a$SSindex[match(SS_df$SSid,a$SSid)], 
+a$FOindex[match(FO_df$FOid,a$FOid)],
+a$SSindex[match(SS_df$SSid,a$SSid)],
 a$SAindex[match(SA_df$SAid,a$SAid)]
 )
 
 # file production
-Oldscipen<-.Options$scipen	
-options(scipen=500)		
+Oldscipen<-.Options$scipen
+options(scipen=500)
 
 #remove all id
 for (i in names(RDBESlist))
@@ -618,7 +621,9 @@ RDBESlist[[i]][which(grepl(colnames(RDBESlist[[i]]),pat="[A-Z]id"))]<-NULL
 #================
 # save
 #================
-	dir_outputs<-paste0(project_name_outputs,"/"); dir.create(dir_outputs, recursive=T, showWarnings=FALSE)
+	dir_outputs<-paste0(base_dir_outputs,
+	                    project_name_outputs,"/")
+  dir.create(dir_outputs, recursive=T, showWarnings=FALSE)
 	filename_output_CS <- paste0(project_name_outputs,"_H1.csv")
 	filename_output_SL <- paste0(project_name_outputs,"_HSL.csv")
 	filename_output_VD <- paste0(project_name_outputs,"_HVD.csv")
@@ -666,4 +671,3 @@ write.table(b$V1, file=paste0(dir_outputs,filename_output_CS), col.names=FALSE, 
 
 	write.table(VD_base, file=paste0(dir_outputs,filename_output_VD), col.names=FALSE, row.names = FALSE, quote=FALSE,sep=",")
 
-	
