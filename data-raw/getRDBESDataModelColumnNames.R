@@ -1,8 +1,8 @@
 library(openxlsx)
 
-rdbesDataModel <- "./data-raw/RDBES Data Model CS.xlsx"
-rdbesDataModelVDSL <- "./data-raw/RDBES Data Model VD SL.xlsx"
-rdbesDataModelCLCE <- "./data-raw/RDBES Data Model CL CE.xlsx"
+rdbesDataModel <- "./data-raw/dataFormat/RDBES Data Model CS.xlsx"
+rdbesDataModelVDSL <- "./data-raw/dataFormat/RDBES Data Model VD SL.xlsx"
+rdbesDataModelCLCE <- "./data-raw/dataFormat/RDBES Data Model CL CE.xlsx"
 
 outFile <- "./data/mapColNamesFieldR.rds"
 
