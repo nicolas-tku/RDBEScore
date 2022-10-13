@@ -147,9 +147,10 @@ doEstimationForAllStrata <- function(RDBESDataObjectForEstim,
 
     }
 
-    ## DE/SD/SS need to be handled differently because we can't estimate with
+    ## DE/SD need to be handled differently because we can't estimate with
     # these tables
-    if (currentTable %in% c("DE", "SD", "SS")) {
+    #if (currentTable %in% c("DE", "SD", "SS")) {
+    if (currentTable %in% c("DE", "SD")) {
 
       # Add on a parentTableID column if it doesn't exist
       if (!"parentTableID" %in% names(myTableWithValues)) {
