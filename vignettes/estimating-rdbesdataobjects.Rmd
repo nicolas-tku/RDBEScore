@@ -3,7 +3,7 @@ title: "Estimating Population parameters from RDBESDataObjects"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Estimating RDBESDataObjects}
+  %\VignetteIndexEntry{Estimating Population parameters from RDBESDataObjects}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
