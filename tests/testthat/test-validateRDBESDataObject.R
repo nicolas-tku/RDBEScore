@@ -59,7 +59,7 @@ test_that("validateRDBESDataObject returns same object for valid object from H5
 })
 test_that("validateRDBESDataObject produces error for NA",  {
 
-  expect_errorror(validateRDBESDataObject(objectToCheck = NA,
+  expect_error(validateRDBESDataObject(objectToCheck = NA,
                                      verbose = FALSE))
 
 })

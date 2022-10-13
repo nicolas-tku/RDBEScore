@@ -31,42 +31,34 @@
 validateRDBESDataObject <- function(objectToCheck,
                                 checkDataTypes = FALSE,
                                 verbose = FALSE) {
-  validRDBESDataObject <- TRUE
-  warningText <- NA
-
   #allowedNamesInList <- unique(icesRDBES::mapColNamesFieldR$Table.Prefix)
   allowedNamesInList <- unique(mapColNamesFieldR$Table.Prefix)
 
   # CHECK 1 Have we just been passed NA?
   if (length(is.na(objectToCheck)) == 1) {
     if (is.na(objectToCheck)) {
-      validRDBESDataObject <- FALSE
-      warningText <- "objectToCheck is NA"
+      stop("objectToCheck is NA")
     }
   # CHECK 2 Is this an object of class RDBESDataObject?  It should be!
   } else if (! 'RDBESDataObject' %in% class(objectToCheck)) {
-    validRDBESDataObject <- FALSE
-    warningText <- "objectToCheck is not of the class RDBESDataObject"
+    stop("objectToCheck is not of the class RDBESDataObject")
   # CHECK 3 Is this a list?  It should be!
   } else if (!(is.list(objectToCheck) & inherits(objectToCheck, "list"))) {
-    validRDBESDataObject <- FALSE
-    warningText <- "objectToCheck does not inherit from list"
+    stop("objectToCheck does not inherit from list")
     # CHECK 4 Does this list have any names that aren't allowed?
   } else if (!all(names(objectToCheck) %in% allowedNamesInList)) {
-    validRDBESDataObject <- FALSE
-    warningText <- paste("objectToCheck is a list but has extra names ",
+    stop(paste("objectToCheck is a list but has extra names ",
       paste(names(objectToCheck), collapse = ","),
       sep = ""
-    )
+    ))
     # CHECK 5 Does the list have an entry for all the required names?
   } else if (!all(allowedNamesInList %in% names(objectToCheck))) {
-    validRDBESDataObject <- FALSE
     print(paste(names(objectToCheck), collapse = ","))
-    warningText <- paste("objectToCheck is a list but does not contain ",
+    stop(paste("objectToCheck is a list but does not contain ",
       "all the required names ",
       paste(names(objectToCheck), collapse = ","),
       sep = ""
-    )
+    ))
   } else { #1
 
     # Get any objectToCheck entries which aren't null or data tables
@@ -85,13 +77,11 @@ validateRDBESDataObject <- function(objectToCheck,
       )]
     # CHECK 6 Are there any entries which aren't NULL or data tables?
     if (length(badEntries) > 0) {
-      validRDBESDataObject <- FALSE
-      warningText <-
-        paste("objectToCheck is a list but contains some entries which are ",
-          "not NULL or data tables",
-          paste(names(badEntries), collapse = ","),
-          sep = ""
-        )
+      stop(paste("objectToCheck is a list but contains some entries which are ",
+        "not NULL or data tables",
+        paste(names(badEntries), collapse = ","),
+        sep = ""
+      ))
     } else { #2
 
       # Print out null entries for information
@@ -146,19 +136,15 @@ validateRDBESDataObject <- function(objectToCheck,
               )
           }
         }
+        if(!validRDBESDataObject) {
+          stop(warningText)
+        }
       } #3
     } #2
   } #1
 
-
-
-  # Print out any information if we need to
-  if (!is.na(warningText)) {
-    print(warningText)
-  }
-
   # Return the validation result
-  validRDBESDataObject
+  return(invisible(objectToCheck));
 }
 
 #' @rdname validateRDBESDataObject
