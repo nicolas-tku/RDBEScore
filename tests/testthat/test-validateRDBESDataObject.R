@@ -92,22 +92,22 @@ test_that("validateRDBESDataObject produces error for object with a required
   expect_error(validateRDBESDataObject(objectToCheck = myObject,
                                      verbose = FALSE))
 })
-test_that("validateRDBESDataObject returns F for object with duplicate rows",  {
-
+test_that("validateRDBESDataObject produces error for object with duplicate
+          rows",  {
   myObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
   myObject[['DE']] <- data.table::rbindlist(list(myObject[['DE']],myObject[['DE']]))
   expect_error(validateRDBESDataObject(objectToCheck = myObject,
                                      verbose = FALSE))
 })
-test_that("validateRDBESDataObject returns F for object with duplicate DEid values",  {
-
+test_that("validateRDBESDataObject produces error for object with duplicate
+          DEid values",  {
   myObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
   myObject[['DE']][,"DEid"]  <- replicate(nrow(myObject[['DE']]),1)
   expect_error(validateRDBESDataObject(objectToCheck = myObject,
                                      verbose = FALSE))
 })
-test_that("validateRDBESDataObject returns F for object with invalid data types (when checking data types)",  {
-
+test_that("validateRDBESDataObject produces error for object with invalid data
+          types (when checking data types)",  {
   myObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
   myObject[["DE"]]$DEid <- as.character(myObject[["DE"]]$DEid)
   myObject[["SD"]]$SDid <- as.character(myObject[["SD"]]$SDid)
@@ -115,8 +115,9 @@ test_that("validateRDBESDataObject returns F for object with invalid data types 
                                      checkDataTypes = TRUE,
                                      verbose = FALSE))
 })
-test_that("validateRDBESDataObject returns F for object with with duplicate DEid values and invalid data types (when checking data types)",  {
-
+test_that("validateRDBESDataObject produces error for object with with
+          duplicate DEid values and invalid data types (when checking data
+          types)",  {
   myObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
   myObject[['DE']][,"DEid"]  <- replicate(nrow(myObject[['DE']]),1)
   myObject[["DE"]]$DEid <- as.character(myObject[["DE"]]$DEid)
