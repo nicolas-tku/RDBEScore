@@ -24,6 +24,7 @@
 #' )
 #' }
 doEstimationForAllStrataWithEstObject <- function(RDBESEstObjectForEstim,
+                                                  targetValue,
                                                   verbose = TRUE) {
 
 
@@ -133,7 +134,10 @@ doEstimationForAllStrataWithEstObject <- function(RDBESEstObjectForEstim,
     # Make some changes for specific tables
     if (currentTable == "SA") {
       # Rename the variable we want to estimate
-      names(myTable)[names(myTable) == "sampWtLive"] <- "studyVariable"
+      #names(myTable)[names(myTable) == "sampWtLive"] <- "studyVariable"
+      #names(myTable)[names(myTable) == "sampWtLive"] <- "studyVariable"
+      names(myTable)[names(myTable) == substring(targetValue,3)   ] <- "studyVariable"
+
     }
     if (currentTable == "DE") {
       # Combine the year with the stratum name
@@ -251,6 +255,7 @@ doEstimationForAllStrataWithEstObject <- function(RDBESEstObjectForEstim,
 
   myStrataResults
 
+}
 
 
   #' Private function used by doEstimationForAllStrata to get the estimates
@@ -331,4 +336,4 @@ doEstimationForAllStrataWithEstObject <- function(RDBESEstObjectForEstim,
     myReturnValues
   }
 
-}
+
