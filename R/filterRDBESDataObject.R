@@ -60,7 +60,7 @@ filterRDBESDataObject <- function(RDBESDataObjectToFilter,
     foundNames <- names(x)[which(names(x) %in% fieldsToFilter)]
     if (length(foundNames) > 0) {
       x <-
-        dplyr::filter(x, dplyr::if_all(foundNames, ~ .x %in% valuesToFilter))
+        dplyr::filter(x, dplyr::if_all(all_of(foundNames), ~ .x %in% valuesToFilter))
     }
     x
   })
