@@ -8,7 +8,7 @@ gitHubFileLocation <-
   "https://api.github.com/repos/ices-tools-dev/RDBES/contents/XSD-files"
 # The folder to read the files from.  If you are
 # downloading from GitHub a copy of the latest files will be saved here
-fileLocation <- "data-raw/"
+fileLocation <- "data-raw/xsd/"
 
 # STEP 1) Get the BaseTypes file (if required)
 if (downloadFromGitHub) {
