@@ -1,6 +1,7 @@
 capture.output({  ## suppresses printing of console output when running test()
 
-test_that("filterRDBESDataObject returns the correct result for single field/value", {
+test_that("filterRDBESDataObject returns the correct result for
+          single field/value", {
   myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
   myFields <- c("FTarvLoc")
   myValues <- c("ZWBFO")
@@ -9,13 +10,15 @@ test_that("filterRDBESDataObject returns the correct result for single field/val
     valuesToFilter = myValues
   )
 
-  # Check the filtered object is ok (should return TRUE)
-  expect_true(validateRDBESDataObject(myFilteredObject, verbose = FALSE))
+  # Check the filtered object is ok (should return the object)
+  expect_equal(myFilteredObject, validateRDBESDataObject(myFilteredObject,
+                                                         verbose = FALSE))
   # Check the expected number of FT rows are returned
   expect_equal(nrow(myFilteredObject[["FT"]]), 17)
 })
 
-test_that("filterRDBESDataObject returns the correct result for single field/ two values", {
+test_that("filterRDBESDataObject returns the correct result for single field/
+          two values", {
   myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
   myFields <- c("FTarvLoc")
   myValues <- c("ZWBFO", "ZWBZH")
@@ -25,11 +28,13 @@ test_that("filterRDBESDataObject returns the correct result for single field/ tw
   )
 
   # Check the filtered object is ok (should return TRUE)
-  expect_true(validateRDBESDataObject(myFilteredObject, verbose = FALSE))
+  expect_equal(myFilteredObject, validateRDBESDataObject(myFilteredObject,
+                                                         verbose = FALSE))
   # Check the expected number of FT rows are returned
   expect_equal(nrow(myFilteredObject[["FT"]]), 37)
 })
-test_that("filterRDBESDataObject returns the correct result for two fields/ two values", {
+test_that("filterRDBESDataObject returns the correct result for two fields/
+          two values", {
   myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
   myFields <- c("DEyear", "DEhierarchy")
   myValues <- c(1965, 2)
@@ -39,11 +44,13 @@ test_that("filterRDBESDataObject returns the correct result for two fields/ two 
   )
 
   # Check the filtered object is ok (should return TRUE)
-  expect_true(validateRDBESDataObject(myFilteredObject, verbose = FALSE))
+  expect_equal(myFilteredObject, validateRDBESDataObject(myFilteredObject,
+                                                         verbose = FALSE))
   # Check the expected number of DE rows are returned
   expect_equal(nrow(myFilteredObject[["DE"]]), 0)
 })
-test_that("filterRDBESDataObject returns the correct result for two fields/ two values", {
+test_that("filterRDBESDataObject returns the correct result for two fields/ two
+          values", {
   myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
   myFields <- c("DEyear", "DEhierarchy")
   myValues <- c(1965, 1)
@@ -53,11 +60,13 @@ test_that("filterRDBESDataObject returns the correct result for two fields/ two 
   )
 
   # Check the filtered object is ok (should return TRUE)
-  expect_true(validateRDBESDataObject(myFilteredObject, verbose = FALSE))
+  expect_equal(myFilteredObject, validateRDBESDataObject(myFilteredObject,
+                                                         verbose = FALSE))
   # Check the expected number of DE rows are returned
   expect_equal(nrow(myFilteredObject[["DE"]]), 3)
 })
-test_that("filterRDBESDataObject returns the correct result for three fields/ three values", {
+test_that("filterRDBESDataObject returns the correct result for three fields/
+          three values", {
   myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
   myFields <- c("DEsampSchemeType", "DEsampScheme", "DEstratumName")
   myValues <- c("NatPilCF", "National Routine", "DE_stratum3_H1")
@@ -67,7 +76,8 @@ test_that("filterRDBESDataObject returns the correct result for three fields/ th
   )
 
   # Check the filtered object is ok (should return TRUE)
-  expect_true(validateRDBESDataObject(myFilteredObject, verbose = FALSE))
+  expect_equal(myFilteredObject, validateRDBESDataObject(myFilteredObject,
+                                                         verbose = FALSE))
   # Check the expected number of DE rows are returned
   expect_equal(nrow(myFilteredObject[["DE"]]), 1)
 })

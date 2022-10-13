@@ -20,12 +20,14 @@ care. Default value is FALSE.}
 out, or FALSE if you don't.  The default is FALSE.}
 }
 \value{
-TRUE if object is valid, FALSE is object is not valid
+objectToCheck, invisible
 }
 \description{
 Perform basic checks on a object.
 }
 \details{
+Checks if 'objectToCheck' parameter is valid. Returns the parameter if it is
+valid and otherwise stops on error.
 It checks the \code{RDBESDataObject} if:
 \itemize{
 \item Is this an object of class RDBESDataObject
@@ -34,7 +36,7 @@ It checks the \code{RDBESDataObject} if:
 }
 
 It does not check if the data is valid.
-The RDBES upload system preforms an extensive set of checks on the
+The RDBES upload system performs an extensive set of checks on the
 uploaded data.
 }
 \examples{
