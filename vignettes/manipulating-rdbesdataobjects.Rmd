@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 The aim of this document is to illustrate some of the ways of manipulating RDBESDataObjects.
 
 ```{r}
-library(icesRDBES)
+library(RDBEScore)
 ```
 
 ## Prerequisites
