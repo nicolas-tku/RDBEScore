@@ -3,24 +3,24 @@
 \name{findAndKillOrphans}
 \alias{findAndKillOrphans}
 \title{This function finds and removed any orphan records in an
-RDBESRawObject.  Normally data that has been downloaded from the RDBES
+RDBESDataObject.  Normally data that has been downloaded from the RDBES
 will not contain orphan records - however if the data is subsequently
 filtered it is possible to introduce orphan records.}
 \usage{
 findAndKillOrphans(objectToCheck, verbose = FALSE)
 }
 \arguments{
-\item{objectToCheck}{an RDBESRawObject.}
+\item{objectToCheck}{an RDBESDataObject.}
 
 \item{verbose}{(Optional) If set to TRUE more detailed text will be printed
 out by the function.  Default is TRUE.}
 }
 \value{
-an RDBESRawObject with any orphan records removed
+an RDBESDataObject with any orphan records removed
 }
 \description{
 This function finds and removed any orphan records in an
-RDBESRawObject.  Normally data that has been downloaded from the RDBES
+RDBESDataObject.  Normally data that has been downloaded from the RDBES
 will not contain orphan records - however if the data is subsequently
 filtered it is possible to introduce orphan records.
 }
@@ -28,10 +28,10 @@ filtered it is possible to introduce orphan records.
 \dontrun{
 
 myH1RawObject <-
-createRDBESRawObject(rdbesExtractPath = "tests\\\\testthat\\\\h1_v_1_19")
+createRDBESDataObject(rdbesExtractPath = "tests\\\\testthat\\\\h1_v_1_19")
 myFields <- c("SDctry","VDctry","VDflgCtry","FTarvLoc")
 myValues <- c("ZW","ZWBZH","ZWVFA" )
-myFilteredObject <- filterRDBESRawObject(myH1RawObject,
+myFilteredObject <- filterRDBESDataObject(myH1RawObject,
                                         fieldsToFilter = myFields,
                                         valuesToFilter = myValues )
 myObjectNoOrphans <- findAndKillOrphans(objectToCheck = myFilteredObject,

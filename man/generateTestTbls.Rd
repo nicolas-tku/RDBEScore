@@ -15,6 +15,7 @@ Defaults to empty list}
 \item{...}{
   Arguments passed on to \code{\link[=makeTbl]{makeTbl}}
   \describe{
+    \item{\code{tblName}}{Name of the table}
     \item{\code{rows}}{numeric number of rows per parent record. Defaults to 4.}
     \item{\code{propSamp}}{numeric proportion of how many of total are
 sampled. This is ignored for "CENSUS". Defaults to 0.5}
@@ -32,10 +33,10 @@ a list of named data.table's
 }
 \description{
 Generates a named list of data tables that follow the structure of
-RDBESrawObject. The tables only have columns required for testing
+RDBESDataObject. The tables only have columns required for testing
 The generate tables
 }
 \examples{
-generateTestTbls(c("A", "B", "C"), seletionMethod = "SRSWOR")
+generateTestTbls(c("A", "B", "C"), selMeth = "SRSWOR")
 generateTestTbls(LETTERS[1:5]) # makes 5 tables with method CENSUS
 }

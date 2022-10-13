@@ -2,11 +2,11 @@
 #' records i.e.those rows which have a value of SpeciesListName that does not
 #' exist in the SL table.
 #'
-#' @param objectToCheck an RDBESRawObject.
+#' @param objectToCheck an RDBESDataObject.
 #' @param verbose (Optional) If set to TRUE more detailed text will be printed
 #' out by the function.  Default is TRUE.
 #'
-#' @return an RDBESRawObject with any records with an invalid SpeciesListName
+#' @return an RDBESDataObject with any records with an invalid SpeciesListName
 #' rows removed
 #' @export
 #'
@@ -14,10 +14,10 @@
 #' \dontrun{
 #'
 #' myH1RawObject <-
-#'   createRDBESRawObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
+#'   createRDBESDataObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
 #' myFields <- c("SLspeclistName")
 #' myValues <- c("WGRDBES-EST TEST 5 - sprat data")
-#' myFilteredObject <- filterRDBESRawObject(myH1RawObject,
+#' myFilteredObject <- filterRDBESDataObject(myH1RawObject,
 #'   fieldsToFilter = myFields,
 #'   valuesToFilter = myValues
 #' )
@@ -29,13 +29,8 @@
 removeBrokenSpeciesListLinks <- function(objectToCheck, verbose = FALSE) {
 
 
-  # Check we have a valid RDBESRawObject before doing anything else
-  if (!validateRDBESRawObject(objectToCheck, verbose = FALSE)) {
-    stop(paste0(
-      "objectToCheck is not valid ",
-      "- removeBrokenSpeciesListLinks will not proceed"
-    ))
-  }
+  # Check we have a valid RDBESDataObject before doing anything else
+  validateRDBESDataObject(objectToCheck, verbose = FALSE)
 
   # Just check the non-null entries
   nonNullEntries <- names(objectToCheck[sapply(objectToCheck, Negate(is.null))])

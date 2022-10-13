@@ -15,6 +15,8 @@ makeTbl(
 )
 }
 \arguments{
+\item{tblName}{Name of the table}
+
 \item{prevTbls}{list of data.tables upstream of the generated table.
 Defaults to empty list}
 

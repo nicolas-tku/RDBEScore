@@ -1,9 +1,11 @@
+capture.output({  ## suppresses printing of console output when running test()
+
 test_that("removeBrokenSpeciesListLinks runs without errors
           or warnings when there are no invalid species list links",  {
 
-    myPath <- ".\\h1_v_1_19"
+    myPath <- "./h1_v_1_19_13"
     myH1RawObject <-
-    createRDBESRawObject(rdbesExtractPath = myPath)
+    createRDBESDataObject(rdbesExtractPath = myPath)
 
     myObjectValidSpeciesListLinks <- expect_warning(
               removeBrokenSpeciesListLinks(objectToCheck = myH1RawObject,
@@ -14,9 +16,9 @@ test_that("removeBrokenSpeciesListLinks runs without errors
 test_that("removeBrokenSpeciesListLinks prduces an error
           if the SL table is NULL",  {
 
-    myPath <- ".\\h1_v_1_19"
+    myPath <- "./h1_v_1_19_13"
     myH1RawObject <-
-    createRDBESRawObject(rdbesExtractPath = myPath)
+    createRDBESDataObject(rdbesExtractPath = myPath)
     myH1RawObject["SL"] <- list(NULL)
 
     myObjectValidSpeciesListLinks <- expect_error(
@@ -28,12 +30,12 @@ test_that("removeBrokenSpeciesListLinks prduces an error
 test_that("removeBrokenSpeciesListLinks runs without errors
           or warnings when there are invalid species list links",  {
 
-    myPath <- ".\\h1_v_1_19"
+    myPath <- "./h1_v_1_19_13"
     myH1RawObject <-
-      createRDBESRawObject(rdbesExtractPath = myPath)
+      createRDBESDataObject(rdbesExtractPath = myPath)
     myFields <- c("SLspeclistName")
     myValues <- c("WGRDBES-EST TEST 5 - sprat data" )
-    myFilteredObject <- filterRDBESRawObject(myH1RawObject,
+    myFilteredObject <- filterRDBESDataObject(myH1RawObject,
                                                fieldsToFilter = myFields,
                                                valuesToFilter = myValues )
     myObjectValidSpeciesListLinks <- expect_warning(
@@ -42,3 +44,5 @@ test_that("removeBrokenSpeciesListLinks runs without errors
                                     ,NA)
 
 })
+
+}) ## end capture.output

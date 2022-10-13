@@ -1,10 +1,10 @@
 library(openxlsx)
 
-rdbesDataModel <- "data-raw\\RDBES Data Model.xlsx"
-rdbesDataModelVDSL <- "data-raw\\RDBES Data Model VD SL.xlsx"
-rdbesDataModelCLCE <- "data-raw\\RDBES Data Model CL CE.xlsx"
+rdbesDataModel <- "./data-raw/dataFormat/RDBES Data Model CS.xlsx"
+rdbesDataModelVDSL <- "./data-raw/dataFormat/RDBES Data Model VD SL.xlsx"
+rdbesDataModelCLCE <- "./data-raw/dataFormat/RDBES Data Model CL CE.xlsx"
 
-outFile <- "data\\mapColNamesFieldR.RData"
+outFile <- "./data/mapColNamesFieldR.rds"
 
 mapColNames <-NULL
 
@@ -52,7 +52,7 @@ for (i in 1:2) {
 # Get rid of NA field names
 mapColNamesFieldR <- mapColNames[!is.na(mapColNames$Field.Name),]
 
-# Fix for one issue
+# Fix for two issues
 mapColNamesFieldR[mapColNamesFieldR$R.Name == "Clid","Field.Name"] <- "CLid"
 mapColNamesFieldR[mapColNamesFieldR$R.Name == "Clid","R.Name"] <- "CLid"
 
@@ -109,6 +109,9 @@ mapColNamesFieldR$Table.Prefix == "SA" &
 mapColNamesFieldR[
   mapColNamesFieldR$Table.Prefix == "SA" &
     mapColNamesFieldR$Field.Name == "SAsequenceNumber","RDataType"] <- "numeric"
+mapColNamesFieldR[
+  mapColNamesFieldR$Table.Prefix == "SA" &
+    mapColNamesFieldR$Field.Name == "SAparentSequenceNumber","RDataType"] <- "numeric"
 
 # Save the data
-save(mapColNamesFieldR,file=outFile)
+usethis::use_data(mapColNamesFieldR)

@@ -2,20 +2,20 @@
 % Please edit documentation in R/killOrphans.R
 \name{killOrphans}
 \alias{killOrphans}
-\title{Internal function to remove orphan records from an RDBESRawObject}
+\title{Internal function to remove orphan records from an RDBESDataObject}
 \usage{
 killOrphans(objectToCheck, orphansToRemove)
 }
 \arguments{
-\item{objectToCheck}{an RDBESRawObject}
+\item{objectToCheck}{an RDBESDataObject}
 
 \item{orphansToRemove}{The output from the findOrphansByTable function (A
 data frame with the primary keys of the table checked, the two
 letter table identifier, and their orphan status.)}
 }
 \value{
-RDBESRawObject with orphan records removed
+RDBESDataObject with orphan records removed
 }
 \description{
-Internal function to remove orphan records from an RDBESRawObject
+Internal function to remove orphan records from an RDBESDataObject
 }

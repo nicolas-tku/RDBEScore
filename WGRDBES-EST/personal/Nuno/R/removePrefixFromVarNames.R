@@ -9,7 +9,7 @@
 #' @examples
 #' \dontrun{
 #' myH1RawObject <-
-#'   createRDBESRawObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
+#'   createRDBESDataObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
 #' cleanPrefixFromVarNames(x = myH1RawObject)
 #' }
 removePrefixFromVarNames <- function(x) {

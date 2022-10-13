@@ -1,11 +1,11 @@
 #' Generate Multi-Level Estimations
 #'
 #' Generates mean and variance estimations for a list of related data tables.
-#' The input data tables is expected to follow the structure of RDBESrawObject.
+#' The input data tables is expected to follow the structure of RDBESDataObject.
 #' The mean an variance estimators are calculated for the target variable.
 #'
 #' @param tbls a named list of data tables that follow the structure of
-#' RDBESrawObject
+#' RDBESDataObject
 #' @inheritParams estimate
 #' @inheritDotParams estimate
 #'
@@ -57,7 +57,7 @@ estimate <- function(tbl, estimRes, target,
   if (length(tblName) > 1) {
     stop("Mixed table")
   }
-  cols <- icesRDBES:::getColnames(tblName)
+  cols <- getColnames(tblName)
   missingCols <- setdiff(cols, colnames(tbl))
   isTarget <- length(setdiff(target, colnames(tbl))) == 0
   data <- tbl[get(parentIdCol) %in% ids, ]
@@ -105,7 +105,7 @@ estimate <- function(tbl, estimRes, target,
       estim$est.Ntotal <- estim$N * lastEstim$est.total/length(ids)
       #TODO this is not implemented correctly, I think PI should be used
       #see also
-      #https://github.com/ices-tools-dev/icesRDBES/files/8513298/A.Generalized.Horvitz-Thompson.Estimator.v2.docx
+      #https://github.com/ices-tools-dev/RDBEScore/files/8513298/A.Generalized.Horvitz-Thompson.Estimator.v2.docx
       estim$var.total <- estim$var.total/estim$N * lastEstim$N/length(ids)
     }
   }

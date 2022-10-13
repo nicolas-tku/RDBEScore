@@ -3,6 +3,8 @@
 #' @param rdbesPrepObject The prepared RDBES object that should be used to
 #' create an estimation object
 #' @param hierarchyToUse The upper RDBES hiearchy to use
+#' @param stopTable PLEASE DOCUMENT THIS
+#' @param verbose PLEASE DOCUMENT THIS
 #'
 #' @return An object of class RDBESEstObject ready for us in design based
 #' estimation
@@ -11,7 +13,7 @@
 #' @examples
 #' \dontrun{
 #' myH1RawObject <-
-#'   createRDBESRawObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
+#'   createRDBESDataObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
 #' myH1EstObj <- createRDBESEstObject(myH1RawObject, 1)
 #' }
 createRDBESEstObject <- function(rdbesPrepObject,
@@ -19,13 +21,7 @@ createRDBESEstObject <- function(rdbesPrepObject,
                                  stopTable = NULL,
                                  verbose = FALSE) {
 
-  if (!validateRDBESRawObject(rdbesPrepObject, verbose = FALSE)) {
-    stop(paste0(
-      "rdbesPrepObject is not valid ",
-      "- createRDBESEstObject will not proceed"
-    ))
-  }
-
+  validateRDBESDataObject(rdbesPrepObject, verbose = FALSE)
   if (!hierarchyToUse %in% 1:13) {
     stop(paste0(
       "An invalid value was used for the 'hierarchyToUse' parameter",
@@ -40,7 +36,7 @@ createRDBESEstObject <- function(rdbesPrepObject,
 
   # See if the user has specified a table to stop at
   targetTables <-
-    icesRDBES::getTablesInRDBESHierarchy(hierarchyToUse)
+    RDBEScore::getTablesInRDBESHierarchy(hierarchyToUse)
   if (length(is.null(stopTable)) == 1 &&
     !is.null(stopTable)) {
     stopTableLoc <- which(targetTables == stopTable)
@@ -81,6 +77,31 @@ createRDBESEstObject <- function(rdbesPrepObject,
     if (verbose) {
       print("Checking for sub-sampling")
     }
+
+    # The latest RDBES downloads don't have a field for SAparentID
+    # If we don't have a field for SAparentID we need to make one
+    # using the SAparentSequenceNumber
+    if (!"SAparentID" %in%  names(rdbesPrepObjectCopy[["SA"]])){
+      # Find the SAid for a given value of SAparSequNum
+      myResults <- sapply(rdbesPrepObjectCopy[["SA"]]$SAparSequNum,function(x){
+        valueToReturn <- NA
+        if (!is.na(x)){
+          valueToReturn <-
+            rdbesPrepObjectCopy[["SA"]][rdbesPrepObjectCopy[["SA"]]$SAseqNum ==
+                                          x,]
+          if (nrow(valueToReturn) == 1){
+            valueToReturn <- valueToReturn$SAid
+          } else {
+            warning(paste0("Could not find unique matching parent sequence ",
+            "number - sub-sampling has not been processed correctly"))
+            valueToReturn <- NA
+          }
+        }
+        valueToReturn
+      })
+      rdbesPrepObjectCopy[["SA"]]$SAparentID <- myResults
+    }
+
 
     subSampleLevels <- lapply(rdbesPrepObjectCopy[["SA"]][, SAid],
       getSubSampleLevel,
@@ -225,7 +246,7 @@ createRDBESEstObject <- function(rdbesPrepObject,
             break
           }
         }
-        suColsToRemove <- paste0(mySUCol, icesRDBES::designVariables)
+        suColsToRemove <- paste0(mySUCol, RDBEScore::designVariables)
         allColsToRemove <- c(colsToRemove, suColsToRemove)
         allColsToRemove <- allColsToRemove[
           allColsToRemove %in% names(tempUpper)]
@@ -292,6 +313,7 @@ createRDBESEstObject <- function(rdbesPrepObject,
 #' the RDBESEstObject
 #'
 #' @param rdbesPrepObject A prepared RDBESRawObj
+#' @param verbose logical. Output messages to console.
 #'
 #' @return allLower - the FM and BV tables combined
 #'
@@ -431,8 +453,9 @@ procRDBESEstObjLowHier <- function(rdbesPrepObject,
 #' @param hierarchyToUse The hierarchy we are using
 #' @param targetTables The RDBES tables we are interested in
 #' @param i Integer to keep track of where we are in the list of tables
+#' @param verbose logical. Output messages to console.
 #'
-#' @return
+#' @return Whoever revises this function please specify what it returns here
 #'
 procRDBESEstObjUppHier <- function(myRDBESEstObj = NULL,
                                    rdbesPrepObject,
@@ -501,7 +524,7 @@ procRDBESEstObjUppHier <- function(myRDBESEstObj = NULL,
       }
 
       # Field names of the design variables
-      designVariables <- icesRDBES::designVariables
+      designVariables <- RDBEScore::designVariables
 
       # if this table has design variable columns
       if (any(names(rdbesPrepObject[[thisTable]])
@@ -547,7 +570,7 @@ procRDBESEstObjUppHier <- function(myRDBESEstObj = NULL,
 #' @param SAidToCheck The SAid to check
 #' @param subSampleLevel The currrent level of sampling
 #'
-#' @return
+#' @return Whoever revises this function please specify what it returns here
 #'
 getSubSampleLevel <- function(SAdata, SAidToCheck, subSampleLevel = 1) {
 

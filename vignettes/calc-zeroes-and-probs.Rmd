@@ -17,29 +17,44 @@ knitr::opts_chunk$set(
 
 ## Introduction 
 
-The aim of this document is to illustrate how to calculate zeros and probabilities using the icesRDBES package.
+The aim of this document is to illustrate how to calculate zeros and probabilities using the RDBEScore package.
 
 ```{r}
-library(icesRDBES)
+library(RDBEScore)
 ```
 
 
 ## Prerequisites
 
-First we'll load some example data from the RDBES and check it's valid.  It's a good tip to check your RDBESRawObjects are valid after any manipulations you perform.
+First we'll load some example data from the RDBES and check it's valid.  It's a good tip to check your RDBESDataObjects are valid after any manipulations you perform.
 
 ```{r load}
 
 getwd()
 
 # H7 test data
-load("../tests/testthat/h7_v_1_19/testDataPreparationFunctions.Rdata")
-myRawObject <- myH7RawObject
+#load("../tests/testthat/h7_v_1_19/testDataPreparationFunctions.Rdata")
+#myRawObject <- myH7RawObject
+myRawObject <-
+     createRDBESDataObject(rdbesExtractPath = "../tests/testthat/h7_v_1_19_13")
+
+# Temp fixes to change data to lower hierarchy C - function won't deal with A, or B yet
+myRawObject[["BV"]] <- dplyr::distinct(myRawObject[["BV"]], FMid, .keep_all = TRUE)
+temp <- dplyr::left_join(myRawObject[["BV"]][,c("BVid","FMid")], 
+                         myRawObject[["FM"]][,c("FMid","SAid")], 
+                         by="FMid")
+myRawObject[["BV"]]$SAid <- temp$SAid
+myRawObject[["BV"]]$FMid <- NA
+myRawObject[["SA"]]$SAlowHierarchy <- "C"
+myRawObject <- filterRDBESDataObject(myRawObject,c("DEstratumName"), c("DE_stratum1_H7"))
+myRawObject <- findAndKillOrphans(myRawObject)
+myRawObject[["BV"]]$BVnumTotal <- 10
+myRawObject[["BV"]]$BVnumSamp <- 10
 
 # Number of rows in each non-null table
 unlist(lapply(myRawObject, nrow))
 
-validateRDBESRawObject(myRawObject)
+validateRDBESDataObject(myRawObject)
 
 
 ```
@@ -56,7 +71,7 @@ First we remove the prefixes and then check the selection and probability values
 # note: this function is only exemplified here - 
 # in general only applyGenerateProbs will be used as the wrapper also includes
 # this function
-runChecksOnSelectionAndProbs(myRawObject, printStopIssue = FALSE)
+runChecksOnSelectionAndProbs(myRawObject, verbose = FALSE)
 
 
 
@@ -64,16 +79,18 @@ runChecksOnSelectionAndProbs(myRawObject, printStopIssue = FALSE)
 
 First, we'll change some data related to selection methods and stratification.
 
-```{r changeData1}
+```{r changeData1, error = TRUE}
 
 	# changes to selection methods
-	myRawObject$OS$OSselectMeth<-"SRSWOR"
+	#myRawObject$OS$OSselectMeth<-"SRSWOR"
 	
-	myRawObject$SA$SAstratification<-"N"
+	#myRawObject$SA$SAstratification<-"N"
 	
-	myRawObject$SA$SAselectMeth<-"SRSWOR"
+	#myRawObject$SA$SAselectMeth<-"SRSWOR"
 	
-	myRawObject$BV$BVselectMeth<-"SRSWOR"
+	#myRawObject$BV$BVselectMeth<-"SRSWOR"
+	
+	validateRDBESDataObject(myRawObject)
 	
 	runChecksOnSelectionAndProbs(myRawObject)
 
@@ -83,10 +100,10 @@ Now the main issues related to selection methods have been corrected (and docume
 
 ```{r changeData2, error = TRUE}
 
-  myH7PrepObject<-applyGenerateProbs (x = myRawObject
-                                      , probType = "inclusion"
-                                      , overwrite=T
-                                      , runInitialProbChecks = FALSE)
+  #myH7PrepObject<-applyGenerateProbs (x = myRawObject
+  #                                    , probType = "inclusion"
+  #                                    , overwrite=T
+  #                                    , runInitialProbChecks = FALSE)
 	
 
 ```
@@ -96,15 +113,15 @@ Now the main issues related to selection methods have been corrected (and docume
 ```{r changeData3, error = TRUE}
 
 	# changes to numTotal
-  myRawObject$OS$OSnumTotal<-c(7,7,7)
-  myRawObject$SS$SSnumTotal<-c(1,1,1)
-  myRawObject$SA$SAnumTotal<-c(25, 17, 32)
-  myRawObject$BV$BVnumTotal<-c(rep(50, 29*5), rep(200, 95*5), rep(200, 39*5))
+  #myRawObject$OS$OSnumTotal<-c(7,7,7)
+  #myRawObject$SS$SSnumTotal<-c(1,1,1)
+  #myRawObject$SA$SAnumTotal<-c(25, 17, 32)
+  #myRawObject$BV$BVnumTotal<-c(rep(50, 29*5), rep(200, 95*5), rep(200, 39*5))
 	
-	myH7PrepObject<-applyGenerateProbs (x = myRawObject
-	                                    , probType = "inclusion"
-	                                    , overwrite=T
-	                                    , runInitialProbChecks = FALSE)
+	#myH7PrepObject<-applyGenerateProbs (x = myRawObject
+	#                                    , probType = "inclusion"
+	#                                    , overwrite=T
+	#                                    , runInitialProbChecks = FALSE)
 
 ```
 
@@ -113,10 +130,10 @@ We're still missing some numSamp values - let's add these and try again.
 
 ```{r changeData4}
 
-  myRawObject$OS$OSnumSamp<-c(3,3,3)
-  myRawObject$SS$SSnumSamp<-c(1,1,1)
-  myRawObject$SA$SAnumSamp<-c(1, 1, 1)
-  myRawObject$BV$BVnumSamp<-c(rep(50, 29*5), rep(200, 95*5), rep(200, 39*5))
+  #myRawObject$OS$OSnumSamp<-c(3,3,3)
+  #myRawObject$SS$SSnumSamp<-c(1,1,1)
+  #myRawObject$SA$SAnumSamp<-c(1, 1, 1)
+  #myRawObject$BV$BVnumSamp<-c(rep(50, 29*5), rep(200, 95*5), rep(200, 39*5))
 
   myH7PrepObject<-applyGenerateProbs (x = myRawObject
                                       , probType = "inclusion"
@@ -129,7 +146,7 @@ We're still missing some numSamp values - let's add these and try again.
 Success! We now have a prepared object - let's check our object is still valid.
 
 ```{r checkValid1}
-  validateRDBESRawObject(myH7PrepObject)
+  validateRDBESDataObject(myH7PrepObject)
 ```
 
 
@@ -141,7 +158,7 @@ Generate true zeroes using the data from the SL table.
 
   myH7PrepObjectWithZeroes<-generateZerosUsingSL(myH7PrepObject)
 
-  myH7PrepObjectWithZeroes$SA
+  head(myH7PrepObjectWithZeroes$SA,5)
 
   # note the solution now has floating points values for SAid, and SAseqNum
   # (we are using sprintf to ensure the decimal places are displayed)
@@ -154,7 +171,7 @@ Generate true zeroes using the data from the SL table.
 Finally, let's check our object is still valid.
 
 ```{r checkValid2}
-  validateRDBESRawObject(myH7PrepObjectWithZeroes)
+  validateRDBESDataObject(myH7PrepObjectWithZeroes)
 ```
 
 

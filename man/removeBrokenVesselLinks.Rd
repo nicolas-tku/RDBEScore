@@ -8,13 +8,13 @@ those rows which have a value of VDid that does not exist in the VD table.}
 removeBrokenVesselLinks(objectToCheck, verbose = FALSE)
 }
 \arguments{
-\item{objectToCheck}{an RDBESRawObject.}
+\item{objectToCheck}{an RDBESDataObject.}
 
 \item{verbose}{(Optional) If set to TRUE more detailed text will be printed
 out by the function.  Default is TRUE.}
 }
 \value{
-an RDBESRawObject with any records with an invalid VDid removed
+an RDBESDataObject with any records with an invalid VDid removed
 }
 \description{
 Remove rows which are not pointing to a valid VesselDetails (VD) records i.e.
@@ -24,10 +24,10 @@ those rows which have a value of VDid that does not exist in the VD table.
 \dontrun{
 
 myH1RawObject <-
-  createRDBESRawObject(rdbesExtractPath = "tests\\\\testthat\\\\h1_v_1_19")
+  createRDBESDataObject(rdbesExtractPath = "tests\\\\testthat\\\\h1_v_1_19")
 myFields <- c("VDlenCat")
 myValues <- c("18-<24")
-myFilteredObject <- filterRDBESRawObject(myH1RawObject,
+myFilteredObject <- filterRDBESDataObject(myH1RawObject,
   fieldsToFilter = myFields,
   valuesToFilter = myValues
 )

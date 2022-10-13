@@ -16,6 +16,10 @@ createRDBESEstObject(
 create an estimation object}
 
 \item{hierarchyToUse}{The upper RDBES hiearchy to use}
+
+\item{stopTable}{PLEASE DOCUMENT THIS}
+
+\item{verbose}{PLEASE DOCUMENT THIS}
 }
 \value{
 An object of class RDBESEstObject ready for us in design based
@@ -27,7 +31,7 @@ Creates an rdbesEStObject from prepared RDBES data
 \examples{
 \dontrun{
 myH1RawObject <-
-  createRDBESRawObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
+  createRDBESDataObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
 myH1EstObj <- createRDBESEstObject(myH1RawObject, 1)
 }
 }

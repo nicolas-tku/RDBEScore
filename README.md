@@ -1,79 +1,84 @@
 
-[![Build Status](https://travis-ci.org/ices-tools-prod/icesRDBES.svg?branch=master)](https://travis-ci.org/ices-tools-prod/icesRDBES)
-[![codecov](https://codecov.io/gh/ices-tools-prod/icesRDBES/branch/master/graph/badge.svg)](https://codecov.io/gh/ices-tools-prod/icesRDBES)
-[![CRAN Status](http://www.r-pkg.org/badges/version/icesRDBES)](https://cran.r-project.org/package=icesRDBES)
+[![codecov](https://codecov.io/gh/ices-tools-prod/RDBEScore/branch/master/graph/badge.svg)](https://codecov.io/gh/ices-tools-prod/RDBEScore)
+[![CRAN Status](http://www.r-pkg.org/badges/version/RDBEScore)](https://cran.r-project.org/package=RDBEScore)
 [![License](https://img.shields.io/badge/license-GPL%20(%3E%3D%202)-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 <!--
-[![GitHub release](https://img.shields.io/github/release/ices-tools-prod/icesRDBES.svg?maxAge=2592001)]()
-[![CRAN Monthly](http://cranlogs.r-pkg.org/badges/icesRDBES)](https://cran.r-project.org/package=icesRDBES)
-[![CRAN Total](http://cranlogs.r-pkg.org/badges/grand-total/icesRDBES)](https://cran.r-project.org/package=icesRDBES)
+[![GitHub release](https://img.shields.io/github/release/ices-tools-prod/RDBEScore.svg?maxAge=2592001)]()
+[![CRAN Monthly](http://cranlogs.r-pkg.org/badges/RDBEScore)](https://cran.r-project.org/package=RDBEScore)
+[![CRAN Total](http://cranlogs.r-pkg.org/badges/grand-total/RDBEScore)](https://cran.r-project.org/package=RDBEScore)
 -->
 
 [<img align="right" alt="ICES Logo" width="17%" height="17%" src="http://ices.dk/_layouts/15/1033/images/icesimg/iceslogo.png">](http://ices.dk)
 
-icesRDBES
+`RDBEScore`
 =========
 
-icesRDBES Provides functions to work with the Regional DataBase and
-Estimation System (RDBES)
+`RDBEScore` provides functions to work with the [**Regional DataBase and Estimation System (RDBES)**](https://sboxrdbes.ices.dk/#/).
 
-icesRDBES is implemented as an [R](https://www.r-project.org) package and
-available on <!-- [CRAN](https://cran.r-project.org/package=icesRDBES) --> 
-[GitHub](https://github.com/ices-tools-dev/icesRDBES)
+It is implemented as an [**R**](https://www.r-project.org) package and
+available on <!-- [CRAN](https://cran.r-project.org/package=RDBEScore) --> 
+[**GitHub**](https://github.com/ices-tools-dev/RDBEScore)
 
 Installation
 ------------
 
 <!--
-icesRDBES can be installed from CRAN using the `install.packages` command:
+RDBEScore can be installed from CRAN using the `install.packages` command:
 
 ```R
-install.packages("icesRDBES")
+install.packages("RDBEScore")
+
 ```
 -->
 
-icesRDBES can be installed from GitHub using the `install_github`
+RDBEScore can be installed from GitHub using the `install_github`
 command from the [remotes](https://remotes.r-lib.org/) package:
 
 ```R
 library(remotes)
-install_github("ices-tools-dev/icesRDBES")
+
+install_github("ices-tools-dev/RDBEScore", build_vignettes = TRUE)
 ```
 
 
 Usage
 -----
 
-For a summary of the package:
+For a summary of the package see the following [Vignettes]():
 
 ```R
-library(icesRDBES)
-?icesRDBES
+browseVignettes(package = "RDBEScore")
 ```
 
 References
 ----------
 
-Regional Database & Estimation System:
+* Regional Database & Estimation System:
 https://sboxrdbes.ices.dk/
 
+* Working Group on Governance of the Regional Database & Estimation System:
+https://www.ices.dk/community/groups/Pages/WGRDBESGOV.aspx
 
+* Working Group on Estimation with the RDBES data model (WGRDBES-EST):
+https://github.com/ices-tools-dev/RDBEScore/blob/main/WGRDBES-EST/references/WGRDBES-EST%20Resolutions.pdf
 
-Development
------------
+* see also: https://github.com/ices-tools-dev/RDBEScore/tree/main/WGRDBES-EST/references
 
-icesRDBES is developed openly on
-[GitHub](https://github.com/ices-tools-dev/icesRDBES).
+`RDBEScore (Development)`
+=========
+
+RDBEScore is developed openly on
+[GitHub](https://github.com/ices-tools-dev/RDBEScore).
 
 Feel free to open an
-[issue](https://github.com/ices-tools-dev/icesRDBES/issues) there if you
+[issue](https://github.com/ices-tools-dev/RDBEScore/issues) there if you
 encounter problems or have suggestions for future versions.
 
 The current development version can be installed using:
 
 ```R
 library(remotes)
-install_github("ices-tools-prod/icesRDBES@dev")
+install_github("ices-tools-dev/RDBEScore@dev")
 ```
 ## Precommit-hook framework
 

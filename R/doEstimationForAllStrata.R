@@ -1,7 +1,7 @@
 #' Estimate totals and means, and try to generate samples variances for all
-#' strata in an RDBESRawObject
+#' strata in an RDBESDataObject
 #'
-#' @param rdbesRawObjectForEstim The RDBESRawObject to generate estimates for
+#' @param RDBESDataObjectForEstim The RDBESDataObject to generate estimates for
 #' @param hierarchyToUse The number of the RDBES hierarchy to estimate for
 #' @param verbose (Optional) If set to TRUE more detailed text will be printed
 #' out by the function.  Default is TRUE.
@@ -13,42 +13,37 @@
 #' \dontrun{
 #'
 #' myH1RawObject <-
-#'   createRDBESRawObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
+#'   createRDBESDataObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
 #'
 #' # Update our test data with some random sample measurements
 #' myH1RawObject[["SA"]]$SAsampWtLive <-
 #'   round(runif(n = nrow(myH1RawObject[["SA"]]), min = 1, max = 100))
 #'
 #' myStrataEst <- doEstimationForAllStrata(
-#'   rdbesRawObjectForEstim = myH1RawObject,
+#'   RDBESDataObjectForEstim = myH1RawObject,
 #'   hierarchyToUse = 1
 #' )
 #' }
-doEstimationForAllStrata <- function(rdbesRawObjectForEstim,
+doEstimationForAllStrata <- function(RDBESDataObjectForEstim,
                                      hierarchyToUse,
                                      verbose = TRUE) {
 
   # For testing
-  # rdbesRawObjectForEstim <- myFilteredTestData
+  # RDBESDataObjectForEstim <- myFilteredTestData
   # hierarchyToUse <- 1
   # verbose <- TRUE
 
   # TODO - function does not handle sub-sampling at the moment
 
-  # Check we have a valid RDBESRawObject before doing anything else
-  if (!validateRDBESRawObject(rdbesRawObjectForEstim, verbose = FALSE)) {
-    stop(paste0(
-      "rdbesRawObjectForEstim is not valid ",
-      "- filterRDBESRawObject will not proceed"
-    ))
-  }
+  # Check we have a valid RDBESDataObject before doing anything else
+  validateRDBESDataObject(RDBESDataObjectForEstim, verbose = FALSE)
 
   # Clear out the variable that will hold our results
   myStrataResults <- NULL
 
   # Find what tables we need for this hierarchy
   tablesToCheck <-
-    icesRDBES::getTablesInRDBESHierarchy(hierarchyToUse)
+    RDBEScore::getTablesInRDBESHierarchy(hierarchyToUse)
   # Loop through our tables, starting at SA and working backwards
   saPosition <- match("SA", tablesToCheck)
   for (i in saPosition:1) {
@@ -83,7 +78,7 @@ doEstimationForAllStrata <- function(rdbesRawObjectForEstim,
     }
 
     # Get our data
-    myTable <- rdbesRawObjectForEstim[[currentTable]][, ..varsNeeded]
+    myTable <- RDBESDataObjectForEstim[[currentTable]][, ..varsNeeded]
     # Get the parent table ID
     names(myTable)[names(myTable) == paste0(parentTable, "id")] <-
       paste0(currentTable, "parentTableID")
@@ -219,9 +214,9 @@ doEstimationForAllStrata <- function(rdbesRawObjectForEstim,
 
 #' Private function used by doEstimationForAllStrata to get the estimates
 #'
-#' @param x
+#' @param x The input
 #'
-#' @return
+#' @return Whoever revises this function please specify what it returns here
 #'
 getEstimForStratum <- function(x) {
   myReturnValues <- data.frame(
@@ -238,7 +233,9 @@ getEstimForStratum <- function(x) {
       x$studyVariable,
       x$numSamp,
       x$numTotal,
-      unique(x$selectMeth)
+      unique(x$selectMeth),
+      x$selProb,
+      x$incProb
     )
   )
   if (length(is.na(myEstim)) == 1 && is.na(myEstim)) {
@@ -260,12 +257,14 @@ getEstimForStratum <- function(x) {
   numberOfSamples <- unique(x$numSamp)
 
   if (is.numeric(myEstim$var.total) && !is.nan(myEstim$var.total) && !is.na(myEstim$var.total) && myEstim$var.total >0 ){
-    myReturnValues$sd.total <- sqrt(myEstim$var.total)
-    if (length(numberOfSamples) == 1 && numberOfSamples >0){
-      myReturnValues$se.total <- sqrt(myEstim$var.total)/sqrt(numberOfSamples)
-    } else {
-      myReturnValues$se.total <- NA
-    }
+    #myReturnValues$sd.total <- sqrt(myEstim$var.total)
+    myReturnValues$sd.total <- NA
+    myReturnValues$se.total <- sqrt(myEstim$var.total)
+    # if (length(numberOfSamples) == 1 && numberOfSamples >0){
+    #   myReturnValues$se.total <- sqrt(myEstim$var.total)/sqrt(numberOfSamples)
+    # } else {
+    #   myReturnValues$se.total <- NA
+    # }
   } else {
     myReturnValues$sd.total <- NA
     myReturnValues$se.total <- NA
@@ -273,12 +272,14 @@ getEstimForStratum <- function(x) {
 
 
   if (is.numeric(myEstim$var.mean) && !is.nan(myEstim$var.mean) && !is.na(myEstim$var.mean) && myEstim$var.mean >0){
-    myReturnValues$sd.mean <- sqrt(myEstim$var.mean)
-    if (length(numberOfSamples) == 1 && numberOfSamples >0){
-      myReturnValues$se.mean <- sqrt(myEstim$var.mean)/sqrt(numberOfSamples)
-    } else {
-      myReturnValues$se.mean <- NA
-    }
+    #myReturnValues$sd.mean <- sqrt(myEstim$var.mean)
+    myReturnValues$sd.mean <- NA
+    myReturnValues$se.mean <- sqrt(myEstim$var.mean)
+    # if (length(numberOfSamples) == 1 && numberOfSamples >0){
+    #   myReturnValues$se.mean <- sqrt(myEstim$var.mean)/sqrt(numberOfSamples)
+    # } else {
+    #   myReturnValues$se.mean <- NA
+    # }
   } else {
     myReturnValues$sd.mean <- NA
     myReturnValues$se.mean <- NA

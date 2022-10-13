@@ -1,5 +1,6 @@
 #' Generate a Data Table
 #'
+#' @param tblName Name of the table
 #' @param prevTbls list of data.tables upstream of the generated table.
 #'  Defaults to empty list
 #' @param rows  numeric number of rows per parent record. Defaults to 4.
@@ -13,9 +14,13 @@
 #' The variable is created using \code{\link[stats]{rnorm}} and saved under
 #'  column ending with "y". Defaults to 5.
 #'
+#' @import data.table
+#' @importFrom stats rnorm
+#'
 #' @return a data.table
 #'
-makeTbl <- function(tblName, prevTbls = list(),
+makeTbl <- function(tblName,
+                    prevTbls = list(),
                     rows = 4,
                     propSamp = 0.5,
                     selMeth = "CENSUS",
@@ -53,12 +58,12 @@ makeTbl <- function(tblName, prevTbls = list(),
   names(data) <- cols
   data[[paste0(tblName, "y")]] <- rnorm(n=times, mean=5)
   data[[paste0(tblName, "recType")]] <- tblName
-  data.table::as.data.table(data)
+  as.data.table(data)
 }
 #' Generate a List of Related Data Tables
 #'
 #' Generates a named list of data tables that follow the structure of
-#' RDBESrawObject. The tables only have columns required for testing
+#' RDBESDataObject. The tables only have columns required for testing
 #' The generate tables
 #'
 #' @param tblNames character vector of table names to be created
@@ -69,7 +74,7 @@ makeTbl <- function(tblName, prevTbls = list(),
 #' @export
 #'
 #' @examples
-#' generateTestTbls(c("A", "B", "C"), seletionMethod = "SRSWOR")
+#' generateTestTbls(c("A", "B", "C"), selMeth = "SRSWOR")
 #' generateTestTbls(LETTERS[1:5]) # makes 5 tables with method CENSUS
 generateTestTbls <- function(tblNames, prevTbls = list(), ...) {
   tbl <- makeTbl(tblNames[1], prevTbls, ...)

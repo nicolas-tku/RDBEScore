@@ -1,13 +1,13 @@
-#' Summarise the selection methods in an RDBESRawObject
+#' Summarise the selection methods in an RDBESDataObject
 #'
-#' @param objectToSummarise An RDBESRawObject that you want to summarise the
+#' @param objectToSummarise An RDBESDataObject that you want to summarise the
 #' selection methods used
 #' @param yearToUse The year to summarise the data for
 #' @param country The country to summarise the data for
 #' @param hierarchyToSummarise The hierarchy to summarise the data for
 #'
 #' @return A list containing:
-#' i) summaryDataByStrataAndMethod: A list of the tables in the RDBESRawObject
+#' i) summaryDataByStrataAndMethod: A list of the tables in the RDBESDataObject
 #' grouped by strata and selection method, with the number of rows, number
 #' of units sampled, and number of units not sampled calculated
 #' ii) summaryDataJoined: The data from (i) joined in a single data frome,
@@ -20,7 +20,7 @@
 #' \dontrun{
 #'
 #' myH1RawObject <-
-#'   createRDBESRawObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
+#'   createRDBESDataObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
 #'
 #'
 #' mySummary <- summariseSelectionMethods(
@@ -39,7 +39,7 @@ summariseSelectionMethods <- function(objectToSummarise,
 
   # For testing - to be removed
   # myRDBESData <-
-  #      createRDBESRawObject(""..\\..\\..\\tests\\testthat\\h1_v_1_19"")
+  #      createRDBESDataObject(""..\\..\\..\\tests\\testthat\\h1_v_1_19"")
   # objectToSummarise <- myRDBESData
   # yearToUse <- 1965
   # country <- 'ZW'
@@ -53,15 +53,10 @@ summariseSelectionMethods <- function(objectToSummarise,
     " sampling variables yet"
   ))
 
-  # Check we have a valid RDBESRawObject before doing anything else
-  if (!validateRDBESRawObject(objectToSummarise, verbose = FALSE)) {
-    stop(paste0(
-      "rdbesRawObjectToFilter is not valid ",
-      "- filterRDBESRawObject will not proceed"
-    ))
-  }
+  # Check we have a valid RDBESDataObject before doing anything else
+  validateRDBESDataObject(objectToSummarise, verbose = FALSE)
 
-  requiredTables <- icesRDBES::tablesInRDBESHierarchies
+  requiredTables <- RDBEScore::tablesInRDBESHierarchies
 
   # Find which tables we need for this file type
   upperHierarchy <- substr(hierarchyToSummarise, 2, nchar(hierarchyToSummarise))
@@ -70,13 +65,13 @@ summariseSelectionMethods <- function(objectToSummarise,
   ## Step 1 - Filter the data
   # Filter by year, country, and hieracrchy at the same time
   # - safe because we know the fields won't have the same values
-  myCSData <- filterRDBESRawObject(objectToSummarise,
+  myCSData <- filterRDBESDataObject(objectToSummarise,
     fieldsToFilter = c("DEhierarchy", "DEyear", "SDctry"),
     valuesToFilter = c(yearToUse, country, upperHierarchy)
   )
 
   # Make sure we don't have any orphan records
-  myCSData <- icesRDBES::findAndKillOrphans(myCSData, verbose = FALSE)
+  myCSData <- RDBEScore::findAndKillOrphans(myCSData, verbose = FALSE)
 
 
   # Lists to hold the outputs

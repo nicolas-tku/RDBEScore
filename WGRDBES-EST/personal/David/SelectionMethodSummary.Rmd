@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r loadFunctions, message=FALSE, warning=FALSE}
 # Load our functions
 library(dplyr)
-library(icesRDBES)
+library(RDBEScore)
 source("summariseSelectionMethods.R")
 library(kableExtra)
 ```
@@ -26,7 +26,7 @@ options(scipen=500) # big number of digits
 
 ## STEP 1) LOAD OUR DATA
 
-myRDBESData <- createRDBESRawObject("..\\..\\..\\tests\\testthat\\h1_v_1_19")
+myRDBESData <- createRDBESDataObject("..\\..\\..\\tests\\testthat\\h1_v_1_19")
 
 
 

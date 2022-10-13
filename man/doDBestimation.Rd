@@ -18,16 +18,19 @@ doDBestimation(
 \item{x}{a data.frame (or data.table) in rdbesEstimObj format
 with value of target variable in column targetValue}
 
-\item{estimateType}{a string with type of estimate. As of now only 
+\item{estimateType}{a string with type of estimate. As of now only
 "total" is defined}
 
-\item{pointEstimator}{a string with type of variance estimator. As 
+\item{pointEstimator}{a string with type of point estimator. As
+of now only "Unbiased" is defined}
+
+\item{varEstimator}{a string with type of variance estimator. As
 of now only "WRonPSUviaPik" is defined}
 
-\item{stage}{a natural number (0,1,..) with sampling stage of 
+\item{stage}{a natural number (0,1,..) with sampling stage of
 estimate. 0 corresponds to DE level.}
 
-\item{domainOfinterest}{list ofdomains of interest (e.g., SAarea). As 
+\item{domainOfinterest}{list ofdomains of interest (e.g., SAarea). As
 of now only NULL (=no domain estimate) is defined}
 }
 \value{
@@ -40,7 +43,7 @@ RDBES estimation object (rdbesEstimObj)
 }
 \examples{
 data(shrimps)
-doDBestimation (x = shrimps, estimateType = "total", 
-pointEstimator = "Unbiased", varEstimator = "WRonPSUviaPsi",stage = 0, 
+doDBestimation (x = shrimps, estimateType = "total",
+pointEstimator = "Unbiased", varEstimator = "WRonPSUviaPsi",stage = 0,
 domainOfinterest = NULL )
 }

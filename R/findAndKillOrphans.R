@@ -1,23 +1,23 @@
 #' This function finds and removed any orphan records in an
-#' RDBESRawObject.  Normally data that has been downloaded from the RDBES
+#' RDBESDataObject.  Normally data that has been downloaded from the RDBES
 #' will not contain orphan records - however if the data is subsequently
 #' filtered it is possible to introduce orphan records.
 #'
-#' @param objectToCheck an RDBESRawObject.
+#' @param objectToCheck an RDBESDataObject.
 #' @param verbose (Optional) If set to TRUE more detailed text will be printed
 #' out by the function.  Default is TRUE.
 #'
-#' @return an RDBESRawObject with any orphan records removed
+#' @return an RDBESDataObject with any orphan records removed
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #'
 #' myH1RawObject <-
-#' createRDBESRawObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
+#' createRDBESDataObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
 #' myFields <- c("SDctry","VDctry","VDflgCtry","FTarvLoc")
 #' myValues <- c("ZW","ZWBZH","ZWVFA" )
-#' myFilteredObject <- filterRDBESRawObject(myH1RawObject,
+#' myFilteredObject <- filterRDBESDataObject(myH1RawObject,
 #'                                         fieldsToFilter = myFields,
 #'                                         valuesToFilter = myValues )
 #' myObjectNoOrphans <- findAndKillOrphans(objectToCheck = myFilteredObject,
@@ -25,17 +25,12 @@
 #' }
 findAndKillOrphans <- function(objectToCheck, verbose = FALSE) {
 
-  # Check we have a valid RDBESRawObject before doing anything else
-  if (!validateRDBESRawObject(objectToCheck, verbose = FALSE)) {
-    stop(paste0(
-      "objectToCheck is not valid ",
-      "- findAndKillOrphans will not proceed"
-    ))
-  }
+  # Check we have a valid RDBESDataObject before doing anything else
+  validateRDBESDataObject(objectToCheck, verbose = FALSE)
 
   # Get all the XXid fields and SAparSequNum
-  myIds <- icesRDBES::mapColNamesFieldR[
-    grepl("^..id$", icesRDBES::mapColNamesFieldR$R.Name),
+  myIds <- RDBEScore::mapColNamesFieldR[
+    grepl("^..id$", RDBEScore::mapColNamesFieldR$R.Name),
     c("Table.Prefix", "R.Name")]
 
   # Get rid of the primary key ids from each table
@@ -53,8 +48,8 @@ findAndKillOrphans <- function(objectToCheck, verbose = FALSE) {
     !(myForeignKeyIds$R.Name == "VDid" | myForeignKeyIds$R.Name == "SLid"), ]
 
   # Special case for SA - need to add in the parent sequence number field
-  myParSeqNum <- icesRDBES::mapColNamesFieldR[
-    grepl("^SAparSequNum$", icesRDBES::mapColNamesFieldR$R.Name),
+  myParSeqNum <- RDBEScore::mapColNamesFieldR[
+    grepl("^SAparSequNum$", RDBEScore::mapColNamesFieldR$R.Name),
     c("Table.Prefix", "R.Name")]
 
   myForeignKeyIds <- rbind(myForeignKeyIds, myParSeqNum)

@@ -3,16 +3,16 @@
 \name{doEstimationForAllStrata}
 \alias{doEstimationForAllStrata}
 \title{Estimate totals and means, and try to generate samples variances for all
-strata in an RDBESRawObject}
+strata in an RDBESDataObject}
 \usage{
 doEstimationForAllStrata(
-  rdbesRawObjectForEstim,
+  RDBESDataObjectForEstim,
   hierarchyToUse,
   verbose = TRUE
 )
 }
 \arguments{
-\item{rdbesRawObjectForEstim}{The RDBESRawObject to generate estimates for}
+\item{RDBESDataObjectForEstim}{The RDBESDataObject to generate estimates for}
 
 \item{hierarchyToUse}{The number of the RDBES hierarchy to estimate for}
 
@@ -24,20 +24,20 @@ A data frame containing estimates for all strata
 }
 \description{
 Estimate totals and means, and try to generate samples variances for all
-strata in an RDBESRawObject
+strata in an RDBESDataObject
 }
 \examples{
 \dontrun{
 
 myH1RawObject <-
-  createRDBESRawObject(rdbesExtractPath = "tests\\\\testthat\\\\h1_v_1_19")
+  createRDBESDataObject(rdbesExtractPath = "tests\\\\testthat\\\\h1_v_1_19")
 
 # Update our test data with some random sample measurements
 myH1RawObject[["SA"]]$SAsampWtLive <-
   round(runif(n = nrow(myH1RawObject[["SA"]]), min = 1, max = 100))
 
 myStrataEst <- doEstimationForAllStrata(
-  rdbesRawObjectForEstim = myH1RawObject,
+  RDBESDataObjectForEstim = myH1RawObject,
   hierarchyToUse = 1
 )
 }

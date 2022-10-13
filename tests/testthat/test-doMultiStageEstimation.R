@@ -1,3 +1,5 @@
+capture.output({  ## suppresses printing of console output when running test()
+
 # a few convenience functions to check results
 getCorrectEstimates <- function(tblName, hd, startEstim, propSampled) {
   Ty <- paste0(tblName, "y")
@@ -316,3 +318,6 @@ test_that(paste0("mean if ", testMain), {
 
 ### --------- errors-------------
 testMain <- "error"
+
+
+}) ## end capture.output

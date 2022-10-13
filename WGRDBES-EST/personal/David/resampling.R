@@ -1,4 +1,4 @@
-library(icesRDBES)
+library(RDBEScore)
 library(ggplot2)
 
 # This code illustrates how increasing the number of samples decreases the spread of the estimated vales i.e. the variance

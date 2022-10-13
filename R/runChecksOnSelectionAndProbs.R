@@ -23,13 +23,8 @@
 runChecksOnSelectionAndProbs <- function(x, verbose = TRUE) {
 
 
-  # Check we have a valid RDBESRawObject before doing anything else
-  if (!validateRDBESRawObject(x, verbose = FALSE)) {
-    stop(paste0(
-      "x is not valid ",
-      "- runChecksOnSelectionAndProbs will not proceed"
-    ))
-  }
+  # Check we have a valid RDBESDataObject before doing anything else
+  validateRDBESDataObject(x, verbose = FALSE)
 
   if (length(unique(x[["DE"]]$DEhierarchy)) > 1) stop(">1 hierarchy in data not
                                                     yet specified")
@@ -47,7 +42,7 @@ runChecksOnSelectionAndProbs <- function(x, verbose = TRUE) {
   # aspects needing development
   if (any(!is.na(x[["SA"]]$SAparentID))) stop("multiple sub-sampling present
                                                 in SA: not yet developed")
-  if (nrow(x[["SA"]]) >= 1 && x[["SA"]]$SAlowHierarchy %in% c("A", "B")) {
+  if (nrow(x[["SA"]]) >= 1 && any(x[["SA"]]$SAlowHierarchy %in% c("A", "B"))) {
     stop("lower hierarchy A and B present: not yet developed")
   }
 
@@ -82,13 +77,13 @@ runChecksOnSelectionAndProbs <- function(x, verbose = TRUE) {
 
         # stops
         # on not yet developed features
-        if (length(unique(x[[stratumNameCol]])) > 1 |
-            any(x[[stratificationCol]] == "Y")) {
-          if (verbose) {
-            print(x)
-          }
-          stop("strata present: not yet specified")
-        }
+        # if (length(unique(x[[stratumNameCol]])) > 1 |
+        #     any(x[[stratificationCol]] == "Y")) {
+        #   if (verbose) {
+        #     print(x)
+        #   }
+        #   stop("strata present: not yet specified")
+        # }
         if (length(unique(x[[clusterNameCol]])) > 1 |
             any(x[[clusteringCol]] == "Y")) {
           if (verbose) {
@@ -128,20 +123,20 @@ runChecksOnSelectionAndProbs <- function(x, verbose = TRUE) {
         }
 
         # on numbers and probs
-        if (length(unique(x[[numTotalCol]])) > 1) {
-          if (verbose) {
-            print(x)
-          }
-          stop("more than 1 numTotal per parentId not allowed when
-               stratification == N")
-        }
-        if (length(unique(x[[numSampCol]])) > 1) {
-          if (verbose) {
-            print(x)
-          }
-          stop("more than 1 numSamp per parentId not allowed when
-               stratification == N")
-        }
+        # if (length(unique(x[[numTotalCol]])) > 1) {
+        #   if (verbose) {
+        #     print(x)
+        #   }
+        #   stop("more than 1 numTotal per parentId not allowed when
+        #        stratification == N")
+        # }
+        # if (length(unique(x[[numSampCol]])) > 1) {
+        #   if (verbose) {
+        #     print(x)
+        #   }
+        #   stop("more than 1 numSamp per parentId not allowed when
+        #        stratification == N")
+        # }
 
         if (length(unique(x[[selectMethCol]])) > 1) {
           print("warning: more than 1 selection method")
@@ -161,10 +156,10 @@ runChecksOnSelectionAndProbs <- function(x, verbose = TRUE) {
         if (any(is.na(x[[numSampCol]])) == TRUE) {
           print("warning: NAs in numSamp")
         }
-        if (any(is.na(x[[numSampCol]])) == FALSE &
-            unique(x[[numSampCol]]) != nrow(x)) {
-          print("warning: numSamp!= nrows")
-        }
+        # if (any(is.na(x[[numSampCol]])) == FALSE &
+        #     unique(x[[numSampCol]]) != nrow(x)) {
+        #   print("warning: numSamp!= nrows")
+        # }
       })
     }
   }

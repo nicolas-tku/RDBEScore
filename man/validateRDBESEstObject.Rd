@@ -13,7 +13,7 @@ validateRDBESEstObject(objectToCheck, verbose = FALSE)
 out, or FALSE if you don't.  The default is FALSE.}
 }
 \value{
-
+Whoever revises this function please specify what it returns here
 }
 \description{
 Check whether an object is a valid RDBESEstObject
@@ -21,7 +21,7 @@ Check whether an object is a valid RDBESEstObject
 \examples{
 \dontrun{
 myH1RawObject <-
-createRDBESRawObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
+createRDBESDataObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
 myEStObj <- createRDBESEstObject(myH1RawObject,1)
 validateRDBESEstObject(myEStObj)}
 }

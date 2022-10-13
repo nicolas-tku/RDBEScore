@@ -1,21 +1,21 @@
 #' Remove rows which are not pointing to a valid VesselDetails (VD) records i.e.
 #' those rows which have a value of VDid that does not exist in the VD table.
 #'
-#' @param objectToCheck an RDBESRawObject.
+#' @param objectToCheck an RDBESDataObject.
 #' @param verbose (Optional) If set to TRUE more detailed text will be printed
 #' out by the function.  Default is TRUE.
 #'
-#' @return an RDBESRawObject with any records with an invalid VDid removed
+#' @return an RDBESDataObject with any records with an invalid VDid removed
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #'
 #' myH1RawObject <-
-#'   createRDBESRawObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
+#'   createRDBESDataObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
 #' myFields <- c("VDlenCat")
 #' myValues <- c("18-<24")
-#' myFilteredObject <- filterRDBESRawObject(myH1RawObject,
+#' myFilteredObject <- filterRDBESDataObject(myH1RawObject,
 #'   fieldsToFilter = myFields,
 #'   valuesToFilter = myValues
 #' )
@@ -27,17 +27,12 @@
 removeBrokenVesselLinks <- function(objectToCheck, verbose = FALSE) {
 
 
-  # Check we have a valid RDBESRawObject before doing anything else
-  if (!validateRDBESRawObject(objectToCheck, verbose = FALSE)) {
-    stop(paste0(
-      "objectToCheck is not valid ",
-      "- removeBrokenVesselLinks will not proceed"
-    ))
-  }
+  # Check we have a valid RDBESDataObject before doing anything else
+  validateRDBESDataObject(objectToCheck, verbose = FALSE)
 
   # Get all the VDid fields
-  myIds <- icesRDBES::mapColNamesFieldR[
-    grepl("^VDid$", icesRDBES::mapColNamesFieldR$R.Name),
+  myIds <- RDBEScore::mapColNamesFieldR[
+    grepl("^VDid$", RDBEScore::mapColNamesFieldR$R.Name),
     c("Table.Prefix", "R.Name")
   ]
 

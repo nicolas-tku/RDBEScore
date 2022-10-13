@@ -4,13 +4,14 @@
 #' @param verbose (Optional) Set to TRUE if you want informative text printed
 #' out, or FALSE if you don't.  The default is FALSE.
 #'
-#' @return
+#' @return Whoever revises this function please specify what it returns here
+#'
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' myH1RawObject <-
-#' createRDBESRawObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
+#' createRDBESDataObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
 #' myEStObj <- createRDBESEstObject(myH1RawObject,1)
 #' validateRDBESEstObject(myEStObj)}
 validateRDBESEstObject <- function(objectToCheck, verbose = FALSE){
@@ -24,7 +25,7 @@ validateRDBESEstObject <- function(objectToCheck, verbose = FALSE){
       validRDBESEstObject <- FALSE
       warningText <- "objectToCheck is NA"
     }
-    # CHECK 2 Is this an object of class rdbesRawObject?  It should be!
+    # CHECK 2 Is this an object of class RDBESDataObject?  It should be!
   } else if (! 'RDBESEstObject' %in% class(objectToCheck)) {
     validRDBESEstObject <- FALSE
     warningText <- "objectToCheck is not of the class RDBESEstObject"
