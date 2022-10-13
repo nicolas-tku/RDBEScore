@@ -16,13 +16,13 @@ knitr::opts_chunk$set(
 
 ## Introduction 
 
-The aim of this document is to outline the basic workflow of importing data downloaded from the [ICES Regional Database & Estimation System (RDBES)](https://sboxrdbes.ices.dk/#/) into `R` using the `icesRDBES` package.
+The aim of this document is to outline the basic workflow of importing data downloaded from the [ICES Regional Database & Estimation System (RDBES)](https://sboxrdbes.ices.dk/#/) into `R` using the `RDBEScore` package.
 
 
 ## Load the package
 
 ```{r setup}
-library(icesRDBES)
+library(RDBEScore)
 ```
 
 ## Importing zipped files

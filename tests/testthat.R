@@ -1,4 +1,4 @@
 library(testthat)
-library(icesRDBES)
+library(RDBEScore)
 
-test_check("icesRDBES")
+test_check("RDBEScore")
