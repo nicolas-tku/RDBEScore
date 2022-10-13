@@ -1,15 +1,15 @@
-library(icesRDBES)
+library(RDBEScore)
 library(dplyr)
 
 
 # Load the test data
-testData <- icesRDBES::createRDBESDataObject("./FishNCo/testData/RegionalTestData")
+testData <- RDBEScore::createRDBESDataObject("./FishNCo/testData/RegionalTestData")
 
 
 # show the non-null table names
 names(testData[!unlist(lapply(testData, is.null))])
 # validate the data
-icesRDBES::validateRDBESDataObject(testData, verbose = FALSE)
+RDBEScore::validateRDBESDataObject(testData, verbose = FALSE)
 
 # make some changs to our test data so that we can estimate
 testData[['SA']]$SAselectMeth = 'SRSWOR'
@@ -69,13 +69,13 @@ testData[['SD']] <-
 myFields <- c("DEhierarchy")
 myValues <- c(1) # filter values here
 
-myFilteredTestData <- icesRDBES::filterRDBESDataObject(testData,
+myFilteredTestData <- RDBEScore::filterRDBESDataObject(testData,
                                                       fieldsToFilter = myFields,
                                                       valuesToFilter = myValues )
 
 # Remove any orphan records we created during the filtering
 myFilteredTestData <-
-  icesRDBES::findAndKillOrphans(myFilteredTestData, verbose = FALSE)
+  RDBEScore::findAndKillOrphans(myFilteredTestData, verbose = FALSE)
 
 # Generate estimates for all strata
 StrataEst <-

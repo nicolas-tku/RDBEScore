@@ -2,30 +2,30 @@
 
 # Trying to re-create issue #27
 
-library(icesRDBES)
+library(RDBEScore)
 
 path_in <- "Q:/mynd/kibi/RDBES/WGRDBES-EST/dnk_data/"
 
 
 cl <-
-  icesRDBES::importRDBESDownloadData(paste0(path_in, "HCL_2022_10_12_085635.zip"),
+  RDBEScore::importRDBESDownloadData(paste0(path_in, "HCL_2022_10_12_085635.zip"),
                                      castToCorrectDataTypes = T)
 cl <-
-  icesRDBES::importRDBESDownloadData(paste0(path_in, "HCL_2022_10_12_085635.zip"),
+  RDBEScore::importRDBESDownloadData(paste0(path_in, "HCL_2022_10_12_085635.zip"),
                                      castToCorrectDataTypes = F)
 
-icesRDBES::validateRDBESDataObject(objectToCheck = cl, verbose = T)
+RDBEScore::validateRDBESDataObject(objectToCheck = cl, verbose = T)
 
 # This should be ok now -petri
 
-cl <- icesRDBES::validateRDBESDataObject(objectToCheck = cl, verbose = T)
+cl <- RDBEScore::validateRDBESDataObject(objectToCheck = cl, verbose = T)
 
 unique(cl[["CL"]]$CLeconZone)
 
 # Read in CE and test
 
 ce <-
-  icesRDBES::importRDBESDownloadData(paste0(path_in, "HCE_2022_10_12_085803.zip"),
+  RDBEScore::importRDBESDownloadData(paste0(path_in, "HCE_2022_10_12_085803.zip"),
                                      castToCorrectDataTypes = T)
 
 dat <- ce[["CE"]]
@@ -34,7 +34,7 @@ dat <- ce[["CE"]]
 # It would be nice to know where, but since this is checked in the upload I assume this is correct
 
 ce <-
-  icesRDBES::importRDBESDownloadData(paste0(path_in, "HCE_2022_10_12_085803.zip"),
+  RDBEScore::importRDBESDownloadData(paste0(path_in, "HCE_2022_10_12_085803.zip"),
                                      castToCorrectDataTypes = F)
 as.integer(ce[["CE"]]$CEgTFishHour)
 as.numeric(ce[["CE"]]$CEgTFishHour)
@@ -45,7 +45,7 @@ as.double(999999999999)
 as.double(-999999999999)
 as.double(-999999999999)
 
-icesRDBES::validateRDBESDataObject(objectToCheck = ce, verbose = T)
+RDBEScore::validateRDBESDataObject(objectToCheck = ce, verbose = T)
 
 dat <- ce[["CE"]]
 

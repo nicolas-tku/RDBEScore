@@ -97,8 +97,8 @@ createRDBESDataObject <- function(rdbesExtractPath = NA,
           data.table::setDT(myList[[myFile]])
 
         # Change database field names to R names where we can
-        #myNames <- icesRDBES::mapColNamesFieldR[
-        #  icesRDBES::mapColNamesFieldR$Table.Prefix == myFile, ]
+        #myNames <- RDBEScore::mapColNamesFieldR[
+        #  RDBEScore::mapColNamesFieldR$Table.Prefix == myFile, ]
         myNames <- mapColNamesFieldR[
                       mapColNamesFieldR$Table.Prefix == myFile, ]
         myNameMatches <- match(
@@ -123,7 +123,7 @@ createRDBESDataObject <- function(rdbesExtractPath = NA,
   }
 
   # Create an RDBESDataObject using the constructor
-  myRDBESDataObject <- icesRDBES::newRDBESDataObject(DE = myList[["DE"]],
+  myRDBESDataObject <- RDBEScore::newRDBESDataObject(DE = myList[["DE"]],
                                         SD = myList[["SD"]],
                                         VS = myList[["VS"]],
                                         FT = myList[["FT"]],

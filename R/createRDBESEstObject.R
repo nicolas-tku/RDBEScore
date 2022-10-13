@@ -36,7 +36,7 @@ createRDBESEstObject <- function(rdbesPrepObject,
 
   # See if the user has specified a table to stop at
   targetTables <-
-    icesRDBES::getTablesInRDBESHierarchy(hierarchyToUse)
+    RDBEScore::getTablesInRDBESHierarchy(hierarchyToUse)
   if (length(is.null(stopTable)) == 1 &&
     !is.null(stopTable)) {
     stopTableLoc <- which(targetTables == stopTable)
@@ -246,7 +246,7 @@ createRDBESEstObject <- function(rdbesPrepObject,
             break
           }
         }
-        suColsToRemove <- paste0(mySUCol, icesRDBES::designVariables)
+        suColsToRemove <- paste0(mySUCol, RDBEScore::designVariables)
         allColsToRemove <- c(colsToRemove, suColsToRemove)
         allColsToRemove <- allColsToRemove[
           allColsToRemove %in% names(tempUpper)]
@@ -524,7 +524,7 @@ procRDBESEstObjUppHier <- function(myRDBESEstObj = NULL,
       }
 
       # Field names of the design variables
-      designVariables <- icesRDBES::designVariables
+      designVariables <- RDBEScore::designVariables
 
       # if this table has design variable columns
       if (any(names(rdbesPrepObject[[thisTable]])

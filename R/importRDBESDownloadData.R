@@ -73,7 +73,7 @@ importRDBESDownloadData <- function(filenames,
 
   # the files are not used currently but can be if we want to
   files <- unique(unlist(sapply(filenames, unzipFile, tmp)))
-  res <- icesRDBES::createRDBESDataObject(tmp,
+  res <- RDBEScore::createRDBESDataObject(tmp,
                               castToCorrectDataTypes = castToCorrectDataTypes)
   unlink(tmp, recursive = T)
   res

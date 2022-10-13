@@ -31,8 +31,8 @@ removeBrokenVesselLinks <- function(objectToCheck, verbose = FALSE) {
   validateRDBESDataObject(objectToCheck, verbose = FALSE)
 
   # Get all the VDid fields
-  myIds <- icesRDBES::mapColNamesFieldR[
-    grepl("^VDid$", icesRDBES::mapColNamesFieldR$R.Name),
+  myIds <- RDBEScore::mapColNamesFieldR[
+    grepl("^VDid$", RDBEScore::mapColNamesFieldR$R.Name),
     c("Table.Prefix", "R.Name")
   ]
 

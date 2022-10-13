@@ -3,10 +3,10 @@
 
 .onAttach<- function (lib, pkg){
   if(interactive()){
-    vers <- packageDescription("icesRDBES", fields = "Version")
+    vers <- packageDescription("RDBEScore", fields = "Version")
     start_msg <- paste("
 ======================================================================
-icesRDBES", vers, "
+RDBEScore", vers, "
 ======================================================================
 
 Please Note:
@@ -18,7 +18,7 @@ experimental.
 
 Please report any issues or bugs you encounter here:
 
-    https://github.com/ices-tools-dev/icesRDBES
+    https://github.com/ices-tools-dev/RDBEScore
 
 ======================================================================")
 

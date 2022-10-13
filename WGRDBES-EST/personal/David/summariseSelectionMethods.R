@@ -56,7 +56,7 @@ summariseSelectionMethods <- function(objectToSummarise,
   # Check we have a valid RDBESDataObject before doing anything else
   validateRDBESDataObject(objectToSummarise, verbose = FALSE)
 
-  requiredTables <- icesRDBES::tablesInRDBESHierarchies
+  requiredTables <- RDBEScore::tablesInRDBESHierarchies
 
   # Find which tables we need for this file type
   upperHierarchy <- substr(hierarchyToSummarise, 2, nchar(hierarchyToSummarise))
@@ -71,7 +71,7 @@ summariseSelectionMethods <- function(objectToSummarise,
   )
 
   # Make sure we don't have any orphan records
-  myCSData <- icesRDBES::findAndKillOrphans(myCSData, verbose = FALSE)
+  myCSData <- RDBEScore::findAndKillOrphans(myCSData, verbose = FALSE)
 
 
   # Lists to hold the outputs

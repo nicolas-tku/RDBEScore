@@ -19,8 +19,8 @@ validateRDBESDataObjectContent <- function(objectToCheck) {
     # Assume the first field name accurately gives us the table name
     tableName <- substring(names(x)[1], 1, 2)
     requiredColumnNames <-
-      icesRDBES::mapColNamesFieldR[
-        icesRDBES::mapColNamesFieldR$Table.Prefix == tableName,
+      RDBEScore::mapColNamesFieldR[
+        RDBEScore::mapColNamesFieldR$Table.Prefix == tableName,
         ]
     requiredColumnNames[is.na(requiredColumnNames$R.Name), "R.Name"] <-
       requiredColumnNames[is.na(requiredColumnNames$R.Name), "Field.Name"]

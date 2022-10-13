@@ -1,4 +1,4 @@
-library(icesRDBES)
+library(RDBEScore)
 
 
 getwd()

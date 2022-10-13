@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r loadFunctions, message=FALSE, warning=FALSE}
 # Load our functions
 library(dplyr)
-library(icesRDBES)
+library(RDBEScore)
 source("summariseSelectionMethods.R")
 library(kableExtra)
 ```
