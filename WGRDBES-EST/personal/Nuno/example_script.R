@@ -60,8 +60,8 @@ installr::check.for.updates.R(notify_user = TRUE, GUI = TRUE,
 
 # other
 	# check why [is it table var prefixes? do we need them back? create a addPrefixToVarNames if so]
-		icesRDBES::validateRDBESDataObject(myH7PrepObject2, verbose = TRUE)
-		icesRDBES::validateRDBESDataObject(myH7PrepObject, verbose = FALSE)
+		RDBEScore::validateRDBESDataObject(myH7PrepObject2, verbose = TRUE)
+		RDBEScore::validateRDBESDataObject(myH7PrepObject, verbose = FALSE)
 
 	
 

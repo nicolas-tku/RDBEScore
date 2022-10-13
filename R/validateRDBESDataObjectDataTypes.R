@@ -35,8 +35,8 @@ validateRDBESDataObjectDataTypes <- function(objectToCheck){
       names(myActualCols) <- c("FieldName","RDataType")
 
       # This is what we expect
-      myRequiredCols <- icesRDBES::mapColNamesFieldR[
-        icesRDBES::mapColNamesFieldR$Table.Prefix == x,
+      myRequiredCols <- RDBEScore::mapColNamesFieldR[
+        RDBEScore::mapColNamesFieldR$Table.Prefix == x,
         ]
 
       # Compare the two lists of column data types

@@ -1,4 +1,4 @@
-library(icesRDBES)
+library(RDBEScore)
 #library(dplyr)
 # Suppress summarise info
 #options(dplyr.summarise.inform = FALSE)

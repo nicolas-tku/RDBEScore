@@ -29,8 +29,8 @@ findAndKillOrphans <- function(objectToCheck, verbose = FALSE) {
   validateRDBESDataObject(objectToCheck, verbose = FALSE)
 
   # Get all the XXid fields and SAparSequNum
-  myIds <- icesRDBES::mapColNamesFieldR[
-    grepl("^..id$", icesRDBES::mapColNamesFieldR$R.Name),
+  myIds <- RDBEScore::mapColNamesFieldR[
+    grepl("^..id$", RDBEScore::mapColNamesFieldR$R.Name),
     c("Table.Prefix", "R.Name")]
 
   # Get rid of the primary key ids from each table
@@ -48,8 +48,8 @@ findAndKillOrphans <- function(objectToCheck, verbose = FALSE) {
     !(myForeignKeyIds$R.Name == "VDid" | myForeignKeyIds$R.Name == "SLid"), ]
 
   # Special case for SA - need to add in the parent sequence number field
-  myParSeqNum <- icesRDBES::mapColNamesFieldR[
-    grepl("^SAparSequNum$", icesRDBES::mapColNamesFieldR$R.Name),
+  myParSeqNum <- RDBEScore::mapColNamesFieldR[
+    grepl("^SAparSequNum$", RDBEScore::mapColNamesFieldR$R.Name),
     c("Table.Prefix", "R.Name")]
 
   myForeignKeyIds <- rbind(myForeignKeyIds, myParSeqNum)
