@@ -13,17 +13,18 @@
 
 	# name your project (will be used in filenames for CS, SL and VD)
 		project_name_outputs <- "WGRDBES-EST_TEST_Pckg_Survey_data_apistrat_H1"
-  #nameof the directory where the outputs are saved currently one folder above
-		# of the working deirectory
-		base_dir_outputs <- "../"
+
 
 	# select a year for upload
 		DEyear<-1968
 		SDinstitution <- 4484
 		DEsamplingScheme<-"SWE_CommEMAtSea_RouCF"
-		Basedir <- "./data-raw/exampleData/textBooks/"
-		VD_base <- readRDS(paste0(Basedir,"VD_base.rds"))
-		SL_base <- readRDS(paste0(Basedir,"SL_base.rds"))
+		baseDir <- "./data-raw/exampleData/textBooks/"
+		VD_base <- readRDS(paste0(baseDir,"VD_base.rds"))
+		SL_base <- readRDS(paste0(baseDir,"SL_base.rds"))
+
+		#nameof the directory where the outputs are saved currently
+		base_dir_outputs <- baseDir
 
 
 #========================
