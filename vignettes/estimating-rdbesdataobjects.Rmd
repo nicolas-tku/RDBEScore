@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 The aim of this document is to illustrate how population parameters like total and mean can be estimated using the **estimMC(...)** function.
 
 ```{r}
-library(icesRDBES)
+library(RDBEScore)
 ```
 
 ## Prerequisites
