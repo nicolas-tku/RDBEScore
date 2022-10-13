@@ -53,13 +53,19 @@ browseVignettes(package = "icesRDBES")
 References
 ----------
 
-Regional Database & Estimation System:
+* Regional Database & Estimation System:
 https://sboxrdbes.ices.dk/
 
+* Working Group on Governance of the Regional Database & Estimation System:
+https://www.ices.dk/community/groups/Pages/WGRDBESGOV.aspx
 
+* Working Group on Estimation with the RDBES data model (WGRDBES-EST):
+https://github.com/ices-tools-dev/icesRDBES/blob/main/WGRDBES-EST/references/WGRDBES-EST%20Resolutions.pdf
 
-Development
------------
+* see also: https://github.com/ices-tools-dev/icesRDBES/tree/main/WGRDBES-EST/references
+
+`icesRDBES (Development)`
+=========
 
 icesRDBES is developed openly on
 [GitHub](https://github.com/ices-tools-dev/icesRDBES).
