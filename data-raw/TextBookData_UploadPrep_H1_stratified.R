@@ -1,6 +1,5 @@
-#=================
-# Prepares textbook data as H1 upload file
-#=================
+#======Prepares textbook data as H1 upload file===========
+
 
 	rm(list=ls())
 	library(data.table)
@@ -27,8 +26,7 @@
 		base_dir_outputs <- baseDir
 
 
-#========================
-# Outline of Hierarchy 1
+#========Outline of Hierarchy 1================
 	# Design
 	# Sampling details
 	# Vessel Selection
@@ -38,12 +36,11 @@
 	# Sample
 	# Length
 		# Biological variables
-# ========================
 
 
-#===============
-	#DE
-#===============
+
+#===DE============
+
 
 
 # 1                                     DEid [] - int
@@ -73,9 +70,8 @@ DE_df<-data.frame(
 		  DEreasonNotSampled = ""
 			)
 
-#===============
-	#SD
-#===============
+#===SD============
+
 
                           # x
 # 1            SDid [M] - int
@@ -93,9 +89,8 @@ SD_df<-data.frame(
   stringsAsFactors=FALSE
 )
 
-#===============
-	#VS
-#===============
+#===VS============
+
 
                                                              # x
 # 1                                               VSid [M] - int
@@ -172,9 +167,8 @@ VS_df$VSnumberSampled<-sampSize[VS_df$VSstratumName]
 strataSize<-c('E' = 4421, 'M' = 1018, 'H' = 755)
 VS_df$VSnumberTotal<-strataSize[VS_df$VSstratumName]
 
-#===============
-	#FT
-#===============
+#====FT===========
+
 
 # 1                                               FTid [M] - int
 # 2                                             OSid [M/O] - int
@@ -254,9 +248,8 @@ FT_df <- data.frame(
  stringsAsFactors=FALSE)
 
 
-#===============
-	#FO
-#===============
+#====FO===========
+
 
 # 1                                                                       FOid [M] - int
 # 2                                                                     FTid [M/O] - int
@@ -393,9 +386,7 @@ stringsAsFactors=FALSE
 )
 
 
-#===============
-	#SS
-#===============
+#===SS============
 
 # 1                                                SSid [] - int
 # 2                                             LEid [M/O] - int
@@ -469,9 +460,8 @@ SS_df<-data.frame(
 	SSreasonNotSampled = ""
 )
 
-#===============
-	#SA
-#===============
+#====SA===========
+
 
 # 1                                            SAid [] - int
 # 2                                            SSid [] - int
@@ -572,9 +562,8 @@ SA_df<-data.frame(
 
 
 
-#===============
-	#Builds final format
-#===============
+#====Builds final format===========
+
 
 RDBESlist = list(DE = DE_df,SD = SD_df, VS = VS_df, FT = FT_df, FO = FO_df, SS = SS_df, SA = SA_df)
 
@@ -619,9 +608,8 @@ for (i in names(RDBESlist))
 RDBESlist[[i]][which(grepl(colnames(RDBESlist[[i]]),pat="[A-Z]id"))]<-NULL
 }
 
-#================
-# save
-#================
+#===Save============
+
 	dir_outputs<-paste0(base_dir_outputs,
 	                    project_name_outputs,"/")
   dir.create(dir_outputs, recursive=T, showWarnings=FALSE)
@@ -653,9 +641,8 @@ b$V1<-as.character(b$V1)
 # saves CS output
 write.table(b$V1, file=paste0(dir_outputs,filename_output_CS), col.names=FALSE, row.names = FALSE, quote=FALSE,sep=",")
 
-# ----------------------
-# Builds and saves dummySL
-# ----------------------
+# -----Builds and saves dummySL-----------------
+
 
 	SL_base$SLspeciesListName<-project_name_outputs
 	SL_base$SLyear<-DEyear
@@ -664,9 +651,8 @@ write.table(b$V1, file=paste0(dir_outputs,filename_output_CS), col.names=FALSE, 
 	write.table(SL_base,  file=paste0(dir_outputs,filename_output_SL), col.names=FALSE, row.names = FALSE, quote=FALSE,sep=",")
 
 
-# ----------------------
-# Builds and saves dummyVD
-# ----------------------
+# -----Builds and saves dummyVD-----------------
+
 
 # saves VD output
 
