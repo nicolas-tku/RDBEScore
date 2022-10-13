@@ -30,12 +30,7 @@ removeBrokenSpeciesListLinks <- function(objectToCheck, verbose = FALSE) {
 
 
   # Check we have a valid RDBESDataObject before doing anything else
-  if (!validateRDBESDataObject(objectToCheck, verbose = FALSE)) {
-    stop(paste0(
-      "objectToCheck is not valid ",
-      "- removeBrokenSpeciesListLinks will not proceed"
-    ))
-  }
+  validateRDBESDataObject(objectToCheck, verbose = FALSE)
 
   # Just check the non-null entries
   nonNullEntries <- names(objectToCheck[sapply(objectToCheck, Negate(is.null))])

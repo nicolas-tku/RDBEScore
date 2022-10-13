@@ -24,12 +24,7 @@ runChecksOnSelectionAndProbs <- function(x, verbose = TRUE) {
 
 
   # Check we have a valid RDBESDataObject before doing anything else
-  if (!validateRDBESDataObject(x, verbose = FALSE)) {
-    stop(paste0(
-      "x is not valid ",
-      "- runChecksOnSelectionAndProbs will not proceed"
-    ))
-  }
+  validateRDBESDataObject(x, verbose = FALSE)
 
   if (length(unique(x[["DE"]]$DEhierarchy)) > 1) stop(">1 hierarchy in data not
                                                     yet specified")

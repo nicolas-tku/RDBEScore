@@ -16,9 +16,9 @@ cl <-
 
 icesRDBES::validateRDBESDataObject(objectToCheck = cl, verbose = T)
 
-# Do not assign to a new object, then you just have a empty value called the -> issue raised by Nick
+# This should be ok now -petri
 
-# cl <- icesRDBES::validateRDBESDataObject(objectToCheck = cl, verbose = T)
+cl <- icesRDBES::validateRDBESDataObject(objectToCheck = cl, verbose = T)
 
 unique(cl[["CL"]]$CLeconZone)
 

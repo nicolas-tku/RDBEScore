@@ -54,12 +54,7 @@ summariseSelectionMethods <- function(objectToSummarise,
   ))
 
   # Check we have a valid RDBESDataObject before doing anything else
-  if (!validateRDBESDataObject(objectToSummarise, verbose = FALSE)) {
-    stop(paste0(
-      "RDBESDataObjectToFilter is not valid ",
-      "- filterRDBESDataObject will not proceed"
-    ))
-  }
+  validateRDBESDataObject(objectToSummarise, verbose = FALSE)
 
   requiredTables <- icesRDBES::tablesInRDBESHierarchies
 

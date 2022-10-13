@@ -109,6 +109,7 @@ validateRDBESDataObject <- function(objectToCheck,
 
       # The next checks are only relevent if we don't have an empty object
       if (length(nonNullEntries) > 0) { #3
+        #TODO: implement content, type checks using stop and fix this mess
 
         # Call a function to check whether the required field names
         # are present and that there aren't duplicates

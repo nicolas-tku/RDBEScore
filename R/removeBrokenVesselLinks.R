@@ -28,12 +28,7 @@ removeBrokenVesselLinks <- function(objectToCheck, verbose = FALSE) {
 
 
   # Check we have a valid RDBESDataObject before doing anything else
-  if (!validateRDBESDataObject(objectToCheck, verbose = FALSE)) {
-    stop(paste0(
-      "objectToCheck is not valid ",
-      "- removeBrokenVesselLinks will not proceed"
-    ))
-  }
+  validateRDBESDataObject(objectToCheck, verbose = FALSE)
 
   # Get all the VDid fields
   myIds <- icesRDBES::mapColNamesFieldR[

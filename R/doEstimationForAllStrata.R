@@ -36,12 +36,7 @@ doEstimationForAllStrata <- function(RDBESDataObjectForEstim,
   # TODO - function does not handle sub-sampling at the moment
 
   # Check we have a valid RDBESDataObject before doing anything else
-  if (!validateRDBESDataObject(RDBESDataObjectForEstim, verbose = FALSE)) {
-    stop(paste0(
-      "RDBESDataObjectForEstim is not valid ",
-      "- filterRDBESDataObject will not proceed"
-    ))
-  }
+  validateRDBESDataObject(RDBESDataObjectForEstim, verbose = FALSE)
 
   # Clear out the variable that will hold our results
   myStrataResults <- NULL

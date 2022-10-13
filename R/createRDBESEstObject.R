@@ -21,13 +21,7 @@ createRDBESEstObject <- function(rdbesPrepObject,
                                  stopTable = NULL,
                                  verbose = FALSE) {
 
-  if (!validateRDBESDataObject(rdbesPrepObject, verbose = FALSE)) {
-    stop(paste0(
-      "rdbesPrepObject is not valid ",
-      "- createRDBESEstObject will not proceed"
-    ))
-  }
-
+  validateRDBESDataObject(rdbesPrepObject, verbose = FALSE)
   if (!hierarchyToUse %in% 1:13) {
     stop(paste0(
       "An invalid value was used for the 'hierarchyToUse' parameter",

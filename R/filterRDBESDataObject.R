@@ -38,12 +38,7 @@ filterRDBESDataObject <- function(RDBESDataObjectToFilter,
                                  killOrphans = FALSE) {
 
   # Check we have a valid RDBESDataObject before doing anything else
-  if (!validateRDBESDataObject(RDBESDataObjectToFilter, verbose = FALSE)) {
-    stop(paste0(
-      "RDBESDataObjectToFilter is not valid ",
-      "- filterRDBESDataObject will not proceed"
-    ))
-  }
+  validateRDBESDataObject(RDBESDataObjectToFilter, verbose = FALSE)
 
   # Check if the requested columns actually exist in the object
   allColNames <- unlist(lapply(RDBESDataObjectToFilter, names))

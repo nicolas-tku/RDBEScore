@@ -14,12 +14,7 @@
 generateZerosUsingSL <- function(x) {
 
   # Check we have a valid RDBESDataObject before doing anything else
-  if (!validateRDBESDataObject(x, verbose = FALSE)) {
-    stop(paste0(
-      "x is not valid ",
-      "- generateZerosUsingSL will not proceed"
-    ))
-  }
+  validateRDBESDataObject(x, verbose = FALSE)
 
   if (!(nrow(x[["SA"]]) >= 1 && nrow(x[["SL"]]) >= 1)) stop("no SA and/or SL")
 

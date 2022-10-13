@@ -21,14 +21,8 @@
 #'                                              RDBESDataObject2=myH5RawObject)
 #' }
 combineRDBESDataObjects <- function(RDBESDataObject1, RDBESDataObject2) {
-  if (!validateRDBESDataObject(RDBESDataObject1, verbose = FALSE) |
-      !validateRDBESDataObject(RDBESDataObject2, verbose = FALSE)) {
-    stop(paste0(
-      "At least one of the RDBESDataObjects is not valid ",
-      "- mergeRDBESDataObjects will not proceed"
-    ))
-  }
-
+  validateRDBESDataObject(RDBESDataObject1, verbose = FALSE)
+  validateRDBESDataObject(RDBESDataObject2, verbose = FALSE)
   # Create an empty RDBESDataObject as the basis of what we will return
   myRDBESDataObject <- createRDBESDataObject()
 
