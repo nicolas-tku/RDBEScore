@@ -1,52 +1,99 @@
-#' Estimate totals and means, and try to generate samples variances for all
-#' strata in an RDBESDataObject
-#'
-#' @param RDBESDataObjectForEstim The RDBESDataObject to generate estimates for
-#' @param hierarchyToUse The number of the RDBES hierarchy to estimate for
-#' @param verbose (Optional) If set to TRUE more detailed text will be printed
-#' out by the function.  Default is FALSE
-#'
-#' @return A data frame containing estimates for all strata
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#'
-#' myH1RawObject <-
-#'   createRDBESDataObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
-#'
-#' # Update our test data with some random sample measurements
-#' myH1RawObject[["SA"]]$SAsampWtLive <-
-#'   round(runif(n = nrow(myH1RawObject[["SA"]]), min = 1, max = 100))
-#'
-#' myStrataEst <- doEstimationForAllStrata(
-#'   RDBESDataObjectForEstim = myH1RawObject,
-#'   hierarchyToUse = 1
-#' )
-#' }
-doEstimationForAllStrata <- function(RDBESDataObjectForEstim,
-                                     hierarchyToUse,
-                                     verbose = FALSE) {
+library(dplyr)
+library(icesRDBES)
+
+## Step 1) load and prepare some test data
+
+myH1RawObject <-
+  createRDBESDataObject(rdbesExtractPath = "./tests/testthat/h1_v_1_19_13")
+
+#Filter our data for WGRDBES-EST TEST 1, 1965, H1
+myValues <- c(1965,1,"National Routine","DE_stratum1_H1",1019159)
+myFields <- c("DEyear","DEhierarchy","DEsampScheme","DEstratumName","SAspeCode")
+
+myH1RawObject <- filterRDBESDataObject(myH1RawObject,
+                                       fieldsToFilter = myFields,
+                                       valuesToFilter = myValues )
+myH1RawObject <- filterRDBESDataObject(myH1RawObject,
+                                       fieldsToFilter = c("SAid"),
+                                       valuesToFilter = c(644983) )
+myH1RawObject <- findAndKillOrphans(myH1RawObject)
+
+# Edit our data so that we have SRSWOR on each level and calculate the probs
+myH1RawObject[["VS"]]$VSselectMeth <- "SRSWOR"
+myH1RawObject[["VS"]]$VSincProb <- myH1RawObject[["VS"]]$VSnumSamp / myH1RawObject[["VS"]]$VSnumTotal
+myH1RawObject[["VS"]]$VSselProb <- 1/myH1RawObject[["VS"]]$VSnumTotal
+myH1RawObject[["FT"]]$FTselectMeth <- "SRSWOR"
+myH1RawObject[["FT"]]$FTincProb <- myH1RawObject[["FT"]]$FTnumSamp / myH1RawObject[["FT"]]$FTnumTotal
+myH1RawObject[["FT"]]$FTselProb <- 1/myH1RawObject[["FT"]]$FTnumTotal
+myH1RawObject[["FO"]]$FOselectMeth <- "SRSWOR"
+myH1RawObject[["FO"]]$FOincProb <- myH1RawObject[["FO"]]$FOnumSamp / myH1RawObject[["FO"]]$FOnumTotal
+myH1RawObject[["FO"]]$FOselProb <- 1/myH1RawObject[["FO"]]$FOnumTotal
+myH1RawObject[["SS"]]$SSselectMeth <- "SRSWOR"
+myH1RawObject[["SS"]]$SSincProb <- myH1RawObject[["SS"]]$SSnumSamp / myH1RawObject[["SS"]]$SSnumTotal
+myH1RawObject[["SS"]]$SSselProb <- 1/myH1RawObject[["SS"]]$SSnumTotal
+myH1RawObject[["SA"]]$SAselectMeth <- "SRSWOR"
+myH1RawObject[["SA"]]$SAincProb <- myH1RawObject[["SA"]]$SAnumSamp / myH1RawObject[["SA"]]$SAnumTotal
+myH1RawObject[["SA"]]$SAselProb <- 1/myH1RawObject[["SA"]]$SAnumTotal
+
+# Update our test data with some random sample measurements (it didn't include these)
+myH1RawObject[['SA']]$SAsampWtLive <- round(runif(n=nrow(myH1RawObject[['SA']]),min = 1, max = 100))
+
+## Step 2) Create an estimation object, but stop at SA since we'll just use the SAsampWtLive
+myH1EstObj <- createRDBESEstObject(myH1RawObject, 1, stopTable = "SA", verbose = TRUE)
+# Get rid of rows that don't have an SA row
+myH1EstObj <- myH1EstObj[!is.na(myH1EstObj$SAid),]
+
+targetValue <- "SAsampWtLive"
+
+# Get a point estimate for comparison
+x <- myH1EstObj
+x$studyVariable <- x[,..targetValue]
+targetProbColumns <- names(x)[grep("^.*incProb$", names(x))]
+x$totalIncProb <- apply(x[, ..targetProbColumns], 1, prod)
+x$pointEstimate <- x$studyVariable / x$totalIncProb
+# Total estimate - add up all point estimates
+sum(x$pointEstimate , na.rm = TRUE)
+myStrataResults[myStrataResults$recType == "DE","est.total"]
+
+
+RDBESDataObjectForEstim <- myH1EstObj
+
+####
+
 
   # For testing
   # RDBESDataObjectForEstim <- myFilteredTestData
   # hierarchyToUse <- 1
-  # verbose <- TRUE
+   verbose <- TRUE
 
   # TODO - function does not handle sub-sampling at the moment
 
   # Check we have a valid RDBESDataObject before doing anything else
-  validateRDBESDataObject(RDBESDataObjectForEstim, verbose = verbose)
+  # if (!validateRDBESDataObject(RDBESDataObjectForEstim, verbose = FALSE)) {
+  #   stop(paste0(
+  #     "RDBESDataObjectForEstim is not valid ",
+  #     "- filterRDBESDataObject will not proceed"
+  #   ))
+  # }
 
   # Clear out the variable that will hold our results
   myStrataResults <- NULL
 
   # Find what tables we need for this hierarchy
-  tablesToCheck <-
-    RDBEScore::getTablesInRDBESHierarchy(hierarchyToUse)
+
+  suLevels <- names(RDBESDataObjectForEstim)[grep("^su.table$", names(RDBESDataObjectForEstim))]
+  tablesToCheck <- unique(RDBESDataObjectForEstim[,..suLevels])
+  tablesToCheck <- c(t(tablesToCheck))
+  tablesToCheck <- c("DE","SD",tablesToCheck)
+  suLevels <- gsub("table","",suLevels)
+  #tablesToCheck <-
+  #  icesRDBES::getTablesInRDBESHierarchy(hierarchyToUse)
   # Loop through our tables, starting at SA and working backwards
-  saPosition <- match("SA", tablesToCheck)
-  for (i in saPosition:1) {
+  # Loop through our tables, starting at the right and working backwards
+  #saPosition <- match("SA", tablesToCheck)
+  for (i in length(tablesToCheck):1) {
+  #for (i in saPosition:1) {
+    #i <- 4
     currentTable <- tablesToCheck[i]
     parentTable <- NA
     if (i > 1) {
@@ -62,28 +109,49 @@ doEstimationForAllStrata <- function(RDBESDataObjectForEstim,
       varsNeeded <- c(varsNeeded, paste0(parentTable, "id"))
     } else if (currentTable == "DE") {
       varsNeeded <- paste0(currentTable, c("id", "recType", "sampScheme",
-                                    "year", "stratumName", "hierarchy", "samp"))
+                                           "year", "stratumName", "hierarchy", "samp"))
     } else {
-      designVars <- c(
-        "id", "recType", "stratification", "stratumName",
-        "selectMeth", "numTotal", "numSamp", "selProb", "incProb",
+      #designVars <- c(
+      # "id", "recType", "stratification", "stratumName",
+      #  "selectMeth", "numTotal", "numSamp", "selProb", "incProb",
+      #  "samp"
+      #)
+      #varsNeeded <- paste0(currentTable, designVars)
+      varsNeeded1 <- paste0(suLevels[i-2],c(
+        "stratification","stratumName", "selectMeth", "numTotal", "numSamp", "selProb", "incProb",
         "samp"
-      )
-      varsNeeded <- paste0(currentTable, designVars)
-      varsNeeded <- c(varsNeeded, paste0(parentTable, "id"))
+      ))
+      varsNeeded2 <- paste0(currentTable,c("id", "recType"
+
+      ))
+      #varsNeeded <- NULL
+      varsNeeded <- c(varsNeeded1, varsNeeded2, paste0(parentTable, "id"))
       if (currentTable == "SA") {
-        varsNeeded <- c(varsNeeded, "SAsampWtLive")
+        #varsNeeded <- c(varsNeeded, "SAsampWtLive")
+        varsNeeded <- c(varsNeeded, targetValue)
       }
     }
 
     # Get our data
-    myTable <- RDBESDataObjectForEstim[[currentTable]][, ..varsNeeded]
+    #myTable <- RDBESDataObjectForEstim[[currentTable]][, ..varsNeeded]
+    myTable <- RDBESDataObjectForEstim[, ..varsNeeded]
+    # De-duplicate (because columns to the right might be different but have disappeared)
+    #myTable <- distinct(myTable, paste0(currentTable,"id") , .keep_all = TRUE)
+    myTable <- unique(myTable)
+
     # Get the parent table ID
     names(myTable)[names(myTable) == paste0(parentTable, "id")] <-
       paste0(currentTable, "parentTableID")
     # Remove the two letter prefix from column names so they will
     # be consistent between tables
-    names(myTable) <- substring(names(myTable), 3)
+    #names(myTable) <- substring(names(myTable), 3)
+    names(myTable) <- gsub(currentTable,"",names(myTable), ignore.case = FALSE)
+    # change suxStratumName to stratumName
+    #names(myTable)[names(myTable)==paste0(suLevels[i],"stratumName")]<-"stratumName"
+    if(i-2 > 0) {
+      names(myTable) <- gsub(suLevels[i-2],"",names(myTable), ignore.case = FALSE)
+    }
+
     myTable$parentTable <- parentTable
 
     # We'll fill in the values for parent stratum as we go through the tables
@@ -130,24 +198,25 @@ doEstimationForAllStrata <- function(RDBESDataObjectForEstim,
       # Join our current table with the previous resuults
       myTableWithValues <-
         dplyr::left_join(myTable,
-          myPrevEstimates,
-          by = c("id" = "parentTableID")
+                         myPrevEstimates,
+                         by = c("id" = "parentTableID")
         )
 
       # Append the parent table stratum to our previous results (so we can
       # easily join the parent and child records of our final results)
       myStrataResults[myStrataResults$parentTable == currentTable, ]$
         parentTableStratum <-
-         dplyr::left_join(
-           myStrataResults[myStrataResults$parentTable == currentTable, ],
-           myTable[,c("id","parentIDandStratum")],
-           by = c("parentTableID"="id"))$"parentIDandStratum.y"
+        dplyr::left_join(
+          myStrataResults[myStrataResults$parentTable == currentTable, ],
+          myTable[,c("id","parentIDandStratum")],
+          by = c("parentTableID"="id"))$"parentIDandStratum.y"
 
 
     }
 
-    ## DE/SD need to be handled differently because we can't estimate with
+    ## DE/SD/SS need to be handled differently because we can't estimate with
     # these tables
+    #if (currentTable %in% c("DE", "SD", "SS")) {
     if (currentTable %in% c("DE", "SD")) {
 
       # Add on a parentTableID column if it doesn't exist
@@ -208,16 +277,17 @@ doEstimationForAllStrata <- function(RDBESDataObjectForEstim,
   }
 
   myStrataResults
-}
+
 
 
 #' Private function used by doEstimationForAllStrata to get the estimates
 #'
 #' @param x The input
 #'
-#' @return Data frame with estimation results
+#' @return Whoever revises this function please specify what it returns here
 #'
 getEstimForStratum <- function(x) {
+  #print(x)
   myReturnValues <- data.frame(
     "recType" = unique(x$recType),
     "parentTable" = unique(x$parentTable),
@@ -237,6 +307,7 @@ getEstimForStratum <- function(x) {
       x$incProb
     )
   )
+  #print(myEstim)
   if (length(is.na(myEstim)) == 1 && is.na(myEstim)) {
     myReturnValues$est.results.available <- FALSE
     myReturnValues$est.total <- NA
@@ -259,6 +330,11 @@ getEstimForStratum <- function(x) {
     #myReturnValues$sd.total <- sqrt(myEstim$var.total)
     myReturnValues$sd.total <- NA
     myReturnValues$se.total <- sqrt(myEstim$var.total)
+    # if (length(numberOfSamples) == 1 && numberOfSamples >0){
+    #   myReturnValues$se.total <- sqrt(myEstim$var.total)/sqrt(numberOfSamples)
+    # } else {
+    #   myReturnValues$se.total <- NA
+    # }
   } else {
     myReturnValues$sd.total <- NA
     myReturnValues$se.total <- NA
@@ -266,8 +342,14 @@ getEstimForStratum <- function(x) {
 
 
   if (is.numeric(myEstim$var.mean) && !is.nan(myEstim$var.mean) && !is.na(myEstim$var.mean) && myEstim$var.mean >0){
+    #myReturnValues$sd.mean <- sqrt(myEstim$var.mean)
     myReturnValues$sd.mean <- NA
     myReturnValues$se.mean <- sqrt(myEstim$var.mean)
+    # if (length(numberOfSamples) == 1 && numberOfSamples >0){
+    #   myReturnValues$se.mean <- sqrt(myEstim$var.mean)/sqrt(numberOfSamples)
+    # } else {
+    #   myReturnValues$se.mean <- NA
+    # }
   } else {
     myReturnValues$sd.mean <- NA
     myReturnValues$se.mean <- NA
