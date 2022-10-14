@@ -20,7 +20,7 @@ care. Default value is FALSE.}
 out, or FALSE if you don't.  The default is FALSE.}
 }
 \value{
-objectToCheck, invisible
+Returns objectToCheck
 }
 \description{
 Perform basic checks on a object.

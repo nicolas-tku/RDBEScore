@@ -20,7 +20,7 @@
 #' @param verbose (Optional) Set to TRUE if you want informative text printed
 #' out, or FALSE if you don't.  The default is FALSE.
 #'
-#' @return objectToCheck, invisible
+#' @return Returns objectToCheck
 #' @md
 #' @export
 #' @aliases checkRDBESDataObject
