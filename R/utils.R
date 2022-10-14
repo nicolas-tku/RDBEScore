@@ -33,7 +33,7 @@ globalVariables(c("mapColNamesFieldR", "mapColNamesFieldR", "SAid",
                   "..varsNeeded", "%>%", "parentTableID", "est.total",
                   "recType", "parentTableStratum", "stratumName",
                   "parentIDandStratum", "studyVariable", "..myColNames",
-                  "..methColNames", "tblName", "all_of"))
+                  "..methColNames", "tblName", "all_of", "..suLevels"))
 
 
 

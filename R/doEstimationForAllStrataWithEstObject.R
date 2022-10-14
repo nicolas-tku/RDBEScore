@@ -4,6 +4,7 @@
 #' @param RDBESEstObjectForEstim The RDBESEstObject to generate estimates for
 #' @param verbose (Optional) If set to TRUE more detailed text will be printed
 #' out by the function.  Default is TRUE.
+#' @param targetValue Target value, for example "SAsampWtLive"
 #'
 #' @return A data frame containing estimates for all strata
 #' @export
