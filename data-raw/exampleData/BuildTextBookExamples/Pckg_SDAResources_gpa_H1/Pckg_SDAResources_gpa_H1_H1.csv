@@ -1,0 +1,102 @@
+DE,National Routine,NatRouCF,1968,U,Y,1,Y,
+SD,ZW,4484
+VS,1,26820,N,U,1C,,Observer,4,4,1,1,CENSUS,   1,SRSWOR,100,5,,0.05,Y,
+FT,26820,1,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-01,,ZWHWN,1968-01-01,,1,1,1,1,CENSUS,1,,,,,,Y,
+FO,N,1,U,N,U,Observer,H,V,Lan,1968-01-01,,1968-01-01,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,1,,,,,,Y,
+SS,1,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,1,,,,,,Y,
+SA,1,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,1,D,Observer,N,,,308,308,1
+VS,2,32376,N,U,1C,,Observer,4,4,1,1,CENSUS,   10,SRSWOR,100,5,,0.05,Y,
+FT,32376,10,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-10,,ZWHWN,1968-01-10,,1,1,1,1,CENSUS,10,,,,,,Y,
+FO,N,10,U,N,U,Observer,H,V,Lan,1968-01-10,,1968-01-10,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,10,,,,,,Y,
+SS,10,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,10,,,,,,Y,
+SA,10,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,10,D,Observer,N,,,256,256,1
+VS,3,31356,N,U,1C,,Observer,4,4,1,1,CENSUS,   11,SRSWOR,100,5,,0.05,Y,
+FT,31356,11,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-11,,ZWHWN,1968-01-11,,1,1,1,1,CENSUS,11,,,,,,Y,
+FO,N,11,U,N,U,Observer,H,V,Lan,1968-01-11,,1968-01-11,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,11,,,,,,Y,
+SS,11,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,11,,,,,,Y,
+SA,11,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,11,D,Observer,N,,,252,252,1
+VS,4,17418,N,U,1C,,Observer,4,4,1,1,CENSUS,   12,SRSWOR,100,5,,0.05,Y,
+FT,17418,12,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-12,,ZWHWN,1968-01-12,,1,1,1,1,CENSUS,12,,,,,,Y,
+FO,N,12,U,N,U,Observer,H,V,Lan,1968-01-12,,1968-01-12,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,12,,,,,,Y,
+SS,12,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,12,,,,,,Y,
+SA,12,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,12,D,Observer,N,,,188,188,1
+VS,1,50358,N,U,1C,,Observer,4,4,1,1,CENSUS,   13,SRSWOR,100,5,,0.05,Y,
+FT,50358,13,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-13,,ZWHWN,1968-01-13,,1,1,1,1,CENSUS,13,,,,,,Y,
+FO,N,13,U,N,U,Observer,H,V,Lan,1968-01-13,,1968-01-13,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,13,,,,,,Y,
+SS,13,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,13,,,,,,Y,
+SA,13,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,13,D,Observer,N,,,300,300,1
+VS,2,51358,N,U,1C,,Observer,4,4,1,1,CENSUS,   14,SRSWOR,100,5,,0.05,Y,
+FT,51358,14,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-14,,ZWHWN,1968-01-14,,1,1,1,1,CENSUS,14,,,,,,Y,
+FO,N,14,U,N,U,Observer,H,V,Lan,1968-01-14,,1968-01-14,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,14,,,,,,Y,
+SS,14,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,14,,,,,,Y,
+SA,14,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,14,D,Observer,N,,,288,288,1
+VS,3,51168,N,U,1C,,Observer,4,4,1,1,CENSUS,   15,SRSWOR,100,5,,0.05,Y,
+FT,51168,15,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-15,,ZWHWN,1968-01-15,,1,1,1,1,CENSUS,15,,,,,,Y,
+FO,N,15,U,N,U,Observer,H,V,Lan,1968-01-15,,1968-01-15,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,15,,,,,,Y,
+SS,15,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,15,,,,,,Y,
+SA,15,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,15,D,Observer,N,,,344,344,1
+VS,4,52004,N,U,1C,,Observer,4,4,1,1,CENSUS,   16,SRSWOR,100,5,,0.05,Y,
+FT,52004,16,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-16,,ZWHWN,1968-01-16,,1,1,1,1,CENSUS,16,,,,,,Y,
+FO,N,16,U,N,U,Observer,H,V,Lan,1968-01-16,,1968-01-16,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,16,,,,,,Y,
+SS,16,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,16,,,,,,Y,
+SA,16,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,16,D,Observer,N,,,364,364,1
+VS,1,38728,N,U,1C,,Observer,4,4,1,1,CENSUS,   17,SRSWOR,100,5,,0.05,Y,
+FT,38728,17,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-17,,ZWHWN,1968-01-17,,1,1,1,1,CENSUS,17,,,,,,Y,
+FO,N,17,U,N,U,Observer,H,V,Lan,1968-01-17,,1968-01-17,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,17,,,,,,Y,
+SS,17,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,17,,,,,,Y,
+SA,17,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,17,D,Observer,N,,,268,268,1
+VS,2,34008,N,U,1C,,Observer,4,4,1,1,CENSUS,   18,SRSWOR,100,5,,0.05,Y,
+FT,34008,18,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-18,,ZWHWN,1968-01-18,,1,1,1,1,CENSUS,18,,,,,,Y,
+FO,N,18,U,N,U,Observer,H,V,Lan,1968-01-18,,1968-01-18,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,18,,,,,,Y,
+SS,18,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,18,,,,,,Y,
+SA,18,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,18,D,Observer,N,,,192,192,1
+VS,3,23088,N,U,1C,,Observer,4,4,1,1,CENSUS,   19,SRSWOR,100,5,,0.05,Y,
+FT,23088,19,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-19,,ZWHWN,1968-01-19,,1,1,1,1,CENSUS,19,,,,,,Y,
+FO,N,19,U,N,U,Observer,H,V,Lan,1968-01-19,,1968-01-19,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,19,,,,,,Y,
+SS,19,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,19,,,,,,Y,
+SA,19,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,19,D,Observer,N,,,328,328,1
+VS,2,43412,N,U,1C,,Observer,4,4,1,1,CENSUS,   2,SRSWOR,100,5,,0.05,Y,
+FT,43412,2,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-02,,ZWHWN,1968-01-02,,1,1,1,1,CENSUS,2,,,,,,Y,
+FO,N,2,U,N,U,Observer,H,V,Lan,1968-01-02,,1968-01-02,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,2,,,,,,Y,
+SS,2,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,2,,,,,,Y,
+SA,2,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,2,D,Observer,N,,,260,260,1
+VS,4,50348,N,U,1C,,Observer,4,4,1,1,CENSUS,   20,SRSWOR,100,5,,0.05,Y,
+FT,50348,20,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-20,,ZWHWN,1968-01-20,,1,1,1,1,CENSUS,20,,,,,,Y,
+FO,N,20,U,N,U,Observer,H,V,Lan,1968-01-20,,1968-01-20,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,20,,,,,,Y,
+SS,20,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,20,,,,,,Y,
+SA,20,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,20,D,Observer,N,,,320,320,1
+VS,3,42060,N,U,1C,,Observer,4,4,1,1,CENSUS,   3,SRSWOR,100,5,,0.05,Y,
+FT,42060,3,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-03,,ZWHWN,1968-01-03,,1,1,1,1,CENSUS,3,,,,,,Y,
+FO,N,3,U,N,U,Observer,H,V,Lan,1968-01-03,,1968-01-03,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,3,,,,,,Y,
+SS,3,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,3,,,,,,Y,
+SA,3,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,3,D,Observer,N,,,344,344,1
+VS,4,46770,N,U,1C,,Observer,4,4,1,1,CENSUS,   4,SRSWOR,100,5,,0.05,Y,
+FT,46770,4,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-04,,ZWHWN,1968-01-04,,1,1,1,1,CENSUS,4,,,,,,Y,
+FO,N,4,U,N,U,Observer,H,V,Lan,1968-01-04,,1968-01-04,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,4,,,,,,Y,
+SS,4,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,4,,,,,,Y,
+SA,4,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,4,D,Observer,N,,,304,304,1
+VS,1,50796,N,U,1C,,Observer,4,4,1,1,CENSUS,   5,SRSWOR,100,5,,0.05,Y,
+FT,50796,5,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-05,,ZWHWN,1968-01-05,,1,1,1,1,CENSUS,5,,,,,,Y,
+FO,N,5,U,N,U,Observer,H,V,Lan,1968-01-05,,1968-01-05,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,5,,,,,,Y,
+SS,5,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,5,,,,,,Y,
+SA,5,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,5,D,Observer,N,,,236,236,1
+VS,2,43048,N,U,1C,,Observer,4,4,1,1,CENSUS,   6,SRSWOR,100,5,,0.05,Y,
+FT,43048,6,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-06,,ZWHWN,1968-01-06,,1,1,1,1,CENSUS,6,,,,,,Y,
+FO,N,6,U,N,U,Observer,H,V,Lan,1968-01-06,,1968-01-06,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,6,,,,,,Y,
+SS,6,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,6,,,,,,Y,
+SA,6,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,6,D,Observer,N,,,304,304,1
+VS,3,50708,N,U,1C,,Observer,4,4,1,1,CENSUS,   7,SRSWOR,100,5,,0.05,Y,
+FT,50708,7,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-07,,ZWHWN,1968-01-07,,1,1,1,1,CENSUS,7,,,,,,Y,
+FO,N,7,U,N,U,Observer,H,V,Lan,1968-01-07,,1968-01-07,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,7,,,,,,Y,
+SS,7,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,7,,,,,,Y,
+SA,7,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,7,D,Observer,N,,,328,328,1
+VS,4,50654,N,U,1C,,Observer,4,4,1,1,CENSUS,   8,SRSWOR,100,5,,0.05,Y,
+FT,50654,8,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-08,,ZWHWN,1968-01-08,,1,1,1,1,CENSUS,8,,,,,,Y,
+FO,N,8,U,N,U,Observer,H,V,Lan,1968-01-08,,1968-01-08,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,8,,,,,,Y,
+SS,8,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,8,,,,,,Y,
+SA,8,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,8,D,Observer,N,,,268,268,1
+VS,1,51104,N,U,1C,,Observer,4,4,1,1,CENSUS,   9,SRSWOR,100,5,,0.05,Y,
+FT,51104,9,N,U,N,U,Observer,AtSea,1,ZWHWN,1968-01-09,,ZWHWN,1968-01-09,,1,1,1,1,CENSUS,9,,,,,,Y,
+FO,N,9,U,N,U,Observer,H,V,Lan,1968-01-09,,1968-01-09,,60,Crew,,,,,,,27.3.a.21,,NotApplicable,,,,,,OTT_CRU_70-89_2_35,OTT,,,,,NotRecorded,NotApplicable,NotRecorded,NotApplicable,,So,1,1,1,1,CENSUS,9,,,,,,Y,
+SS,9,N,U,N,U,Sort,Lan,Volume,Observer,Pckg_SDAResources_gpa_H1,N,,,1,1,1,1,CENSUS,9,,,,,,Y,
+SA,9,,N,U,107254,NEP,FRE,WHL,DeadOrZeroProbSurvival,Lan,,,,U,,,,NotApplicable,,,,,,,,,Box,,,1,1,1,1,CENSUS,9,D,Observer,N,,,200,200,1
