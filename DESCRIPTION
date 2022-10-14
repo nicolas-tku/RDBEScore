@@ -1,4 +1,4 @@
-Package: icesRDBES
+Package: RDBEScore
 Type: Package
 Title: Functions for the ICES Regional Database and Estimation System (RDBES)
 Version: 0.2.0

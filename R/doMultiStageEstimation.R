@@ -105,7 +105,7 @@ estimate <- function(tbl, estimRes, target,
       estim$est.Ntotal <- estim$N * lastEstim$est.total/length(ids)
       #TODO this is not implemented correctly, I think PI should be used
       #see also
-      #https://github.com/ices-tools-dev/icesRDBES/files/8513298/A.Generalized.Horvitz-Thompson.Estimator.v2.docx
+      #https://github.com/ices-tools-dev/RDBEScore/files/8513298/A.Generalized.Horvitz-Thompson.Estimator.v2.docx
       estim$var.total <- estim$var.total/estim$N * lastEstim$N/length(ids)
     }
   }

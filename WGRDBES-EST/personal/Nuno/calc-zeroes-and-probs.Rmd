@@ -17,14 +17,14 @@ knitr::opts_chunk$set(
 
 ## Introduction 
 
-The aim of this document is to illustrate how to calculate zeros and probabilities using the icesRDBES package.
+The aim of this document is to illustrate how to calculate zeros and probabilities using the RDBEScore package.
 
 ```{r}
-library(icesRDBES)
+library(RDBEScore)
 ```
 ## Load functions from their temporary locations
 
-These should be added to the icesRDBES package which will make this step unnecessary in the future.
+These should be added to the RDBEScore package which will make this step unnecessary in the future.
 
 ```{r loadFunctionsTemp}
 

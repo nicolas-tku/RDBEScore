@@ -12,7 +12,7 @@ output:
 ---
 
 ```{r, echo=FALSE,warning=FALSE,message=FALSE,quietly=T}
-library(icesRDBES)
+library(RDBEScore)
 library(dplyr)
 library(lubridate)
 library(sf)
@@ -44,9 +44,9 @@ This example uses test data in the hierarchy 1 RDBES format.
 ```{r,warning=FALSE,message=FALSE,}
 
   # Load the test data
-  testData <- icesRDBES::createRDBESDataObject("testData/RegionalTestData")
+  testData <- RDBEScore::createRDBESDataObject("testData/RegionalTestData")
   # validate the data
-  icesRDBES::validateRDBESDataObject(testData)
+  RDBEScore::validateRDBESDataObject(testData)
 
 
 ```

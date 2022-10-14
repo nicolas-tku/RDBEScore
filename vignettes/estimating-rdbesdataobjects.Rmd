@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 The aim of this document is to illustrate how population parameters like total and mean can be estimated using the **estimMC(...)** function.
 
 ```{r}
-library(icesRDBES)
+library(RDBEScore)
 ```
 
 ## Prerequisites
@@ -311,7 +311,7 @@ for(L in LETTERS[2:5]){
 
 For lower hierarchy tables the number of sampled and measured total 
 ```{r}
-estimTables <- icesRDBES::getTablesInRDBESHierarchy(1)
+estimTables <- RDBEScore::getTablesInRDBESHierarchy(1)
 estimTables <- estimTables[3:9]
 estimTables
 ```   

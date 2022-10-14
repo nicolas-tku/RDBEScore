@@ -1,4 +1,4 @@
-library(icesRDBES)
+library(RDBEScore)
 library(dplyr)
 library(lubridate)
 library(sf)

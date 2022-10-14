@@ -20,8 +20,8 @@ setRDBESDataObjectDataTypes <- function(RDBESDataObjectToConvert){
         tableName <- substring(names(x)[1], 1, 2)
         # Find information for the relevent columns
         requiredColumns <-
-          icesRDBES::mapColNamesFieldR[
-            icesRDBES::mapColNamesFieldR$Table.Prefix == tableName, ]
+          RDBEScore::mapColNamesFieldR[
+            RDBEScore::mapColNamesFieldR$Table.Prefix == tableName, ]
         # Change to numeric
         myCols <-
           requiredColumns[requiredColumns$RDataType == "numeric","R.Name"]

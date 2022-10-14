@@ -35,7 +35,7 @@ getTablesInRDBESHierarchy <- function(hierarchy,
   # Make sure we have an int
   hierarchy <- as.integer(hierarchy)
   hierarchyName <- paste0("H", hierarchy)
-  hierarchyData <- icesRDBES::tablesInRDBESHierarchies
+  hierarchyData <- RDBEScore::tablesInRDBESHierarchies
   hierarchyData <- hierarchyData[hierarchyData$hierarchy == hierarchyName, ]
   hierarchyData <- hierarchyData[order(hierarchyData$sortOrder), ]
 

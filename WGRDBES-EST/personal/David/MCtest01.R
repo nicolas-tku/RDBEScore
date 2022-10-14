@@ -2,7 +2,7 @@
 # Compare these implmentations of generalised functions against
 # the implementation in estimMC
 
-library(icesRDBES)
+library(RDBEScore)
 # Get the estimMC function for comparison
 #source("R/estimMC.R")
 
