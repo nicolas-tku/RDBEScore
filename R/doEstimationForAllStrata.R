@@ -4,7 +4,7 @@
 #' @param RDBESDataObjectForEstim The RDBESDataObject to generate estimates for
 #' @param hierarchyToUse The number of the RDBES hierarchy to estimate for
 #' @param verbose (Optional) If set to TRUE more detailed text will be printed
-#' out by the function.  Default is TRUE.
+#' out by the function.  Default is FALSE
 #'
 #' @return A data frame containing estimates for all strata
 #' @export
@@ -26,7 +26,7 @@
 #' }
 doEstimationForAllStrata <- function(RDBESDataObjectForEstim,
                                      hierarchyToUse,
-                                     verbose = TRUE) {
+                                     verbose = FALSE) {
 
   # For testing
   # RDBESDataObjectForEstim <- myFilteredTestData
@@ -36,7 +36,7 @@ doEstimationForAllStrata <- function(RDBESDataObjectForEstim,
   # TODO - function does not handle sub-sampling at the moment
 
   # Check we have a valid RDBESDataObject before doing anything else
-  validateRDBESDataObject(RDBESDataObjectForEstim, verbose = FALSE)
+  validateRDBESDataObject(RDBESDataObjectForEstim, verbose = verbose)
 
   # Clear out the variable that will hold our results
   myStrataResults <- NULL
@@ -47,7 +47,6 @@ doEstimationForAllStrata <- function(RDBESDataObjectForEstim,
   # Loop through our tables, starting at SA and working backwards
   saPosition <- match("SA", tablesToCheck)
   for (i in saPosition:1) {
-    #i <- 6
     currentTable <- tablesToCheck[i]
     parentTable <- NA
     if (i > 1) {
@@ -149,7 +148,6 @@ doEstimationForAllStrata <- function(RDBESDataObjectForEstim,
 
     ## DE/SD need to be handled differently because we can't estimate with
     # these tables
-    #if (currentTable %in% c("DE", "SD", "SS")) {
     if (currentTable %in% c("DE", "SD")) {
 
       # Add on a parentTableID column if it doesn't exist
@@ -217,7 +215,7 @@ doEstimationForAllStrata <- function(RDBESDataObjectForEstim,
 #'
 #' @param x The input
 #'
-#' @return Whoever revises this function please specify what it returns here
+#' @return Data frame with estimation results
 #'
 getEstimForStratum <- function(x) {
   myReturnValues <- data.frame(
@@ -261,11 +259,6 @@ getEstimForStratum <- function(x) {
     #myReturnValues$sd.total <- sqrt(myEstim$var.total)
     myReturnValues$sd.total <- NA
     myReturnValues$se.total <- sqrt(myEstim$var.total)
-    # if (length(numberOfSamples) == 1 && numberOfSamples >0){
-    #   myReturnValues$se.total <- sqrt(myEstim$var.total)/sqrt(numberOfSamples)
-    # } else {
-    #   myReturnValues$se.total <- NA
-    # }
   } else {
     myReturnValues$sd.total <- NA
     myReturnValues$se.total <- NA
@@ -273,14 +266,8 @@ getEstimForStratum <- function(x) {
 
 
   if (is.numeric(myEstim$var.mean) && !is.nan(myEstim$var.mean) && !is.na(myEstim$var.mean) && myEstim$var.mean >0){
-    #myReturnValues$sd.mean <- sqrt(myEstim$var.mean)
     myReturnValues$sd.mean <- NA
     myReturnValues$se.mean <- sqrt(myEstim$var.mean)
-    # if (length(numberOfSamples) == 1 && numberOfSamples >0){
-    #   myReturnValues$se.mean <- sqrt(myEstim$var.mean)/sqrt(numberOfSamples)
-    # } else {
-    #   myReturnValues$se.mean <- NA
-    # }
   } else {
     myReturnValues$sd.mean <- NA
     myReturnValues$se.mean <- NA
