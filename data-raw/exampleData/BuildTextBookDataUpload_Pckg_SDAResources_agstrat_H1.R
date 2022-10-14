@@ -1,4 +1,4 @@
-#======Prepares textbook data as H1 upload file===========
+#======Prepares textbook data agstrat as H1 upload file===========
 
 # Info:
 # Table VS and SA contain the core information of \code{data(agstrat)} used in Lohr examples 3.2 and 3.6. 
@@ -29,8 +29,8 @@
 		DEyear<-1968
 		SDinstitution <- 4484
 		DEsamplingScheme<-"National Routine"
-		baseDir <- "./data-raw/exampleData/textBooks/"
-		#baseDir <- "BuildTextBookExamples/"
+		#baseDir <- "./data-raw/exampleData/textBooks/"
+		baseDir <- "BuildTextBookExamples/"
 		VD_base <- readRDS(paste0(baseDir,"VD_base.rds"))
 		SL_base <- readRDS(paste0(baseDir,"SL_base.rds"))
 
@@ -169,7 +169,7 @@ VS_df <- data.frame(
   VSselectionProb = "",
   VSinclusionProb = "",
   VSselectionMethod = "SRSWOR", #M
-  VSunitName = dataset$region,#M
+  VSunitName = paste(dataset$county, dataset$state, dataset$region, dataset$VSid),#M
   VSselectionMethodCluster = "",
   VSnumberTotalClusters = "",
   VSnumberSampledClusters = "",
@@ -373,8 +373,8 @@ FO_df <- data.frame(
 	FOincidentalByCatchMitigationDeviceTargetSecond = "NotApplicable",#M
 	FOgearDimensions = "",
 	FOobservationCode = 'So', #M
-	FOnumberTotal = 10,
-	FOnumberSampled = 10,
+	FOnumberTotal = 1,
+	FOnumberSampled = 1,
 	FOselectionProb = 1,
 	FOinclusionProb = 1,
 	FOselectionMethod = "CENSUS", #M
@@ -666,7 +666,7 @@ write.table(b$V1, file=paste0(dir_outputs,filename_output_CS), col.names=FALSE, 
 		# since it is an example - nicer to do here, fixing directly data input to scripts than patching it over multiple scripts later
 		# since example data are very simple, a simple select is done on specieaListName - this may not be sufficient in some minor cases
 		
-filename_download <- "2022_10_14_054806.zip"
+filename_download <- "2022_10_14_063321.zip"
 unzip(paste0(dir_outputs, filename_download), exdir = paste0(dir_outputs,"tmp"))
 # reads file to be fixed, fixes it and saves it back overwriting
 tmp<-fread(paste0(dir_outputs,"tmp/SpeciesList.csv"))
