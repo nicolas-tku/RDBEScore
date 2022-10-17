@@ -41,11 +41,14 @@ doEstimationForAllStrataWithEstObject <- function(RDBESEstObjectForEstim,
   myStrataResults <- NULL
 
   # Find what tables we need
-  suLevels <- names(RDBESEstObjectForEstim)[grep("^su.table$", names(RDBESEstObjectForEstim))]
-  tablesToCheck <- unique(RDBESEstObjectForEstim[,..suLevels])
+  suLevels <-
+    names(RDBESEstObjectForEstim)[
+      grep("^su.table$", names(RDBESEstObjectForEstim))
+    ]
+  tablesToCheck <- unique(RDBESEstObjectForEstim[, ..suLevels])
   tablesToCheck <- c(t(tablesToCheck))
-  tablesToCheck <- c("DE","SD",tablesToCheck)
-  suLevels <- gsub("table","",suLevels)
+  tablesToCheck <- c("DE", "SD", tablesToCheck)
+  suLevels <- gsub("table", "", suLevels)
 
   # Loop through our tables, starting at the right and working to left
   for (i in length(tablesToCheck):1) {
@@ -63,12 +66,19 @@ doEstimationForAllStrataWithEstObject <- function(RDBESEstObjectForEstim,
       varsNeeded <- paste0(currentTable, c("id", "recType", "ctry", "inst"))
       varsNeeded <- c(varsNeeded, paste0(parentTable, "id"))
     } else if (currentTable == "DE") {
-      varsNeeded <- paste0(currentTable, c("id", "recType", "sampScheme",
-                                           "year", "stratumName", "hierarchy", "samp"))
+      varsNeeded <- paste0(currentTable, c(
+        "id", "recType", "sampScheme",
+        "year", "stratumName",
+        "hierarchy", "samp"
+      ))
     } else {
-      varsNeeded1 <- paste0(suLevels[i-2],c(
-        "stratification","stratumName", "selectMeth", "numTotal", "numSamp", "selProb", "incProb","samp"))
-      varsNeeded2 <- paste0(currentTable,c("id", "recType"))
+      varsNeeded1 <- paste0(suLevels[i - 2], c(
+        "stratification", "stratumName",
+        "selectMeth", "numTotal",
+        "numSamp", "selProb",
+        "incProb", "samp"
+      ))
+      varsNeeded2 <- paste0(currentTable, c("id", "recType"))
       varsNeeded <- c(varsNeeded1, varsNeeded2, paste0(parentTable, "id"))
       if (currentTable == "SA") {
         varsNeeded <- c(varsNeeded, targetValue)
@@ -77,7 +87,8 @@ doEstimationForAllStrataWithEstObject <- function(RDBESEstObjectForEstim,
 
     # Get our data
     myTable <- RDBESEstObjectForEstim[, ..varsNeeded]
-    # De-duplicate (because columns to the right might be different but have disappeared)
+    # De-duplicate (because columns to the right might be different
+    # but have disappeared)
     myTable <- unique(myTable)
 
     # Get the parent table ID
@@ -85,10 +96,12 @@ doEstimationForAllStrataWithEstObject <- function(RDBESEstObjectForEstim,
       paste0(currentTable, "parentTableID")
     # Remove the two letter prefix from column names so they will
     # be consistent between tables
-    names(myTable) <- gsub(currentTable,"",names(myTable), ignore.case = FALSE)
+    names(myTable) <-
+      gsub(currentTable, "", names(myTable), ignore.case = FALSE)
     # change suxStratumName to stratumName
-    if(i-2 > 0) {
-      names(myTable) <- gsub(suLevels[i-2],"",names(myTable), ignore.case = FALSE)
+    if (i - 2 > 0) {
+      names(myTable) <-
+        gsub(suLevels[i - 2], "", names(myTable), ignore.case = FALSE)
     }
 
     myTable$parentTable <- parentTable
@@ -96,12 +109,16 @@ doEstimationForAllStrataWithEstObject <- function(RDBESEstObjectForEstim,
     # We'll fill in the values for parent stratum as we go through the tables
     myTable$parentTableStratum <- NA
 
-    # Make some changes for specific tables
-    if (currentTable == "SA") {
-      # Rename the variable we want to estimate
-      names(myTable)[names(myTable) == substring(targetValue,3)   ] <- "studyVariable"
-
+    # Rename the variable we want to estimate
+    # TODO - check this works for estimating SA vairales when there is
+    # sub-sampling
+    if (substring(targetValue, 3) %in% names(myTable)) {
+      # if (currentTable == "SA") {
+      names(myTable)[names(myTable) == substring(targetValue, 3)] <-
+        "studyVariable"
     }
+
+    # Make some changes for specific tables
     if (currentTable == "DE") {
       # Combine the year with the stratum name
       myTable$stratumName <- paste0(myTable$year, "-", myTable$stratumName)
@@ -138,8 +155,8 @@ doEstimationForAllStrataWithEstObject <- function(RDBESEstObjectForEstim,
       # Join our current table with the previous resuults
       myTableWithValues <-
         dplyr::left_join(myTable,
-                         myPrevEstimates,
-                         by = c("id" = "parentTableID")
+          myPrevEstimates,
+          by = c("id" = "parentTableID")
         )
 
       # Append the parent table stratum to our previous results (so we can
@@ -148,15 +165,13 @@ doEstimationForAllStrataWithEstObject <- function(RDBESEstObjectForEstim,
         parentTableStratum <-
         dplyr::left_join(
           myStrataResults[myStrataResults$parentTable == currentTable, ],
-          myTable[,c("id","parentIDandStratum")],
-          by = c("parentTableID"="id"))$"parentIDandStratum.y"
-
-
+          myTable[, c("id", "parentIDandStratum")],
+          by = c("parentTableID" = "id")
+        )$"parentIDandStratum.y"
     }
 
     ## DE/SD/SS need to be handled differently because we can't estimate with
     # these tables
-    #if (currentTable %in% c("DE", "SD", "SS")) {
     if (currentTable %in% c("DE", "SD")) {
 
       # Add on a parentTableID column if it doesn't exist
@@ -192,8 +207,6 @@ doEstimationForAllStrataWithEstObject <- function(RDBESEstObjectForEstim,
         "est.mean" = NA,
         "var.total" = NA,
         "var.mean" = NA,
-        "sd.total" = NA,
-        "sd.mean" = NA,
         "se.total" = NA,
         "se.mean" = NA
       )
@@ -217,72 +230,68 @@ doEstimationForAllStrataWithEstObject <- function(RDBESEstObjectForEstim,
   }
 
   myStrataResults
-
 }
 
 
-  #' Private function used by doEstimationForAllStrata to get the estimates
-  #'
-  #' @param x The input
-  #'
-  #' @return Data frame with estimated values
-  #'
-  getEstimForStratum <- function(x) {
-    myReturnValues <- data.frame(
-      "recType" = unique(x$recType),
-      "parentTable" = unique(x$parentTable),
-      "parentTableID" = unique(x$parentTableID),
-      "parentTableStratum" = unique(x$parentTableStratum),
-      "stratumName" = unique(x$stratumName),
-      "parentIDandStratum" = unique(x$parentIDandStratum)
+#' Private function used by doEstimationForAllStrata to get the estimates
+#'
+#' @param x The input
+#'
+#' @return Data frame with estimated values
+#'
+getEstimForStratum <- function(x) {
+  myReturnValues <- data.frame(
+    "recType" = unique(x$recType),
+    "parentTable" = unique(x$parentTable),
+    "parentTableID" = unique(x$parentTableID),
+    "parentTableStratum" = unique(x$parentTableStratum),
+    "stratumName" = unique(x$stratumName),
+    "parentIDandStratum" = unique(x$parentIDandStratum)
+  )
+  myEstim <- NA
+  try(
+    myEstim <- estimMC(
+      x$studyVariable,
+      x$numSamp,
+      x$numTotal,
+      unique(x$selectMeth),
+      x$selProb,
+      x$incProb
     )
-    myEstim <- NA
-    try(
-      myEstim <- estimMC(
-        x$studyVariable,
-        x$numSamp,
-        x$numTotal,
-        unique(x$selectMeth),
-        x$selProb,
-        x$incProb
-      )
-    )
-    if (length(is.na(myEstim)) == 1 && is.na(myEstim)) {
-      myReturnValues$est.results.available <- FALSE
-      myReturnValues$est.total <- NA
-      myReturnValues$est.mean <- NA
-      myReturnValues$var.total <- NA
-      myReturnValues$var.mean <- NA
-    } else {
-      myReturnValues$est.results.available <- TRUE
-      myReturnValues$est.total <- myEstim$est.total
-      myReturnValues$est.mean <- myEstim$est.mean
-      myReturnValues$var.total <- myEstim$var.total
-      myReturnValues$var.mean <- myEstim$var.mean
-
-    }
-
-    # Calculate the standard error from the variance
-    numberOfSamples <- unique(x$numSamp)
-
-    if (is.numeric(myEstim$var.total) && !is.nan(myEstim$var.total) && !is.na(myEstim$var.total) && myEstim$var.total >0 ){
-      myReturnValues$sd.total <- NA
-      myReturnValues$se.total <- sqrt(myEstim$var.total)
-    } else {
-      myReturnValues$sd.total <- NA
-      myReturnValues$se.total <- NA
-    }
-
-
-    if (is.numeric(myEstim$var.mean) && !is.nan(myEstim$var.mean) && !is.na(myEstim$var.mean) && myEstim$var.mean >0){
-      myReturnValues$sd.mean <- NA
-      myReturnValues$se.mean <- sqrt(myEstim$var.mean)
-    } else {
-      myReturnValues$sd.mean <- NA
-      myReturnValues$se.mean <- NA
-    }
-
-    myReturnValues
+  )
+  if (length(is.na(myEstim)) == 1 && is.na(myEstim)) {
+    myReturnValues$est.results.available <- FALSE
+    myReturnValues$est.total <- NA
+    myReturnValues$est.mean <- NA
+    myReturnValues$var.total <- NA
+    myReturnValues$var.mean <- NA
+  } else {
+    myReturnValues$est.results.available <- TRUE
+    myReturnValues$est.total <- myEstim$est.total
+    myReturnValues$est.mean <- myEstim$est.mean
+    myReturnValues$var.total <- myEstim$var.total
+    myReturnValues$var.mean <- myEstim$var.mean
   }
 
+  # Calculate the standard error from the variance
 
+  if (is.numeric(myEstim$var.total) &&
+    !is.nan(myEstim$var.total) &&
+    !is.na(myEstim$var.total) &&
+    myEstim$var.total > 0) {
+    myReturnValues$se.total <- sqrt(myEstim$var.total)
+  } else {
+    myReturnValues$se.total <- NA
+  }
+
+  if (is.numeric(myEstim$var.mean) &&
+    !is.nan(myEstim$var.mean) &&
+    !is.na(myEstim$var.mean) &&
+    myEstim$var.mean > 0) {
+    myReturnValues$se.mean <- sqrt(myEstim$var.mean)
+  } else {
+    myReturnValues$se.mean <- NA
+  }
+
+  myReturnValues
+}
