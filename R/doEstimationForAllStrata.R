@@ -25,8 +25,8 @@
 #' )
 #' }
 doEstimationForAllStrata <- function(RDBESEstObjectForEstim,
-                                                  targetValue,
-                                                  verbose = FALSE) {
+                                     targetValue,
+                                     verbose = FALSE) {
 
 
   # Check we have a valid RDBESDataObject before doing anything else
@@ -35,6 +35,17 @@ doEstimationForAllStrata <- function(RDBESEstObjectForEstim,
       "RDBESEstObjectForEstim is not valid ",
       "- doEstimationForAllStrataWithEstObject will not proceed"
     ))
+  }
+
+  # Stop if we have any clustering - not developed yet
+  clustFields <-
+    names(RDBESEstObjectForEstim)[grep(
+      "^su.clustering$",
+      names(RDBESEstObjectForEstim)
+    )]
+  if (any(!is.na(RDBESEstObjectForEstim[, ..clustFields]) &
+    RDBESEstObjectForEstim[, ..clustFields] != "N")) {
+    stop("Clustering is present in the data - this cannot be handled yet.")
   }
 
   # Clear out the variable that will hold our results
