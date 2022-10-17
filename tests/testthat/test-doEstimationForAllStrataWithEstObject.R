@@ -110,4 +110,60 @@ test_that("doEstimationForAllStrataWithEstObject creates correct est.total for S
 
 })
 
+test_that("doEstimationForAllStrataWithEstObject creates get correct results for Lohr worked examples",  {
+
+  myTestData <- importRDBESDownloadData("../../data-raw/exampleData/WGRDBES-EST_TEST_LOHR_eg_3_2_3_6.zip")
+  validateRDBESDataObject(myTestData, checkDataTypes = TRUE)
+
+  # ensure the numer of sampled and total items is set on the relevent levels
+  myTestData[["SA"]]$SAnumSamp <- 1
+  myTestData[["SA"]]$SAnumTotal <- 1
+  myTestData[["FT"]]$FTnumSamp <- 1
+  myTestData[["FT"]]$FTnumTotal <- 1
+  myTestData[["FO"]]$FOnumSamp <- 1
+  myTestData[["FO"]]$FOnumTotal <- 1
+  myTestData[["SS"]]$SSnumSamp <- 1
+  myTestData[["SS"]]$SSnumTotal <- 1
+
+  # create an est object
+  myEstData <- createRDBESEstObject(myTestData, 1, "SA" )
+
+  # Run estimation
+  myResults <- doEstimationForAllStrataWithEstObject(myEstData, "SAsampWtMes")
+
+  # Get the results for the VS strata
+  NC_actual <-  myResults[myResults$recType == "VS" & myResults$stratumName == "NC" ,c("stratumName","est.total","est.mean", "se.total","se.mean")]
+  NE_actual <-  myResults[myResults$recType == "VS" & myResults$stratumName == "NE" ,c("stratumName","est.total","est.mean", "se.total","se.mean")]
+  S_actual <-  myResults[myResults$recType == "VS" & myResults$stratumName == "S" ,c("stratumName","est.total","est.mean", "se.total","se.mean")]
+  W_actual <-  myResults[myResults$recType == "VS" & myResults$stratumName == "W" ,c("stratumName","est.total","est.mean", "se.total","se.mean")]
+
+  # Check if the results are correct
+
+  # NC stratum
+  expect_equal(round(NC_actual$est.total,0), 316731380)
+  expect_equal(round(NC_actual$se.total,0), 16977399)
+  expect_equal(round(NC_actual$est.mean,2), 300504.16)
+  expect_equal(round(NC_actual$se.mean,2), 16107.59)
+
+  # NE stratum
+  expect_equal(round(NE_actual$est.total,0), 21478558)
+  expect_equal(round(NE_actual$se.total,0), 3992889)
+  expect_equal(round(NE_actual$est.mean,2), 97629.81)
+  expect_equal(round(NE_actual$se.mean,2), 18149.49)
+
+  # S stratum
+  expect_equal(round(S_actual$est.total,0), 292037391)
+  expect_equal(round(S_actual$se.total,0), 26154840)
+  expect_equal(round(S_actual$est.mean,2), 211315.04)
+  expect_equal(round(S_actual$se.mean,2), 18925.35)
+
+  # W stratum
+  expect_equal(round(W_actual$est.total,0), 279488706)
+  expect_equal(round(W_actual$se.total,0), 39416342)
+  expect_equal(round(W_actual$est.mean,2), 662295.51)
+  expect_equal(round(W_actual$se.mean,2), 93403.65)
+
+
+})
+
 }) ## end capture.output
