@@ -3,28 +3,24 @@
 \name{doEstimationForAllStrata}
 \alias{doEstimationForAllStrata}
 \title{Estimate totals and means, and try to generate samples variances for all
-strata in an RDBESDataObject}
+strata in an RDBESEstObject}
 \usage{
-doEstimationForAllStrata(
-  RDBESDataObjectForEstim,
-  hierarchyToUse,
-  verbose = TRUE
-)
+doEstimationForAllStrata(RDBESEstObjectForEstim, targetValue, verbose = FALSE)
 }
 \arguments{
-\item{RDBESDataObjectForEstim}{The RDBESDataObject to generate estimates for}
+\item{RDBESEstObjectForEstim}{The RDBESEstObject to generate estimates for}
 
-\item{hierarchyToUse}{The number of the RDBES hierarchy to estimate for}
+\item{targetValue}{The field to estimate for, for example "SAsampWtLive"}
 
 \item{verbose}{(Optional) If set to TRUE more detailed text will be printed
-out by the function.  Default is TRUE.}
+out by the function.  Default is FALSE}
 }
 \value{
 A data frame containing estimates for all strata
 }
 \description{
 Estimate totals and means, and try to generate samples variances for all
-strata in an RDBESDataObject
+strata in an RDBESEstObject
 }
 \examples{
 \dontrun{

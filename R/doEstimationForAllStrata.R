@@ -24,7 +24,7 @@
 #'   hierarchyToUse = 1
 #' )
 #' }
-doEstimationForAllStrataWithEstObject <- function(RDBESEstObjectForEstim,
+doEstimationForAllStrata <- function(RDBESEstObjectForEstim,
                                                   targetValue,
                                                   verbose = FALSE) {
 

@@ -48,7 +48,7 @@ capture.output({  ## suppresses printing of console output when running test()
 
   }
 
-test_that("doEstimationForAllStrataWithEstObject creates correct est.total for SAsampWtLive using H1",  {
+test_that("doEstimationForAllStrata creates correct est.total for SAsampWtLive using H1",  {
 
       # get some SA test data
       myTestData <- generateTestData("SA")
@@ -73,13 +73,13 @@ test_that("doEstimationForAllStrataWithEstObject creates correct est.total for S
       expectedTotal <- sum(x$pointEstimate , na.rm = TRUE)
 
       # Check the new function works - and the estimated total is the same
-      myStrataResults <- doEstimationForAllStrataWithEstObject(myTestData, targetValue)
+      myStrataResults <- doEstimationForAllStrata(myTestData, targetValue)
       actualTotal <- myStrataResults[myStrataResults$recType == "DE","est.total"]
 
       expect_equal(actualTotal,expectedTotal )
 
   })
-test_that("doEstimationForAllStrataWithEstObject creates correct est.total for SAsampWtMes using H1",  {
+test_that("doEstimationForAllStrata creates correct est.total for SAsampWtMes using H1",  {
 
   myTestData <- generateTestData("SA")
 
@@ -103,14 +103,14 @@ test_that("doEstimationForAllStrataWithEstObject creates correct est.total for S
   expectedTotal <- sum(x$pointEstimate , na.rm = TRUE)
 
   # Check the new function works - and the estimated total is the same
-  myStrataResults <- doEstimationForAllStrataWithEstObject(myTestData, targetValue)
+  myStrataResults <- doEstimationForAllStrata(myTestData, targetValue)
   actualTotal <- myStrataResults[myStrataResults$recType == "DE","est.total"]
 
   expect_equal(actualTotal,expectedTotal )
 
 })
 
-test_that("doEstimationForAllStrataWithEstObject creates get correct results for Lohr worked examples",  {
+test_that("doEstimationForAllStrata creates get correct results for Lohr worked examples",  {
 
   myTestData <- importRDBESDownloadData("../../data-raw/exampleData/WGRDBES-EST_TEST_LOHR_eg_3_2_3_6.zip")
   validateRDBESDataObject(myTestData, checkDataTypes = TRUE)
@@ -129,7 +129,7 @@ test_that("doEstimationForAllStrataWithEstObject creates get correct results for
   myEstData <- createRDBESEstObject(myTestData, 1, "SA" )
 
   # Run estimation
-  myResults <- doEstimationForAllStrataWithEstObject(myEstData, "SAsampWtMes")
+  myResults <- doEstimationForAllStrata(myEstData, "SAsampWtMes")
 
   # Get the results for the VS strata
   NC_actual <-  myResults[myResults$recType == "VS" & myResults$stratumName == "NC" ,c("stratumName","est.total","est.mean", "se.total","se.mean")]
