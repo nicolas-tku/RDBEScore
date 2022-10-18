@@ -29,6 +29,7 @@ doEstimationForAllStrata <- function(RDBESEstObjectForEstim,
                                      verbose = FALSE) {
 
 
+
   # Check we have a valid RDBESDataObject before doing anything else
   if (!validateRDBESEstObject(RDBESEstObjectForEstim, verbose = verbose)) {
     stop(paste0(
@@ -51,14 +52,28 @@ doEstimationForAllStrata <- function(RDBESEstObjectForEstim,
   # Clear out the variable that will hold our results
   myStrataResults <- NULL
 
+  foundTargetValue <- FALSE
+
   # Find what tables we need
   suLevels <-
     names(RDBESEstObjectForEstim)[
       grep("^su.table$", names(RDBESEstObjectForEstim))
     ]
-  tablesToCheck <- unique(RDBESEstObjectForEstim[, ..suLevels])
-  tablesToCheck <- c(t(tablesToCheck))
-  tablesToCheck <- c("DE", "SD", tablesToCheck)
+  tablesToCheck <- c("DE", "SD")
+  # I'm sure there's a better way to do this...
+  for (myLevel in suLevels){
+    myValues <- RDBESEstObjectForEstim[, ..myLevel]
+    myValues <- na.omit(myValues)
+    data.table::setorder(myValues)
+    tablesToCheck <- c(tablesToCheck,myValues[1,][[1]])
+  }
+  tablesToCheck <- na.omit(tablesToCheck)
+  tablesToCheck <- unique(tablesToCheck)
+
+  #tablesToCheck <- unique(RDBESEstObjectForEstim[, ..suLevels])
+  #(RDBESEstObjectForEstim[, ..suLevels])
+  #tablesToCheck <- c(t(tablesToCheck))
+  #tablesToCheck <- c("DE", "SD", tablesToCheck)
   suLevels <- gsub("table", "", suLevels)
 
   # Loop through our tables, starting at the right and working to left
@@ -121,12 +136,14 @@ doEstimationForAllStrata <- function(RDBESEstObjectForEstim,
     myTable$parentTableStratum <- NA
 
     # Rename the variable we want to estimate
-    # TODO - check this works for estimating SA vairales when there is
+    # TODO - check this works for estimating SA variables when there is
     # sub-sampling
-    if (substring(targetValue, 3) %in% names(myTable)) {
-      # if (currentTable == "SA") {
-      names(myTable)[names(myTable) == substring(targetValue, 3)] <-
-        "studyVariable"
+    if (!foundTargetValue){
+      if (substring(targetValue, 3) %in% names(myTable)) {
+        names(myTable)[names(myTable) == substring(targetValue, 3)] <-
+          "studyVariable"
+        foundTargetValue <- TRUE
+      }
     }
 
     # Make some changes for specific tables
@@ -276,32 +293,34 @@ getEstimForStratum <- function(x) {
     myReturnValues$est.mean <- NA
     myReturnValues$var.total <- NA
     myReturnValues$var.mean <- NA
+    myReturnValues$se.total <- NA
+    myReturnValues$se.mean <- NA
   } else {
     myReturnValues$est.results.available <- TRUE
     myReturnValues$est.total <- myEstim$est.total
     myReturnValues$est.mean <- myEstim$est.mean
     myReturnValues$var.total <- myEstim$var.total
     myReturnValues$var.mean <- myEstim$var.mean
-  }
 
-  # Calculate the standard error from the variance
+    # Calculate the standard error from the variance
+    if (is.numeric(myEstim$var.total) &&
+        !is.nan(myEstim$var.total) &&
+        !is.na(myEstim$var.total) &&
+        myEstim$var.total > 0) {
+      myReturnValues$se.total <- sqrt(myEstim$var.total)
+    } else {
+      myReturnValues$se.total <- NA
+    }
 
-  if (is.numeric(myEstim$var.total) &&
-    !is.nan(myEstim$var.total) &&
-    !is.na(myEstim$var.total) &&
-    myEstim$var.total > 0) {
-    myReturnValues$se.total <- sqrt(myEstim$var.total)
-  } else {
-    myReturnValues$se.total <- NA
-  }
+    if (is.numeric(myEstim$var.mean) &&
+        !is.nan(myEstim$var.mean) &&
+        !is.na(myEstim$var.mean) &&
+        myEstim$var.mean > 0) {
+      myReturnValues$se.mean <- sqrt(myEstim$var.mean)
+    } else {
+      myReturnValues$se.mean <- NA
+    }
 
-  if (is.numeric(myEstim$var.mean) &&
-    !is.nan(myEstim$var.mean) &&
-    !is.na(myEstim$var.mean) &&
-    myEstim$var.mean > 0) {
-    myReturnValues$se.mean <- sqrt(myEstim$var.mean)
-  } else {
-    myReturnValues$se.mean <- NA
   }
 
   myReturnValues
