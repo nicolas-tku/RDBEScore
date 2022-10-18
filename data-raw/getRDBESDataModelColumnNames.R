@@ -113,5 +113,8 @@ mapColNamesFieldR[
   mapColNamesFieldR$Table.Prefix == "SA" &
     mapColNamesFieldR$Field.Name == "SAparentSequenceNumber","RDataType"] <- "numeric"
 
+# Remove any spaces from the R names
+mapColNamesFieldR$R.Name <- gsub(" ", "", mapColNamesFieldR$R.Name)
+
 # Save the data
-usethis::use_data(mapColNamesFieldR)
+usethis::use_data(mapColNamesFieldR, overwrite = TRUE)
