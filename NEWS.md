@@ -4,4 +4,4 @@
 
 # RDBEScore 0.2.1
 
-* `generateZerosUsingSL`: fixed behavior and added tests for function
+* fix behavior of generateZerosUsingSL and added tests for function
