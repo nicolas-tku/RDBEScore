@@ -1,64 +1,57 @@
+capture.output({  ## suppresses printing of console output when running test()
 
-library(remotes)
-install_github("ices-tools-dev/RDBEScore@dev")
-library(RDBEScore)
+test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLyear*SLcatchFrac*SLcommTaxon", {
 
-getwd()
-setwd("~/GitHub/icesRDBES")
 
-mySurveyH1 <- importRDBESDownloadData('data-raw/exampleData/WGRDBES-EST_TEST_Pckg_Survey_data_apistrat_H1.zip')
+# species*catchFrac in SL and not in SA: expected behavior -> generate a 0 row in SA
 
-validateRDBESDataObject(mySurveyH1, checkDataTypes = TRUE)
-runChecksOnSelectionAndProbs(mySurveyH1)
+	# create test data from download
+	myH1DataObject <- importRDBESDownloadData("./h1_v_1_19_13/WGRDBES-EST_TEST_Pckg_Survey_data_apistrat_H1.zip")
+	validateRDBESDataObject(myH1DataObject, checkDataTypes = TRUE)
 
-# Inclusion of more species in SL to test the function 'generateZerosUsingSL'
-names(mySurveyH1[["SL"]])
-df1 <- data.frame('31830','SL','ZW','4484','WGRDBES-EST_TEST_Pckg_Survey_data_apistrat_H1','1968','Lan','119605','119605')
-colnames(df1) <- names(mySurveyH1[["SL"]])
+	df1 <- data.frame('31830','SL','ZW','4484','WGRDBES-EST_TEST_Pckg_Survey_data_apistrat_H1','1968','Dis','107254','107254')
+	colnames(df1) <- names(myH1DataObject[["SL"]])
+	myH1DataObject[["SL"]] <- rbind(myH1DataObject[["SL"]],df1)
+	myH1DataObject[["SL"]]$SLid <- as.integer(myH1DataObject[["SL"]]$SLid)
+	myH1DataObject[["SL"]]$SLyear <- as.integer(myH1DataObject[["SL"]]$SLyear)
+	myH1DataObject[["SL"]]$SLcommTaxon <- as.integer(myH1DataObject[["SL"]]$SLcommTaxon)
+	myH1DataObject[["SL"]]$SLsppCode <- as.integer(myH1DataObject[["SL"]]$SLsppCode)
 
-df2 <- data.frame('31831','SL','ZW','4484','WGRDBES-EST_TEST_Pckg_Survey_data_apistrat_H1','1968','Dis','119605','119605')
-colnames(df2) <- names(mySurveyH1[["SL"]])
+	myH1DataObject[["SS"]]<-rbind(myH1DataObject[["SS"]][1,],myH1DataObject[["SS"]][1,])
+	myH1DataObject[["SS"]]$SScatchFra[2]<-"Dis"
+	myH1DataObject[["SS"]]$SSid[2]<-myH1DataObject[["SS"]]$SSid[1]+1
+	myH1DataObject[["SS"]]$SSid<-as.integer(myH1DataObject[["SS"]]$SSid)
 
-mySurveyH1[["SL"]] <- rbind(mySurveyH1[["SL"]],df1,df2)
-mySurveyH1[["SL"]]$SLid <- as.integer(mySurveyH1[["SL"]]$SLid)
-mySurveyH1[["SL"]]$SLyear <- as.integer(mySurveyH1[["SL"]]$SLyear)
-mySurveyH1[["SL"]]$SLcommTaxon <- as.integer(mySurveyH1[["SL"]]$SLcommTaxon)
-mySurveyH1[["SL"]]$SLsppCode <- as.integer(mySurveyH1[["SL"]]$SLsppCode)
 
-# validation after changes
-validateRDBESDataObject(mySurveyH1, checkDataTypes = TRUE)
-runChecksOnSelectionAndProbs(mySurveyH1)
+	myH1DataObject <- filterRDBESDataObject(myH1DataObject, c("SAid"), c(653280), killOrphans = TRUE)
+	validateRDBESDataObject(myH1DataObject, checkDataTypes = TRUE)
 
-myTest <- filterRDBESDataObject(mySurveyH1, c("SAid"), c(653280), killOrphans = TRUE)
-myTest <- removeBrokenSpeciesListLinks(myTest)
+	  # check generateZerosUsingSL is creating missing catchCateg in SA
+		myTest3 <- generateZerosUsingSL(myH1DataObject)
+	  # create aux id_table [Nuno's function] and tmpKey to use in test
+		aux<-createTableOfRDBESIds(x = myTest3, hierarchy = 1, addSAseqNums=FALSE)
+		myTest3$SA$SDctry<-myTest3$SD$SDctry[match(aux$SDid[match(myTest3$SA$SAid,aux$SAid)], myTest3$SD$SDid)]
+		myTest3$SA$SDinst <- myTest3$SD$SDinst[match(aux$SDid[match(myTest3$SA$SAid,aux$SAid)], myTest3$SD$SDid)]
+		myTest3$SA$SSspecListName <- myTest3$SS$SSspecListName[match(aux$SSid[match(myTest3$SA$SAid,aux$SAid)], myTest3$SS$SSid)]
+		myTest3$SA$DEyear <- myTest3$DE$DEyear[match(aux$DEid[match(myTest3$SA$SAid,aux$SAid)], myTest3$DE$DEid)]
+		myTest3$SA[ ,tmpKey := paste(SDctry, SDinst, SSspecListName, DEyear, SAcatchCat, SAspeCode)]
 
-validateRDBESDataObject(myTest)
+	#run tests
+	expect_equal(nrow(myTest3$SA[tmpKey %in% "ZW 4484 WGRDBES-EST_TEST_Pckg_Survey_data_apistrat_H1 1968 Dis 107254",]),1)
+	expect_equal(nrow(myTest3$SA),2)
 
-# Set stratification to N
-#myTest[["VS"]]$VSstratification = "N"
 
-runChecksOnSelectionAndProbs(myTest)
+# species*catchFrac in SL and in SA: expected behavior -> do not generate a 0 row in SA
 
-myTest2 <- applyGenerateProbs(myTest, "inclusion", TRUE)
+	myH1DataObject <- importRDBESDownloadData("./h1_v_1_19_13/WGRDBES-EST_TEST_Pckg_Survey_data_apistrat_H1.zip")
+	myH1DataObject[["SS"]]<-myH1DataObject[["SS"]][1,]
+	myH1DataObject <- filterRDBESDataObject(myH1DataObject, c("SAid"), c(653280), killOrphans = TRUE)
+	validateRDBESDataObject(myH1DataObject, checkDataTypes = TRUE)
 
-validateRDBESDataObject(myTest2)
+	expect_equal(generateZerosUsingSL(myH1DataObject), myH1DataObject)
 
-myTest3 <- generateZerosUsingSL(myTest2)
+})
 
-myTest3[["SA"]]$SAsampWtLive <- myTest3[["SA"]]$SAsampWtMes
-myTest3[["SA"]]$SAnumSamp <- 1
-myTest3[["SA"]]$SAnumTotal <- 1
-myTest3[["FT"]]$FTnumSamp <- 1
-myTest3[["FT"]]$FTnumTotal <- 1
-myTest3[["FO"]]$FOnumSamp <- 1
-myTest3[["FO"]]$FOnumTotal <- 1
-myTest3[["SS"]]$SSnumSamp <- 1
-myTest3[["SS"]]$SSnumTotal <- 1
-
-myTest4 <- doEstimationForAllStrata(myTest3, 1)
-View(myTest4[myTest4$recType == "VS",])
-
-myEst <- createRDBESEstObject(myTest3, 1)
-
+}) ## end capture.output
 
 
