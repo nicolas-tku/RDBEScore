@@ -27,20 +27,41 @@ generateZerosUsingSL <- function(x) {
   tmpSA[, (colsToConvertToNumeric) := lapply(.SD, as.double),
         .SDcols = colsToConvertToNumeric]
 
+# create aux id_table
+	aux<-createTableOfRDBESIds(x = x, hierarchy = 1, addSAseqNums=FALSE)
+	
+	tmpSA$SDctry<-x$SD$SDctry[match(aux$SDid[match(tmpSA$SAid,aux$SAid)], x$SD$SDid)]
+	tmpSA$SDinst <- x$SD$SDinst[match(aux$SDid[match(tmpSA$SAid,aux$SAid)], x$SD$SDid)]
+	tmpSA$SSspecListName <- x$SS$SSspecListName[match(aux$SSid[match(tmpSA$SAid,aux$SAid)], x$SS$SSid)]
+	tmpSA$DEyear <- x$DE$DEyear[match(aux$DEid[match(tmpSA$SAid,aux$SAid)], x$DE$DEid)]
+	tmpSA$SScatchFra <- x$SS$SScatchFra[match(aux$SSid[match(tmpSA$SAid,aux$SAid)], x$SS$SSid)]	
+	
+	tmpSA[ ,tmpKey := paste(SDctry, SDinst, SSspecListName, DEyear, SScatchFra, SAspeCode)]
+
+colsToDelete<-c("SDctry", "SDinst","SSspecListName","DEyear","SScatchFra")
+
+	tmpSA[, (colsToDelete) := lapply(.SD, function(x) x<-NULL),
+        .SDcols = colsToDelete]
+
+	# creates tmpKey in SL
+	tmpSL[, tmpKey := paste(SLcou, SLinst, SLspeclistName, SLyear, SLcatchFrac, SLcommTaxon)]
+
 
   ls1 <- split(tmpSA, tmpSA$SSid)
   ls2 <- lapply(ls1, function(x) {
-    for (sppCode in tmpSL$SLsppCode) {
-      if (sppCode %in% tmpSL$SLsppCode) { # sppCode is not in list
-        if (!sppCode %in% x$SAspeCode) {
+    for (w in tmpSL$tmpKey) {
+         if (!w %in% tmpSA$tmpKey) {
           # duplicates SA row
           y <- x[1, ]
-          y$SAspeCode <- sppCode
-          y$SAtotalWtLive <- 0
+  		  # handles the key
+		  y$SAspeCode <- as.integer(unlist(strsplit(w," "))[6])
+		  y$SAcatchCat <- unlist(strsplit(w," "))[5]
+       	  # handles the remainder
+		  y$SAtotalWtLive <- 0
           y$SAsampWtLive <- 0
           y$SAtotalWtMes <- 0
           y$SAsampWtMes <- 0
-          y$SAid <- min(x$SAid) - 0.001 # maintain a count
+		  y$SAid <- min(x$SAid) - 0.1 # maintain a count
           y$SAseqNum <- min(x$SAseqNum) - 0.001 # maintain a count
           y$SAunitName <- min(x$SAid) - 0.001 # maintain a count
           y$SAsex <- NA
@@ -51,10 +72,11 @@ generateZerosUsingSL <- function(x) {
         } else {
           x
         }
-      }
     }
     x <- x[order(x$SAid, decreasing = F), ]
-    x
+    # cleans tmpKey
+	x$tmpKey<-NULL
+	x
   })
   x[["SA"]] <- data.table::setDT(do.call("rbind", ls2))
   x
