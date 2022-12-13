@@ -28,7 +28,7 @@ generateZerosUsingSL <- function(x) {
         .SDcols = colsToConvertToNumeric]
 
 # create aux id_table
-	aux<-createTableOfRDBESIds(x = x, hierarchy = 1, addSAseqNums=FALSE)
+	aux<-createTableOfRDBESIds(x = x, addSAseqNums=FALSE)
 	
 	tmpSA$SDctry<-x$SD$SDctry[match(aux$SDid[match(tmpSA$SAid,aux$SAid)], x$SD$SDid)]
 	tmpSA$SDinst <- x$SD$SDinst[match(aux$SDid[match(tmpSA$SAid,aux$SAid)], x$SD$SDid)]
