@@ -29,7 +29,7 @@ createTableOfRDBESIds<-function(x, addSAseqNums=TRUE)
 # outputs a table with ids for matching 
 
 
-CStableNames<- getTablesInRDBESHierarchy(hierarchy,
+CStableNames<- getTablesInRDBESHierarchy(hierarchy = x$DE$DEhierarchy[1],
                                       includeOptTables = FALSE,
                                       includeLowHierTables = TRUE,
                                       includeTablesNotInSampHier = FALSE)
