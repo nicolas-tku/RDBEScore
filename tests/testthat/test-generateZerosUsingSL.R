@@ -29,7 +29,7 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 	  # check generateZerosUsingSL is creating missing catchCateg in SA
 		myTest3 <- generateZerosUsingSL(myH1DataObject)
 	  # create aux id_table [Nuno's function] and tmpKey to use in test
-		aux<-createTableOfRDBESIds(x = myTest3, hierarchy = 1, addSAseqNums=FALSE)
+		aux<-createTableOfRDBESIds(x = myTest3, addSAseqNums=FALSE)
 		myTest3$SA$SDctry<-myTest3$SD$SDctry[match(aux$SDid[match(myTest3$SA$SAid,aux$SAid)], myTest3$SD$SDid)]
 		myTest3$SA$SDinst <- myTest3$SD$SDinst[match(aux$SDid[match(myTest3$SA$SAid,aux$SAid)], myTest3$SD$SDid)]
 		myTest3$SA$SSspecListName <- myTest3$SS$SSspecListName[match(aux$SSid[match(myTest3$SA$SAid,aux$SAid)], myTest3$SS$SSid)]
