@@ -1,4 +1,4 @@
-createTableOfRDBESIds<-function(x, hierarchy, addSAseqNums=TRUE)
+createTableOfRDBESIds<-function(x, addSAseqNums=TRUE)
 {
 
 # note: needs developments for different lower hierarchies
@@ -7,9 +7,11 @@ createTableOfRDBESIds<-function(x, hierarchy, addSAseqNums=TRUE)
 # hierarchy is hierarchy (integer)
 # outputs a table with ids for matching 
 
-if(hierarchy==1) CStableNames<- c("DE","SD","VS","FT","FO","SS","SA","FM","BV")
-if(hierarchy==5) CStableNames<- c("DE","SD","OS","LE","SS","SA","BV")
-if(!hierarchy %in% c(1,5)) stop ("hierarchy not defined")
+
+CStableNames<- getTablesInRDBESHierarchy(hierarchy = hierarchy,
+                                      includeOptTables = FALSE,
+                                      includeLowHierTables = TRUE,
+                                      includeTablesNotInSampHier = FALSE)
 
 for (i in 1:(length(CStableNames)-1))
 {
@@ -29,26 +31,18 @@ if (i==1) out<-merge(df_1,df_2, all.x=T) else out<-merge(out, df_2, all.x=T)
 
 }
 # reorders
-if(hierarchy==1) {
-				if(addSAseqNums==TRUE){
-					out<-out[,c("DEid","SDid","VSid","FTid","FOid","SSid","SAid","FMid","BVid","BVfishId","SAseqNum","SAparSequNum")]
-					} else { 
-						out<-out[,c("DEid","SDid","VSid","FTid","FOid","SSid","SAid","FMid","BVid","BVfishId")]
-						}
-				}
+if(addSAseqNums==TRUE){
+	out<-out[,c(paste0(CStableNames,"id"),"BVfishId","SAseqNum","SAparSequNum")]
+	} else { 
+		out<-out[,c(paste0(CStableNames,"id"),"BVfishId")]
+					
 
-if(hierarchy==5) {
-				if(addSAseqNums==TRUE){
-					out<-out[,c("DEid","SDid","OSid","LEid","SSid","SAid","BVid","BVfishId","SAseqNum","SAparSequNum")] 
-					} else { 
-						out<-out[,c("DEid","SDid","OSid","LEid","SSid","SAid","BVid","BVfishId")]
-						}
-				}
+		}
 out
 }
 
 # e.g.,
  ## default adds "SAseqNum","SAparSequNum"
- #head(createTableOfRDBESIds(x = RDBESprepObj, hierarchy = 1))
+ #head(createTableOfRDBESIds(x = RDBESprepObj))
  ## if addSAseqNums is set to FALSE, "SAseqNum" and "SAparSequNum" are not added to output
- # head(createTableOfRDBESIds(x = RDBESprepObj, hierarchy = 1, addSAseqNums=FALSE))
+ # head(createTableOfRDBESIds(x = RDBESprepObj, addSAseqNums=FALSE))
