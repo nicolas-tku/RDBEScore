@@ -1,3 +1,24 @@
+#' Create a table of RDBES Ids
+#'
+#' examples for now see
+#' https://github.com/ices-eg/WK_RDBES/tree/master/WKRDB-EST2/chairs/Nuno
+#'
+#' @param x RDBESdataObject
+#' @param addSAseqNums should SAseqNum be included? Default value is TRUE
+#'
+#' @return data frame of Ids of all tables in sampling hierarchy
+#' 
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'
+#' myH1RawObject <-
+#'   createRDBESDataObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19_13")
+#'   
+#' myTableOfIds<- createTableOfRDBESIds(myH1RawObject)
+#' }
+
 createTableOfRDBESIds<-function(x, addSAseqNums=TRUE)
 {
 
@@ -8,7 +29,7 @@ createTableOfRDBESIds<-function(x, addSAseqNums=TRUE)
 # outputs a table with ids for matching 
 
 
-CStableNames<- getTablesInRDBESHierarchy(hierarchy = hierarchy,
+CStableNames<- getTablesInRDBESHierarchy(hierarchy,
                                       includeOptTables = FALSE,
                                       includeLowHierTables = TRUE,
                                       includeTablesNotInSampHier = FALSE)
