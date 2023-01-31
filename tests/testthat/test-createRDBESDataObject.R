@@ -1,4 +1,4 @@
-capture.output({  ## suppresses printing of console output when running test()
+#capture.output({  ## suppresses printing of console output when running test()
 
 test_that("createRDBESDataObject can create an empty object without errors
           or warnings",  {
@@ -70,8 +70,69 @@ test_that("createRDBESDataObject creates an object with the correct data types",
 
   numberOfDifferences <- nrow(myDiffs)
   expect_equal(numberOfDifferences,0)
+})
+test_that("createRDBESDataObject creates an H1 object with keys on the data tables",  {
 
+  myPath <- "./h1_v_1_19_13"
+
+  myRDBESDataObject <- createRDBESDataObject(rdbesExtractPath = myPath)
+
+  # Not all of the RDBES table types are in the sample data
+  expectedNumberOfTablesWithKeys <- 13
+  actualNumberOfTablesWithKeys <- 0
+
+  for(aTable in names(myRDBESDataObject)){
+    if ('data.table' %in% class(myRDBESDataObject[[aTable]])){
+      if (!is.null(key(myRDBESDataObject[[aTable]]))){
+        actualNumberOfTablesWithKeys <- actualNumberOfTablesWithKeys + 1
+      }
+    }
+  }
+
+  expect_equal(expectedNumberOfTablesWithKeys,actualNumberOfTablesWithKeys)
+
+})
+test_that("createRDBESDataObject creates an H5 object with keys on the data tables",  {
+
+  myPath <- "./h5_v_1_19_13"
+
+  myRDBESDataObject <- createRDBESDataObject(rdbesExtractPath = myPath)
+
+  # Not all of the RDBES table types are in the sample data
+  expectedNumberOfTablesWithKeys <- 13
+  actualNumberOfTablesWithKeys <- 0
+
+  for(aTable in names(myRDBESDataObject)){
+    if ('data.table' %in% class(myRDBESDataObject[[aTable]])){
+      if (!is.null(key(myRDBESDataObject[[aTable]]))){
+        actualNumberOfTablesWithKeys <- actualNumberOfTablesWithKeys + 1
+      }
+    }
+  }
+
+  expect_equal(expectedNumberOfTablesWithKeys,actualNumberOfTablesWithKeys)
+
+})
+test_that("createRDBESDataObject creates an H7 object with keys on the data tables",  {
+
+  myPath <- "./h7_v_1_19_13"
+
+  myRDBESDataObject <- createRDBESDataObject(rdbesExtractPath = myPath)
+
+  # Not all of the RDBES table types are in the sample data
+  expectedNumberOfTablesWithKeys <- 12
+  actualNumberOfTablesWithKeys <- 0
+
+  for(aTable in names(myRDBESDataObject)){
+    if ('data.table' %in% class(myRDBESDataObject[[aTable]])){
+      if (!is.null(key(myRDBESDataObject[[aTable]]))){
+        actualNumberOfTablesWithKeys <- actualNumberOfTablesWithKeys + 1
+      }
+    }
+  }
+
+  expect_equal(expectedNumberOfTablesWithKeys,actualNumberOfTablesWithKeys)
 
 })
 
-}) ## end capture.output
+#}) ## end capture.output

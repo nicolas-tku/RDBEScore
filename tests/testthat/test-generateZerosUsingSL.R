@@ -16,11 +16,15 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 	myH1DataObject[["SL"]]$SLyear <- as.integer(myH1DataObject[["SL"]]$SLyear)
 	myH1DataObject[["SL"]]$SLcommTaxon <- as.integer(myH1DataObject[["SL"]]$SLcommTaxon)
 	myH1DataObject[["SL"]]$SLsppCode <- as.integer(myH1DataObject[["SL"]]$SLsppCode)
+	# ensure key is set on SL
+	setkey(myH1DataObject[["SL"]], SLid)
 
 	myH1DataObject[["SS"]]<-rbind(myH1DataObject[["SS"]][1,],myH1DataObject[["SS"]][1,])
 	myH1DataObject[["SS"]]$SScatchFra[2]<-"Dis"
 	myH1DataObject[["SS"]]$SSid[2]<-myH1DataObject[["SS"]]$SSid[1]+1
 	myH1DataObject[["SS"]]$SSid<-as.integer(myH1DataObject[["SS"]]$SSid)
+	# ensure key is set on SS
+	setkey(myH1DataObject[["SS"]], SSid)
 
 
 	myH1DataObject <- filterRDBESDataObject(myH1DataObject, c("SAid"), c(653280), killOrphans = TRUE)

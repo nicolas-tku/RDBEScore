@@ -29,13 +29,13 @@ generateZerosUsingSL <- function(x) {
 
 # create aux id_table
 	aux<-createTableOfRDBESIds(x = x, addSAseqNums=FALSE)
-	
+
 	tmpSA$SDctry<-x$SD$SDctry[match(aux$SDid[match(tmpSA$SAid,aux$SAid)], x$SD$SDid)]
 	tmpSA$SDinst <- x$SD$SDinst[match(aux$SDid[match(tmpSA$SAid,aux$SAid)], x$SD$SDid)]
 	tmpSA$SSspecListName <- x$SS$SSspecListName[match(aux$SSid[match(tmpSA$SAid,aux$SAid)], x$SS$SSid)]
 	tmpSA$DEyear <- x$DE$DEyear[match(aux$DEid[match(tmpSA$SAid,aux$SAid)], x$DE$DEid)]
-	tmpSA$SScatchFra <- x$SS$SScatchFra[match(aux$SSid[match(tmpSA$SAid,aux$SAid)], x$SS$SSid)]	
-	
+	tmpSA$SScatchFra <- x$SS$SScatchFra[match(aux$SSid[match(tmpSA$SAid,aux$SAid)], x$SS$SSid)]
+
 	tmpSA[ ,tmpKey := paste(SDctry, SDinst, SSspecListName, DEyear, SScatchFra, SAspeCode)]
 
 colsToDelete<-c("SDctry", "SDinst","SSspecListName","DEyear","SScatchFra")
@@ -79,5 +79,7 @@ colsToDelete<-c("SDctry", "SDinst","SSspecListName","DEyear","SScatchFra")
 	x
   })
   x[["SA"]] <- data.table::setDT(do.call("rbind", ls2))
+  # Ensure key is set on SA
+  setkey(x[["SA"]],SAid)
   x
 }

@@ -214,6 +214,8 @@ test_that("createRDBESEstObject creates the correct number of rows when there is
 
   myRawObject["BV"] <- list(NULL)
   myRawObject[["SA"]]<-rbind(myRawObject[["SA"]],newSARows,newSARows2)
+  # Need to re-set the key afer the rbind
+  data.table::setkey(myRawObject[["SA"]],SAid)
 
   myRawObject[["FM"]][myRawObject[["FM"]]$SAid == 644939,"SAid"] <- 644941
 
@@ -257,12 +259,16 @@ test_that("createRDBESEstObject creates the correct number of rows when there is
 
   myRawObject["BV"] <- list(NULL)
   myRawObject[["SA"]]<-rbind(myRawObject[["SA"]],newSARows,newSARows2)
+  # Need to re-set the key afer the rbind
+  data.table::setkey(myRawObject[["SA"]],SAid)
 
   newFM <- data.table::copy(myRawObject[["FM"]])
   newFM[newFM$SAid == 644939,"SAid"] <- 644941
   newFM$FMid <- newFM$FMid + 50
 
   myRawObject[["FM"]]<- rbind(myRawObject[["FM"]],newFM)
+  # Need to re-set the key afer the rbind
+  data.table::setkey(myRawObject[["FM"]],FMid)
 
   myEstObject <- createRDBESEstObject(myRawObject, hierarchyToUse = 1)
   expect_equal(nrow(myEstObject),20)

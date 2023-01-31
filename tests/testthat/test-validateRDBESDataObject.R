@@ -136,4 +136,14 @@ test_that("validateRDBESDataObject prints empty table note",  {
 
 })
 
+test_that("validateRDBESDataObject produces error if keys aren't set on a data table",  {
+
+  myObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
+  # Remove the key from DE
+  data.table::setkey(myObject[['DE']],NULL)
+  expect_error(validateRDBESDataObject(objectToCheck = myObject,
+                                        verbose = TRUE), regexp = "DE does not have a key set")
+})
+
+
 }) ## end capture.output

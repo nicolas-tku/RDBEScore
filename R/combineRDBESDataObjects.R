@@ -39,11 +39,16 @@ combineRDBESDataObjects <- function(RDBESDataObject1, RDBESDataObject2) {
         ),
         use.names = T, fill = T
         )
+      # Need to re-set the key because rbindlist loses it...
+      data.table::setkeyv(myRDBESDataObject[[myTable]],paste0(myTable,"id"))
+
 
       # De-duplicate the resulting SL,VD, CL, and CE tables
       if (myTable %in% c('VD','SL','CL','CE')){
-        myRDBESDataObject[[myTable]] <-
-          dplyr::distinct(myRDBESDataObject[[myTable]], .keep_all = TRUE)
+        # Note - uniqueness will be based only on the data table key
+        myRDBESDataObject[[myTable]] <- unique(myRDBESDataObject[[myTable]])
+        #myRDBESDataObject[[myTable]] <-
+        #  dplyr::distinct(myRDBESDataObject[[myTable]], .keep_all = TRUE)
       }
 
     }

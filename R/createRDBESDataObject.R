@@ -6,7 +6,7 @@
 #' @param rdbesExtractPath (Optional) The path to the csv files produced as an
 #' extract by the ICES RDBES.  If no path is suppled then an empty
 #' RDBESDataObject will be returned.
-#' @param listOfFileNames (Optional) A names list of file names - the list names
+#' @param listOfFileNames (Optional) A named list of file names - the list names
 #' shoudl be the two-letter code for the relevent table e.g.
 #' list("DE" = "DE.csv",... ).  If the parameter is not supplied then the
 #' default file names used by the RDBES data download will be used e.g.
@@ -93,8 +93,8 @@ createRDBESDataObject <- function(rdbesExtractPath = NA,
           )
 
         # Change each entry to a data table
-        myList[[myFile]] <-
-          data.table::setDT(myList[[myFile]])
+        #myList[[myFile]] <-
+        data.table::setDT(myList[[myFile]])
 
         # Change database field names to R names where we can
         #myNames <- RDBEScore::mapColNamesFieldR[
@@ -145,7 +145,13 @@ createRDBESDataObject <- function(rdbesExtractPath = NA,
   if (castToCorrectDataTypes){
     # Ensure all the columns are the correct data type
     myRDBESDataObject <- setRDBESDataObjectDataTypes(myRDBESDataObject)
+  }
 
+  # Set a key on any data tables in myList - use the XXid column as the key
+  for(aTable in names(myRDBESDataObject)){
+    if ('data.table' %in% class(myRDBESDataObject[[aTable]])){
+      data.table::setkeyv(myRDBESDataObject[[aTable]],paste0(aTable,"id"))
+    }
   }
 
   # Return the object

@@ -98,12 +98,10 @@ validateRDBESDataObject <- function(objectToCheck,
         }
       }
 
-      if (any(emptyTables)){
-        if (verbose){
+      if (any(emptyTables) && verbose){
           print(paste("Note that ",names(emptyTables[emptyTables])
                       ," has 0 rows but this is allowed in an RDBESDataObject"
                       , sep = ""))
-        }
       }
 
       # Just check non-NULL entries
@@ -113,11 +111,30 @@ validateRDBESDataObject <- function(objectToCheck,
       if (length(nonNullEntries) > 0) { #3
         #TODO: implement content, type checks using stop and fix this mess
 
+        warningText <- ""
+        validRDBESDataObject <- TRUE
+
+        # Check that keys are set on the data tables
+        for(aTable in names(nonNullEntries)){
+          #if ('data.table' %in% class(nonNullEntries[[aTable]])){
+            if (is.null(key(nonNullEntries[[aTable]]))){
+              validRDBESDataObject <- FALSE
+              warningText <- paste0(warningText, aTable, " does not have a key set. ")
+            }
+          #}
+        }
+
         # Call a function to check whether the required field names
         # are present and that there aren't duplicates
         myReturnValue <- validateRDBESDataObjectContent(nonNullEntries)
-        warningText <- myReturnValue[["warningText"]]
-        validRDBESDataObject <- myReturnValue[["validRDBESDataObject"]]
+        #warningText <- myReturnValue[["warningText"]]
+        if (!is.na(myReturnValue[["warningText"]])){
+          warningText <- paste0(warningText,myReturnValue[["warningText"]],". ")
+        }
+        if (!myReturnValue[["validRDBESDataObject"]]) {
+          validRDBESDataObject <- FALSE
+        }
+        #validRDBESDataObject <- myReturnValue[["validRDBESDataObject"]]
 
         # If we also want to check the data types of the columns
         # then go ahead and call the function to do that
@@ -126,11 +143,13 @@ validateRDBESDataObject <- function(objectToCheck,
           numberOfDifferences <- nrow(myDiffs)
           if (numberOfDifferences >0 ){
             validRDBESDataObject <- FALSE
-            if(is.na(warningText)){
-              warningText <- ""
-            } else {
-              warningText <- paste0(warningText,". ")
-            }
+            #if(warningText != ""){
+            #  warningText <- paste0(warningText,". ")
+            #}
+            #  warningText <- ""
+            #} else {
+            #  warningText <- paste0(warningText,". ")
+            #}
             warningText <- paste0(warningText,
               "objectToCheck has the following fields ",
               "with incorrect data types: ",
