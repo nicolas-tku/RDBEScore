@@ -4,9 +4,10 @@
 #' create an estimation object
 #' @param hierarchyToUse The upper RDBES hiearchy to use
 #' @param stopTable PLEASE DOCUMENT THIS
-#' @param verbose PLEASE DOCUMENT THIS
+#' @param verbose (Optional) Set to TRUE if you want informative text printed
+#' out, or FALSE if you don't.  The default is FALSE.
 #'
-#' @return An object of class RDBESEstObject ready for us in design based
+#' @return An object of class RDBESEstObject ready for use in design based
 #' estimation
 #' @export
 #'
@@ -225,7 +226,9 @@ createRDBESEstObject <- function(rdbesPrepObject,
       if (j == numberOfSampleLevels) {
         tempRDBESEstObj <- dplyr::left_join(tempUpper,
           tempLower,
-          by = saJoinField
+          by = saJoinField,
+          multiple = "all"
+
         )
       } else {
 
@@ -259,7 +262,8 @@ createRDBESEstObject <- function(rdbesPrepObject,
         # currnt SA level so that we just get the matching rows
         tempRDBESEstObj <- dplyr::inner_join(tempUpper,
           tempLower,
-          by = saJoinField
+          by = saJoinField,
+          multiple = "all"
         )
       }
       if (verbose) {
@@ -368,7 +372,8 @@ procRDBESEstObjLowHier <- function(rdbesPrepObject,
     fMBV <-
       dplyr::left_join(rdbesPrepObject[["FM"]],
         rdbesPrepObject[["BV"]],
-        by = "FMid"
+        by = "FMid",
+        multiple = "all"
       )
     # sort out the wrong SAid column name after the join
     names(fMBV)[names(fMBV) == "SAid.x"] <- "SAid"
@@ -406,7 +411,8 @@ procRDBESEstObjLowHier <- function(rdbesPrepObject,
     # if we have both FM and BV data - join them together
     bVFM <- dplyr::right_join(rdbesPrepObject[["FM"]],
       rdbesPrepObject[["BV"]],
-      by = "FMid"
+      by = "FMid",
+      multiple = "all"
     )
     # sort out the wrong SAid column name after the join
     names(bVFM)[names(bVFM) == "SAid.y"] <- "SAid"
@@ -428,8 +434,8 @@ procRDBESEstObjLowHier <- function(rdbesPrepObject,
 
   # If we have data join our lowerX with the fmBV or BVFm data
   if (!is.null(nrow(fMBV))){
-    lowerA <- dplyr::left_join(lowerA, fMBV, by = "SAid")
-    lowerB <- dplyr::left_join(lowerB, fMBV, by = "SAid")
+    lowerA <- dplyr::left_join(lowerA, fMBV, by = "SAid", multiple = "all")
+    lowerB <- dplyr::left_join(lowerB, fMBV, by = "SAid", multiple = "all")
     #lowerD <- dplyr::left_join(lowerD, fMBV, by = "SAid")
     lowerD <- NULL
     allLower <- rbind(allLower,lowerA, lowerB, lowerD)
@@ -437,7 +443,7 @@ procRDBESEstObjLowHier <- function(rdbesPrepObject,
 
   if (!is.null(nrow(bVFM))){
     # Note the difference in lowerC
-    lowerC <- dplyr::left_join(lowerC, bVFM, by = "SAid")
+    lowerC <- dplyr::left_join(lowerC, bVFM, by = "SAid", multiple = "all")
     allLower <- rbind(allLower,lowerC)
   }
 
@@ -549,6 +555,7 @@ procRDBESEstObjUppHier <- function(myRDBESEstObj = NULL,
         dplyr::left_join(myRDBESEstObj,
           rdbesPrepObject[[thisTable]],
           by = joinField
+          , multiple = "all"
         )
     }
 
