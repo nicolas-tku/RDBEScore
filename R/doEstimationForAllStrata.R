@@ -33,12 +33,7 @@ doEstimationForAllStrata <- function(RDBESEstObjectForEstim,
 
 
   # Check we have a valid RDBESEstObject before doing anything else
-  if (!validateRDBESEstObject(RDBESEstObjectForEstim, verbose = verbose)) {
-    stop(paste0(
-      "RDBESEstObjectForEstim is not valid ",
-      "- doEstimationForAllStrataWithEstObject will not proceed"
-    ))
-  }
+  validateRDBESEstObject(RDBESEstObjectForEstim, verbose = verbose)
 
   # Stop if we have any clustering - not developed yet
   clustFields <-
