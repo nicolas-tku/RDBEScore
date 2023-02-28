@@ -19,9 +19,11 @@
 #' myH1RawObject[["SA"]]$SAsampWtLive <-
 #'   round(runif(n = nrow(myH1RawObject[["SA"]]), min = 1, max = 100))
 #'
+#' myH1EstObj <- createRDBESEstObject(myH1RawObject, 1)
+#'
 #' myStrataEst <- doEstimationForAllStrata(
-#'   RDBESDataObjectForEstim = myH1RawObject,
-#'   hierarchyToUse = 1
+#'   RDBESDataObjectForEstim = myH1EstObj,
+#'   targetValue = 'SAsampWtLive'
 #' )
 #' }
 doEstimationForAllStrata <- function(RDBESEstObjectForEstim,
@@ -30,7 +32,7 @@ doEstimationForAllStrata <- function(RDBESEstObjectForEstim,
 
 
 
-  # Check we have a valid RDBESDataObject before doing anything else
+  # Check we have a valid RDBESEstObject before doing anything else
   if (!validateRDBESEstObject(RDBESEstObjectForEstim, verbose = verbose)) {
     stop(paste0(
       "RDBESEstObjectForEstim is not valid ",
@@ -60,7 +62,7 @@ doEstimationForAllStrata <- function(RDBESEstObjectForEstim,
       grep("^su.table$", names(RDBESEstObjectForEstim))
     ]
   tablesToCheck <- c("DE", "SD")
-  # I'm sure there's a better way to do this...
+  # TODO I'm sure there's a better way to do this...
   for (myLevel in suLevels){
     myValues <- RDBESEstObjectForEstim[, ..myLevel]
     myValues <- na.omit(myValues)
@@ -70,10 +72,6 @@ doEstimationForAllStrata <- function(RDBESEstObjectForEstim,
   tablesToCheck <- na.omit(tablesToCheck)
   tablesToCheck <- unique(tablesToCheck)
 
-  #tablesToCheck <- unique(RDBESEstObjectForEstim[, ..suLevels])
-  #(RDBESEstObjectForEstim[, ..suLevels])
-  #tablesToCheck <- c(t(tablesToCheck))
-  #tablesToCheck <- c("DE", "SD", tablesToCheck)
   suLevels <- gsub("table", "", suLevels)
 
   # Loop through our tables, starting at the right and working to left
