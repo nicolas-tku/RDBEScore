@@ -34,7 +34,7 @@ validateRDBESDataObject <- function(objectToCheck,
                                 checkDataTypes = FALSE,
                                 verbose = FALSE) {
   #allowedNamesInList <- unique(RDBEScore::mapColNamesFieldR$Table.Prefix)
-  allowedNamesInList <- unique(mapColNamesFieldR$Table.Prefix)
+  allowedNamesInList <- unique(RDBEScore::mapColNamesFieldR$Table.Prefix)
 
   # CHECK 1 Have we just been passed NA?
   if (length(is.na(objectToCheck)) == 1) {

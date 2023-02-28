@@ -97,10 +97,8 @@ createRDBESDataObject <- function(rdbesExtractPath = NA,
         data.table::setDT(myList[[myFile]])
 
         # Change database field names to R names where we can
-        #myNames <- RDBEScore::mapColNamesFieldR[
-        #  RDBEScore::mapColNamesFieldR$Table.Prefix == myFile, ]
-        myNames <- mapColNamesFieldR[
-                      mapColNamesFieldR$Table.Prefix == myFile, ]
+        myNames <- RDBEScore::mapColNamesFieldR[
+          RDBEScore::mapColNamesFieldR$Table.Prefix == myFile, ]
         myNameMatches <- match(
           trimws(tolower(names(myList[[myFile]]))),
           trimws(tolower(myNames$Field.Name))
