@@ -10,20 +10,20 @@
 		target_var<-"enroll"
 
 	# name your project (will be used in filenames for CS, SL and VD)
-		project_name_outputs <- "WGRDBES-EST_TEST_Pckg_survey_data_apistrat_H1"
+		project_name_outputs <- "WGRDBES-EST_TEST1_Pckg_survey_data_apistrat_H1"
 
 
 	# select a year for upload
 		DEyear<-1965
 		SDinstitution <- 4484
-		DEsamplingScheme<-"SWE_CommEMAtSea_RouCF"
-		baseDir <- "./data-raw/exampleData/textBooks/"
-		VD_base <- readRDS(paste0(baseDir,"VD_base.rds"))
-		SL_base <- readRDS(paste0(baseDir,"SL_base.rds"))
+		DEsamplingScheme<-"WGRDBES-EST TEST 1"
+		baseDir <- "./data-raw/exampleData/TextBookExamples/"
+		baseDir <- ""
+		VD_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/VD_base.rds"))
+		SL_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/SL_base.rds"))
 
 		#nameof the directory where the outputs are saved currently
-		base_dir_outputs <- baseDir
-
+		base_dir_outputs <- paste0(baseDir,"BuiltUploads")
 
 #========Outline of Hierarchy 1================
 	# Design
@@ -67,11 +67,11 @@ DE_df<-data.frame(
 		  DEsamplingScheme = DEsamplingScheme,
 		  DEsamplingSchemeType = "NatRouCF",
 		  DEyear = as.integer(DEyear),
-		  DEstratumName = "U",
+		  DEstratumName = project_name_outputs,
 		  DEhierarchyCorrect = "Y",
 		  DEhierarchy = 1,
 		  DEsampled = "Y",
-		  DEreasonNotSampled = ""
+		  DEreasonNotSampled = "",
 		  DEnonResponseCollected = "Y",
 		  DEauxiliaryVariableTotal = "",
 		  DEauxiliaryVariableValue = "",
@@ -346,19 +346,6 @@ FT_df <- data.frame(
 # 62                                      FOauxiliaryVariableValue [DV,O] - DecimalPrec3
 # 63                              FOauxiliaryVariableName [DV,O] - AuxiliaryVariableName
 # 64                                              FOauxiliaryVariableUnit [DV,O] - MUNIT
-
-
-# programme specific view: trip/landing event [size reduction]
-	FO_base<-FD2extract[['STATION']]
-
-	# read in Katja's output and get FOmetier6
-		aux<-read.csv(paste0("inputs_CS/dataCall2022/RDBES_metiers_from_Katja/fd2_metier_results_all_columns_CommAtSea_Hlab_2021_2022-09-22.csv"))
-		if(all(tapply(aux$metier_level_6_new, aux$haul_id, function(x) length(unique(x)))==1))
-			{
-			FO_base$FOmetier5<-as.character(aux$metier_level_5_new[match(FO_base$STA_ID, aux$haul_id)])
-			FO_base$FOmetier6<-as.character(aux$metier_level_6_new[match(FO_base$STA_ID, aux$haul_id)])
-			} else stop("check metier unicity")
-			if(	any(FO_base$FOmetier6 %in% codeLists[["Metier6_FishingActivity"]]$Key==FALSE)) stop ("metiers not in list Key")
 
 
 FO_df <- data.frame(
@@ -680,7 +667,7 @@ RDBESlist[[i]][which(grepl(colnames(RDBESlist[[i]]),pat="[A-Z]id"))]<-NULL
 
 #===Save============
 
-	dir_outputs<-paste0(base_dir_outputs,
+	dir_outputs<-paste0(base_dir_outputs,"/",
 	                    project_name_outputs,"/")
   dir.create(dir_outputs, recursive=T, showWarnings=FALSE)
 	filename_output_CS <- paste0(project_name_outputs,"_H1.csv")
@@ -725,6 +712,6 @@ write.table(b$V1, file=paste0(dir_outputs,filename_output_CS), col.names=FALSE, 
 
 
 # saves VD output
-
+	VD_base$VDyear<-DEyear
 	write.table(VD_base, file=paste0(dir_outputs,filename_output_VD), col.names=FALSE, row.names = FALSE, quote=FALSE,sep=",")
 
