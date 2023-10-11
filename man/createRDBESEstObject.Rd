@@ -19,10 +19,11 @@ create an estimation object}
 
 \item{stopTable}{PLEASE DOCUMENT THIS}
 
-\item{verbose}{PLEASE DOCUMENT THIS}
+\item{verbose}{(Optional) Set to TRUE if you want informative text printed
+out, or FALSE if you don't.  The default is FALSE.}
 }
 \value{
-An object of class RDBESEstObject ready for us in design based
+An object of class RDBESEstObject ready for use in design based
 estimation
 }
 \description{
