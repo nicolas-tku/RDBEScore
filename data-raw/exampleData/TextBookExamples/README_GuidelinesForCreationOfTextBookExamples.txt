@@ -24,3 +24,7 @@ e.g., BuiltUploads/WGRDBES-EST_TEST1_Pckg_survey_data_apistrat_H1
 i.e., inside directory DownloadsFromRDBES/project_name
 e.g., DownloadsFromRDBES/WGRDBES-EST_TEST1_Pckg_survey_data_apistrat_H1
 
+# =====================
+# don't forget!!
+# =====================
+add the details of the dataset to List_BookExamples.txt
