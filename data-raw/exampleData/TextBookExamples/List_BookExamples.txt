@@ -1,0 +1,12 @@
+# =============
+Script: BuildTextBookDataUpload_Pckg_survey_api_H1.R
+Package: survey
+Dataset: api
+As RDBES hierarchy: H1
+Reference:
+Where
+DEyear = 1965
+DEsamplingScheme = "WGRDBES-EST TEST 1"
+DEstratumName = "WGRDBES-EST_TEST1_Pckg_survey_data_apistrat_H1"
+SDcountry = "ZW"
+# =============
