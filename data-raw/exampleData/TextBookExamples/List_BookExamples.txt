@@ -10,3 +10,42 @@ DEsamplingScheme = "WGRDBES-EST TEST 1"
 DEstratumName = "WGRDBES-EST_TEST1_Pckg_survey_data_apistrat_H1"
 SDcountry = "ZW"
 # =============
+
+# =============
+Script: BuildTextBookDataUpload_Pckg_SDAResources_agsrs_H1.R
+Package: survey
+Dataset: agsrs
+As RDBES hierarchy: H1
+Reference: Lu, Y., & Lohr, S.L. (2021). R Companion for Sampling: Design and Analysis, Third Edition (1st ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9781003228196
+Where: Page 18 Section 2.2
+DEyear = 1965
+DEsamplingScheme = "WGRDBES-EST TEST 1"
+DEstratumName = "WGRDBES-EST_TEST1_Pckg_SDAResources_agsrs_H1"
+SDcountry = "ZW"
+# =============
+
+# =============
+Script: BuildTextBookDataUpload_Pckg_SDAResources_agstrat_H1.R
+Package: survey
+Dataset: agstrat
+As RDBES hierarchy: H1
+Reference: Lu, Y., & Lohr, S.L. (2021). R Companion for Sampling: Design and Analysis, Third Edition (1st ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9781003228196
+Where: Page 32 Section 3.3
+DEyear = 1965
+DEsamplingScheme = "WGRDBES-EST TEST 1"
+DEstratumName = "WGRDBES-EST_TEST1_Pckg_SDAResources_agstrat_H1"
+SDcountry = "ZW"
+# =============
+
+# =============
+Script: BuildTextBookDataUpload_Pckg_SDAResources_agstrat_H1.R
+Package: survey
+Dataset: agstrat
+As RDBES hierarchy: H1
+Reference:
+Where
+DEyear = 1965
+DEsamplingScheme = "WGRDBES-EST TEST 1"
+DEstratumName = "WGRDBES-EST_TEST1_Pckg_SDAResources_agstrat_H1"
+SDcountry = "ZW"
+# =============
