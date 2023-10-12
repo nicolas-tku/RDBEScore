@@ -16,12 +16,12 @@
 		DEyear<-1969
 		SDinstitution <- 4484
 		DEsamplingScheme<-"SWE_CommEMAtSea_RouCF"
-		baseDir <- "./data-raw/exampleData/BuildTextBookExamples/"
-		VD_base <- readRDS(paste0(baseDir,"VD_base.rds"))
-		SL_base <- readRDS(paste0(baseDir,"SL_base.rds"))
+		baseDir <- "./data-raw/exampleData/TextBookExamples/"
+		VD_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/VD_base.rds"))
+		SL_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/SL_base.rds"))
 
 		#nameof the directory where the outputs are saved currently
-		base_dir_outputs <- baseDir
+		base_dir_outputs <- paste0(baseDir,"/BuiltUploads/")
 
 
 #=========Outline of Hierarchy 1===============

@@ -20,13 +20,13 @@
 		DEyear<-1968
 		SDinstitution <- 4484
 		DEsamplingScheme<-"National Routine"
-		#baseDir <- "./data-raw/exampleData/textBooks/"
-		baseDir <- "BuildTextBookExamples/"
-		VD_base <- readRDS(paste0(baseDir,"VD_base.rds"))
-		SL_base <- readRDS(paste0(baseDir,"SL_base.rds"))
+		baseDir <- "./data-raw/exampleData/TextBookExamples/"
+		VD_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/VD_base.rds"))
+		SL_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/SL_base.rds"))
 
 		#nameof the directory where the outputs are saved currently
-		base_dir_outputs <- baseDir
+		base_dir_outputs <- paste0(baseDir,"/BuiltUploads/")
+
 		dir_outputs<-paste0(base_dir_outputs,
 	                    project_name_outputs,"/")
 		dir.create(dir_outputs, recursive=T, showWarnings=FALSE)
@@ -140,7 +140,7 @@ SD_df<-data.frame(
 	test<-sum(duplicated(VS_base$VSencryptedVesselCode))==0
 	if(!test) stop( "duplicated VSencryptedVesselCode")
 
-	
+
 
 VS_df <- data.frame(
   VSid = 1:nrow(VS_base),
@@ -667,10 +667,10 @@ write.table(b$V1, file=paste0(dir_outputs,filename_output_CS), col.names=FALSE, 
 # -----Clean SL after dowload-----------------
 
 # cleans excess of SL rows frequently present in download
-	# note: 
+	# note:
 		# since it is an example - nicer to do here, fixing directly data input to scripts than patching it over multiple scripts later
 		# since example data are very simple, a simple select is done on specieaListName - this may not be sufficient in some minor cases
-		
+
 filename_download <- "2022_10_14_090838.zip"
 unzip(paste0(dir_outputs, filename_download), exdir = paste0(dir_outputs,"tmp"))
 # reads file to be fixed, fixes it and saves it back overwriting

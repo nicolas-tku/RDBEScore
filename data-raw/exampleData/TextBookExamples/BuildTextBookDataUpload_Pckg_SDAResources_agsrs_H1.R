@@ -1,13 +1,13 @@
 #======Prepares textbook data agsrs as H1 upload file===========
 
 # Info:
-# Table VS and SA contain the core information of \code{data(agsrs)} used in Lohr examples 3.2 and 3.6. 
+# Table VS and SA contain the core information of \code{data(agsrs)} used in Lohr examples 3.2 and 3.6.
 # VSnumberSampled and VSnumberTotal set according to \code{agsrs} and book pop values
 # VSunitName is set to a combination of original \code{agsrs$county}, \code{agsrs$state}, \code{agsrs$region} and row numbers
 # Table SA contains the variable measured agsrs$acres92 in \code{SAtotalWeightMeasured}, \code{SAsampleWeightMeasured} and \code{SAconversionFactorMeasLive} set to 1.
-# Table DE, SD, FT and FO are for the most dummy tables inserted to meet RDBES model requirements to be aggregated 
-# during estimation tests. 
-# Values of mandatory fields have dummy values with exception of Design-Variables in VS that match the book  
+# Table DE, SD, FT and FO are for the most dummy tables inserted to meet RDBES model requirements to be aggregated
+# during estimation tests.
+# Values of mandatory fields have dummy values with exception of Design-Variables in VS that match the book
 # BV, FM, CL, and CE are not provided.
 # SL and VD are subset to the essential rows
 
@@ -28,13 +28,12 @@
 		DEyear<-1968
 		SDinstitution <- 4484
 		DEsamplingScheme<-"National Routine"
-		baseDir <- "./data-raw/exampleData/textBooks/"
-		baseDir <- "BuildTextBookExamples/"
-		VD_base <- readRDS(paste0(baseDir,"VD_base.rds"))
-		SL_base <- readRDS(paste0(baseDir,"SL_base.rds"))
+		baseDir <- "./data-raw/exampleData/TextBookExamples/"
+		VD_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/VD_base.rds"))
+		SL_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/SL_base.rds"))
 
 		#nameof the directory where the outputs are saved currently
-		base_dir_outputs <- baseDir
+		base_dir_outputs <- paste0(baseDir,"/BuiltUploads/")
 		dir_outputs<-paste0(base_dir_outputs,
 	                    project_name_outputs,"/")
 		dir.create(dir_outputs, recursive=T, showWarnings=FALSE)
@@ -661,10 +660,10 @@ write.table(b$V1, file=paste0(dir_outputs,filename_output_CS), col.names=FALSE, 
 # -----Clean SL after dowload-----------------
 
 # cleans excess of SL rows frequently present in download
-	# note: 
+	# note:
 		# since it is an example - nicer to do here, fixing directly data input to scripts than patching it over multiple scripts later
 		# since example data are very simple, a simple select is done on specieaListName - this may not be sufficient in some minor cases
-		
+
 filename_download <- "2022_10_14_062441.zip"
 unzip(paste0(dir_outputs, filename_download), exdir = paste0(dir_outputs,"tmp"))
 # reads file to be fixed, fixes it and saves it back overwriting

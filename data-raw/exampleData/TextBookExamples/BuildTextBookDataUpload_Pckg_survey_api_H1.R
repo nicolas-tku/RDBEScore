@@ -18,12 +18,11 @@
 		SDinstitution <- 4484
 		DEsamplingScheme<-"WGRDBES-EST TEST 1"
 		baseDir <- "./data-raw/exampleData/TextBookExamples/"
-		baseDir <- ""
 		VD_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/VD_base.rds"))
 		SL_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/SL_base.rds"))
 
 		#nameof the directory where the outputs are saved currently
-		base_dir_outputs <- paste0(baseDir,"BuiltUploads")
+		base_dir_outputs <- paste0(baseDir,"/BuiltUploads/")
 
 #========Outline of Hierarchy 1================
 	# Design
@@ -76,7 +75,7 @@ DE_df<-data.frame(
 		  DEauxiliaryVariableTotal = "",
 		  DEauxiliaryVariableValue = "",
 		  DEauxiliaryVariableName = "",
-		  DEauxiliaryVariableUnit = "", 
+		  DEauxiliaryVariableUnit = "",
 		  stringsAsFactors=FALSE
 			)
 
@@ -174,12 +173,12 @@ VS_df <- data.frame(
   VSselectionProbCluster = "",
   VSinclusionProbCluster = "",
   VSsampled = "Y",#M
-  VSreasonNotSampled = "", 
+  VSreasonNotSampled = "",
   VSnonResponseCollected = "N",
   VSauxiliaryVariableTotal = "",
   VSauxiliaryVariableValue = "",
   VSauxiliaryVariableName = "",
-  VSauxiliaryVariableUnit = "", 
+  VSauxiliaryVariableUnit = "",
   stringsAsFactors=FALSE
   )
 
@@ -274,7 +273,7 @@ FT_df <- data.frame(
   FTauxiliaryVariableTotal = "",
   FTauxiliaryVariableValue = "",
   FTauxiliaryVariableName = "",
-  FTauxiliaryVariableUnit = "", 
+  FTauxiliaryVariableUnit = "",
   stringsAsFactors=FALSE
 )
 
@@ -412,7 +411,7 @@ FO_df <- data.frame(
 	FOauxiliaryVariableTotal = "",
 	FOauxiliaryVariableValue = "",
 	FOauxiliaryVariableName = "",
-	FOauxiliaryVariableUnit = "", 
+	FOauxiliaryVariableUnit = "",
 stringsAsFactors=FALSE
 )
 
@@ -498,8 +497,8 @@ SS_df<-data.frame(
 	SSauxiliaryVariableTotal = "",
 	SSauxiliaryVariableValue = "",
 	SSauxiliaryVariableName = "",
-	SSauxiliaryVariableUnit = "", 
-	stringsAsFactors=FALSE	
+	SSauxiliaryVariableUnit = "",
+	stringsAsFactors=FALSE
 )
 
 #====SA===========
@@ -613,7 +612,7 @@ SA_df<-data.frame(
 		SAauxiliaryVariableTotal = "",
 		SAauxiliaryVariableValue = "",
 		SAauxiliaryVariableName = "",
-		SAauxiliaryVariableUnit = "", 
+		SAauxiliaryVariableUnit = "",
 		stringsAsFactors=FALSE
 )
 
