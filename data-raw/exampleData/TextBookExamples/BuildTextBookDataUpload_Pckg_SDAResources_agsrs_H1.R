@@ -28,12 +28,9 @@
 		SDinstitution <- 4484
 		DEsamplingScheme<-"WGRDBES-EST TEST 1"
 		DEstratumName <- "Pckg_SDAResources_agsrs_H1"
-		DEsamplingScheme<-"National Routine"
     project_name_outputs <- gsub(" ","_", paste0(DEsamplingScheme,"_", DEstratumName))
 		baseDir <- "./data-raw/exampleData/TextBookExamples/"
 		baseDir <- ""
-		baseDir <- "./data-raw/exampleData/TextBookExamples/"
-
 		VD_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/VD_base.rds"))
 		SL_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/SL_base.rds"))
 
