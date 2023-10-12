@@ -17,12 +17,13 @@
 		DEyear<-1965
 		SDinstitution <- 4484
 		DEsamplingScheme<-"WGRDBES-EST TEST 1"
-		baseDir <- "./data-raw/exampleData/TextBookExamples/"
+		baseDir <- "./data-raw/exampleData/TextBookExamples"
 		VD_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/VD_base.rds"))
 		SL_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/SL_base.rds"))
 
 		#nameof the directory where the outputs are saved currently
 		base_dir_outputs <- paste0(baseDir,"/BuiltUploads/")
+		dir.create(base_dir_outputs, recursive=T, showWarnings=FALSE)
 
 #========Outline of Hierarchy 1================
 	# Design
