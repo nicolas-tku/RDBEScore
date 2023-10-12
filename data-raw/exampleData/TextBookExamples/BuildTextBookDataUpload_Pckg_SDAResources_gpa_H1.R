@@ -1,15 +1,6 @@
-#======Prepares textbook data agstrat as H1 upload file===========
+#======Prepares textbook data SDAResources::gpa as H1 upload file===========
 
 # Info:
-# Table VS and SA contain the core information of \code{data(agstrat)} used in Lohr examples 3.2 and 3.6. 
-# Table VS is stratified with VSstratumName set to \code{agstrat$region}, and VSnumberSampled and VSnumberTotal set according to \code{agstrat}
-# VSunitName is set to a combination of original \code{agstrat$county}, \code{agstrat$state}, \code{agstrat$region} and \code{agstrat$agstrat} row numbers
-# Table SA contains the variable measured agstrat$acres92 in \code{SAtotalWeightMeasured}, \code{SAsampleWeightMeasured} and \code{SAconversionFactorMeasLive} set to 1.
-# Table DE, SD, FT and FO are for the most dummy tables inserted to meet RDBES model requirements to be aggregated 
-# during estimation tests. Values of mandatory fields have dummy values taken from an onboard programme, with exception 
-# of  *\code{selectionMethod} - that is set to CENSUS - they should be ignored during estimation.  
-# BV, FM, CL, and CE are not provided.
-# SL and VD are subset to the essential rows
 
 
 	rm(list=ls())
@@ -22,26 +13,24 @@
 		target_var<-"gpa"
 
 	# name your project (will be used in filenames for CS, SL and VD)
-		project_name_outputs <- "Pckg_SDAResources_gpa_H1"
+		project_name_outputs <- "WGRDBES-EST_TEST_1_Pckg_SDAResources_gpa_H1"
 
 
 	# select a year for upload
-		DEyear<-1968
+		DEyear<-1965
 		SDinstitution <- 4484
-		DEsamplingScheme<-"National Routine"
-		#baseDir <- "./data-raw/exampleData/textBooks/"
-		baseDir <- "BuildTextBookExamples/"
-		VD_base <- readRDS(paste0(baseDir,"VD_base.rds"))
-		SL_base <- readRDS(paste0(baseDir,"SL_base.rds"))
+		DEsamplingScheme<-"WGRDBES-EST TEST 1"
+		DEstratumName <- "Pckg_SDAResources_agstrat_H1"
+    project_name_outputs <- gsub(" ","_", paste0(DEsamplingScheme,"_", DEstratumName))
+		baseDir <- "./data-raw/exampleData/TextBookExamples/"
+		baseDir <- ""
+		VD_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/VD_base.rds"))
+		SL_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/SL_base.rds"))
 
 		#nameof the directory where the outputs are saved currently
-		base_dir_outputs <- baseDir
-		dir_outputs<-paste0(base_dir_outputs,
-	                    project_name_outputs,"/")
-		dir.create(dir_outputs, recursive=T, showWarnings=FALSE)
-		filename_output_CS <- paste0(project_name_outputs,"_H1.csv")
-		filename_output_SL <- paste0(project_name_outputs,"_HSL.csv")
-		filename_output_VD <- paste0(project_name_outputs,"_HVD.csv")
+		base_dir_outputs <- paste0(baseDir,"BuiltUploads")
+		dir.create(base_dir_outputs, recursive=T, showWarnings=FALSE)
+
 
 #========Outline of Hierarchy 1================
 	# Design
@@ -70,6 +59,11 @@
 # 8             DEhierarchy [M] - RDBESUpperHierarchy
 # 9                    DEsampled [DV,M] - YesNoFields
 # 10 DEreasonNotSampled [DV,O] - ReasonForNotSampling
+# 11	  DEnonResponseCollected [DV,O] - YesNoFields
+# 12    DEauxiliaryVariableTotal [DV,O] - DecimalPrec3
+# 13    DEauxiliaryVariableValue [DV,O] - DecimalPrec3
+# 14 DEauxiliaryVariableName [DV,O] - AuxiliaryVariableName
+# 15 DEauxiliaryVariableUnit[DV,O]-MUNIT
 
 DE_df_base<-expand.grid(DEyear=DEyear,
 						DEstratumName="U",stringsAsFactors=F)
@@ -80,11 +74,17 @@ DE_df<-data.frame(
 		  DEsamplingScheme = DEsamplingScheme,
 		  DEsamplingSchemeType = "NatRouCF",
 		  DEyear = as.integer(DEyear),
-		  DEstratumName = "U",
+		  DEstratumName = DEstratumName,
 		  DEhierarchyCorrect = "Y",
 		  DEhierarchy = 1,
 		  DEsampled = "Y",
-		  DEreasonNotSampled = ""
+		  DEreasonNotSampled = "",
+		  DEnonResponseCollected = "Y",
+		  DEauxiliaryVariableTotal = "",
+		  DEauxiliaryVariableValue = "",
+		  DEauxiliaryVariableName = "",
+		  DEauxiliaryVariableUnit = "", 
+		  stringsAsFactors=FALSE
 			)
 
 #===SD============
@@ -135,6 +135,11 @@ SD_df<-data.frame(
 # 23 VSinclusionProbCluster [DV,O] - Decimal0.0000000000000001-1
 # 24                              VSsampled [DV,M] - YesNoFields
 # 25            VSreasonNotSampled [DV,O] - ReasonForNotSampling
+# 26          	     VSnonResponseCollected [DV,O] - YesNoFields
+# 27              VSauxiliaryVariableTotal [DV,O] - DecimalPrec3
+# 28              VSauxiliaryVariableValue [DV,O] - DecimalPrec3
+# 29      VSauxiliaryVariableName [DV,O] - AuxiliaryVariableName
+# 30                      VSauxiliaryVariableUnit [DV,O] - MUNIT
 
 #check_All_fields("VS")
 
@@ -176,7 +181,13 @@ VS_df <- data.frame(
   VSselectionProbCluster = "",
   VSinclusionProbCluster = "",
   VSsampled = "Y",#M
-  VSreasonNotSampled = "", stringsAsFactors=FALSE
+  VSreasonNotSampled = "", 
+  VSnonResponseCollected = "N",
+  VSauxiliaryVariableTotal = "",
+  VSauxiliaryVariableValue = "",
+  VSauxiliaryVariableName = "",
+  VSauxiliaryVariableUnit = "", 
+  stringsAsFactors=FALSE
   )
 
 VS_df$VSclustering <- "1C"
@@ -207,7 +218,7 @@ VS_df$VSinclusionProbCluster<-5/100
 # 7                                             TEid [M/O] - int
 # 8                                    FTrecordType [M] - string
 # 9                  FTencryptedVesselCode [M] - StringLength100
-# 10                      FTsequenceNumber [M] - StringLength100
+# 10                             	  FTsequenceNumber [M] - int
 # 11                       FTstratification [DV,M] - YesNoFields
 # 12                      FTstratumName [DV,M] - StringLength100
 # 13                            FTclustering [DV,M] - Clustering
@@ -217,24 +228,28 @@ VS_df$VSinclusionProbCluster<-5/100
 # 17                  FTnumberOfHaulsOrSets [M/O] - IntZeroToMax
 # 18                  FTdepartureLocation [M/O] - Harbour_LOCODE
 # 19                                FTdepartureDate [M/O] - Date
-# 20                                FTdepartureTime [M/O] - Time
+# 20                 FTdepartureTime [M/O] - StringLength60
 # 21                      FTarrivalLocation [M] - Harbour_LOCODE
 # 22                                    FTarrivalDate [M] - Date
-# 23                                  FTarrivalTime [M/O] - Time
+# 23                   FTarrivalTime [M/O] - StringLength60
 # 24                                  FTnumberTotal [DV,O] - int
 # 25                                FTnumberSampled [DV,O] - int
-# 26        FTselectionProb [DV,O] - Decimal0.0000000000000001-1
-# 27        FTinclusionProb [DV,O] - Decimal0.0000000000000001-1
+# 26                    FTselectionProb [DV,O] - Decimal0-1
+# 27                    FTinclusionProb [DV,O] - Decimal0-1
 # 28                  FTselectionMethod [DV,M] - SelectionMethod
 # 29                         FTunitName [DV,M] - StringLength100
 # 30           FTselectionMethodCluster [DV,O] - SelectionMethod
 # 31                          FTnumberTotalClusters [DV,O] - int
 # 32                        FTnumberSampledClusters [DV,O] - int
-# 33 FTselectionProbCluster [DV,O] - Decimal0.0000000000000001-1
-# 34 FTinclusionProbCluster [DV,O] - Decimal0.0000000000000001-1
+# 33             FTselectionProbCluster [DV,O] - Decimal0-1
+# 34             FTinclusionProbCluster [DV,O] - Decimal0-1
 # 35                              FTsampled [DV,M] - YesNoFields
 # 36            FTreasonNotSampled [DV,O] - ReasonForNotSampling
-
+# 37            FTnonResponseCollected [DV,O] - YesNoFields
+# 38         FTauxiliaryVariableTotal [DV,O] - DecimalPrec3
+# 39         FTauxiliaryVariableValue [DV,O] - DecimalPrec3
+# 40 FTauxiliaryVariableName [DV,O] - AuxiliaryVariableName
+# 41                 FTauxiliaryVariableUnit [DV,O] - MUNIT
 
 FT_df <- data.frame(
   FTid = dataset$VSid,#[M] - int
@@ -273,7 +288,13 @@ FT_df <- data.frame(
   FTinclusionProbCluster="", #[DV,O] - DecimalPrec10
   FTsampled="Y", #[DV,M] - YesNoFields
   FTreasonNotSampled= "", #[DV,O] - RS_ReasonForNotSampling
- stringsAsFactors=FALSE)
+  FTnonResponseCollected = "N",
+  FTauxiliaryVariableTotal = "",
+  FTauxiliaryVariableValue = "",
+  FTauxiliaryVariableName = "",
+  FTauxiliaryVariableUnit = "", 
+  stringsAsFactors=FALSE
+)
 
 
 #====FO===========
@@ -306,37 +327,44 @@ FT_df <- data.frame(
 # 25                                     FOexclusiveEconomicZoneIndicator [O] - ISO_3166
 # 26                                                              FOarea [M] - ICES_Area
 # 27                                                           FOrectangle [O] - StatRec
-# 28                                                   FOgsaSubarea [M] - Areas_GFCM_GSA
-# 29                                           FOjurisdictionArea [O] - JurisdictionArea
-# 30                                                            FOfishingDepth [O] - int
-# 31                                                              FOwaterDepth [O] - int
-# 32                             FOnationalFishingActivity [O] - NationalFishingActivity
-# 33                                             FOmetier5 [O] - Metier5_FishingActivity
-# 34                                             FOmetier6 [M] - Metier6_FishingActivity
-# 35                                                               FOgear [M] - GearType
-# 36                                                                FOmeshSize [O] - int
-# 37                                             FOselectionDevice [O] - SelectionDevice
-# 38                                                 FOselectionDeviceMeshSize [O] - int
-# 39                                                 FOtargetSpecies [O] - TargetSpecies
-# 40              FOincidentalByCatchMitigationDeviceFirst [M] - BycatchMitigationDevice
-# 41  FOincidentalByCatchMitigationDeviceTargetFirst [M] - BycatchMitigationDeviceTarget
-# 42             FOincidentalByCatchMitigationDeviceSecond [M] - BycatchMitigationDevice
-# 43 FOincidentalByCatchMitigationDeviceTargetSecond [M] - BycatchMitigationDeviceTarget
-# 44                                                          FOgearDimensions [O] - int
-# 45                                             FOobservationCode [M] - ObservationCode
-# 46                                                          FOnumberTotal [DV,O] - int
-# 47                                                        FOnumberSampled [DV,O] - int
-# 48                                FOselectionProb [DV,O] - Decimal0.0000000000000001-1
-# 49                                FOinclusionProb [DV,O] - Decimal0.0000000000000001-1
-# 50                                          FOselectionMethod [DV,M] - SelectionMethod
-# 51                                                 FOunitName [DV,M] - StringLength100
-# 52                                   FOselectionMethodCluster [DV,O] - SelectionMethod
-# 53                                                  FOnumberTotalClusters [DV,O] - int
-# 54                                                FOnumberSampledClusters [DV,O] - int
-# 55                         FOselectionProbCluster [DV,O] - Decimal0.0000000000000001-1
-# 56                         FOinclusionProbCluster [DV,O] - Decimal0.0000000000000001-1
-# 57                                                      FOsampled [DV,M] - YesNoFields
-# 58                                    FOreasonNotSampled [DV,O] - ReasonForNotSampling
+# 28                                          FOfisheriesManagementUnit [O] - AreaNonFAO
+# 29                                                   FOgsaSubarea [M] - Areas_GFCM_GSA
+# 30                                           FOjurisdictionArea [O] - JurisdictionArea
+# 31                                                            FOfishingDepth [O] - int
+# 32                                                              FOwaterDepth [O] - int
+# 33                             FOnationalFishingActivity [O] - NationalFishingActivity
+# 34                                             FOmetier5 [O] - Metier5_FishingActivity
+# 35                                             FOmetier6 [M] - Metier6_FishingActivity
+# 36                                                               FOgear [M] - GearType
+# 37                                                                FOmeshSize [O] - int
+# 38                                             FOselectionDevice [O] - SelectionDevice
+# 39                                                 FOselectionDeviceMeshSize [O] - int
+# 40                                                 FOtargetSpecies [O] - TargetSpecies
+# 41              FOincidentalByCatchMitigationDeviceFirst [M] - BycatchMitigationDevice
+# 42  FOincidentalByCatchMitigationDeviceTargetFirst [M] - BycatchMitigationDeviceTarget
+# 43             FOincidentalByCatchMitigationDeviceSecond [M] - BycatchMitigationDevice
+# 44 FOincidentalByCatchMitigationDeviceTargetSecond [M] - BycatchMitigationDeviceTarget
+# 45                                                          FOgearDimensions [O] - int
+# 46                                             FOobservationCode [M] - ObservationCode
+# 47                                                          FOnumberTotal [DV,O] - int
+# 48                                                        FOnumberSampled [DV,O] - int
+# 49                                FOselectionProb [DV,O] - Decimal0.0000000000000001-1
+# 50                                FOinclusionProb [DV,O] - Decimal0.0000000000000001-1
+# 51                                          FOselectionMethod [DV,M] - SelectionMethod
+# 52                                                 FOunitName [DV,M] - StringLength100
+# 53                                   FOselectionMethodCluster [DV,O] - SelectionMethod
+# 54                                                  FOnumberTotalClusters [DV,O] - int
+# 55                                                FOnumberSampledClusters [DV,O] - int
+# 56                         FOselectionProbCluster [DV,O] - Decimal0.0000000000000001-1
+# 57                         FOinclusionProbCluster [DV,O] - Decimal0.0000000000000001-1
+# 58                                                      FOsampled [DV,M] - YesNoFields
+# 59                                    FOreasonNotSampled [DV,O] - ReasonForNotSampling
+# 60                                         FOnonResponseCollected [DV,O] - YesNoFields
+# 61                                      FOauxiliaryVariableTotal [DV,O] - DecimalPrec3
+# 62                                      FOauxiliaryVariableValue [DV,O] - DecimalPrec3
+# 63                              FOauxiliaryVariableName [DV,O] - AuxiliaryVariableName
+# 64                                              FOauxiliaryVariableUnit [DV,O] - MUNIT
+
 
 FO_df <- data.frame(
 	FOid = dataset$VSid,
@@ -366,6 +394,7 @@ FO_df <- data.frame(
 	FOexclusiveEconomicZoneIndicator = "", # might differ!!
 	FOarea = "27.3.a.21", #M
 	FOrectangle = "",
+	FOfisheriesManagementUnit = "",
 	FOgsaSubarea = "NotApplicable", #M
 	FOjurisdictionArea = "",
 	FOfishingDepth = "",
@@ -397,6 +426,11 @@ FO_df <- data.frame(
 	FOinclusionProbCluster = "",
 	FOsampled = "Y", #M
 	FOreasonNotSampled = "",
+	FOnonResponseCollected = "N",
+	FOauxiliaryVariableTotal = "",
+	FOauxiliaryVariableValue = "",
+	FOauxiliaryVariableName = "",
+	FOauxiliaryVariableUnit = "", 
 stringsAsFactors=FALSE
 )
 
@@ -437,6 +471,11 @@ stringsAsFactors=FALSE
 # 32 SSinclusionProbCluster [DV,O] - Decimal0.0000000000000001-1
 # 33                              SSsampled [DV,M] - YesNoFields
 # 34            SSreasonNotSampled [DV,O] - ReasonForNotSampling
+# 35                SSnonResponseCollected [DV,O] - YesNoFields
+# 36             SSauxiliaryVariableTotal [DV,O] - DecimalPrec3
+# 37             SSauxiliaryVariableValue [DV,O] - DecimalPrec3
+# 38     SSauxiliaryVariableName [DV,O] - AuxiliaryVariableName
+# 39                     SSauxiliaryVariableUnit [DV,O] - MUNIT
 
 SS_df<-data.frame(
 	SSid = dataset$VSid,
@@ -472,7 +511,13 @@ SS_df<-data.frame(
 	SSselectionProbCluster = "",
 	SSinclusionProbCluster = "",
 	SSsampled = "Y", #M,
-	SSreasonNotSampled = ""
+	SSreasonNotSampled = "",
+	SSnonResponseCollected = "N",
+	SSauxiliaryVariableTotal = "",
+	SSauxiliaryVariableValue = "",
+	SSauxiliaryVariableName = "",
+	SSauxiliaryVariableUnit = "", 
+	stringsAsFactors=FALSE	
 )
 
 #====SA===========
@@ -498,32 +543,40 @@ SS_df<-data.frame(
 # 18         SAexclusiveEconomicZoneIndicator [O] - ISO_3166
 # 19                                  SAarea [O] - ICES_Area
 # 20                               SArectangle [O] - StatRec
-# 21                       SAgsaSubarea [M] - Areas_GFCM_GSA
-# 22               SAjurisdictionArea [O] - JurisdictionArea
-# 23 SAnationalFishingActivity [O] - NationalFishingActivity
-# 24                 SAmetier5 [O] - Metier5_FishingActivity
-# 25                 SAmetier6 [O] - Metier6_FishingActivity
-# 26                                   SAgear [O] - GearType
-# 27                                    SAmeshSize [O] - int
-# 28                 SAselectionDevice [O] - SelectionDevice
-# 29                     SAselectionDeviceMeshSize [O] - int
-# 30                           SAunitType [M] - SamplingUnit
-# 31                             SAtotalWeightLive [O] - int
-# 32                            SAsampleWeightLive [O] - int
-# 33             SAnumberTotal [DV,O] - Decimal0.1-999999999
-# 34           SAnumberSampled [DV,O] - Decimal0.1-999999999
-# 35    SAselectionProb [DV,O] - Decimal0.0000000000000001-1
-# 36    SAinclusionProb [DV,O] - Decimal0.0000000000000001-1
-# 37              SAselectionMethod [DV,M] - SelectionMethod
-# 38                     SAunitName [DV,M] - StringLength100
-# 39                 SAlowerHierarchy [M/O] - LowerHierarchy
-# 40                                 SAsampler [O] - Sampler
-# 41                          SAsampled [DV,M] - YesNoFields
-# 42      SAreasonNotSampledFM [DV,O] - ReasonForNotSampling
-# 43      SAreasonNotSampledBV [DV,O] - ReasonForNotSampling
-# 44                         SAtotalWeightMeasured [O] - int
-# 45                        SAsampleWeightMeasured [O] - int
-# 46        SAconversionFactorMeasLive [O] - Decimal0.900-10
+# 21              SAfisheriesManagementUnit [O] - AreaNonFAO
+# 22                       SAgsaSubarea [M] - Areas_GFCM_GSA
+# 23               SAjurisdictionArea [O] - JurisdictionArea
+# 24 SAnationalFishingActivity [O] - NationalFishingActivity
+# 25                 SAmetier5 [O] - Metier5_FishingActivity
+# 26                 SAmetier6 [O] - Metier6_FishingActivity
+# 27                                   SAgear [O] - GearType
+# 28                                    SAmeshSize [O] - int
+# 29                 SAselectionDevice [O] - SelectionDevice
+# 30                     SAselectionDeviceMeshSize [O] - int
+# 31                           SAunitType [M] - SamplingUnit
+# 32                             SAtotalWeightLive [O] - int
+# 33                            SAsampleWeightLive [O] - int
+# 34             SAnumberTotal [DV,O] - Decimal0.1-999999999
+# 35           SAnumberSampled [DV,O] - Decimal0.1-999999999
+# 36                     SAselectionProb [DV,O] - Decimal0-1
+# 37                     SAinclusionProb [DV,O] - Decimal0-1
+# 38              SAselectionMethod [DV,M] - SelectionMethod
+# 39                     SAunitName [DV,M] - StringLength100
+# 40                 SAlowerHierarchy [M/O] - LowerHierarchy
+# 41                                 SAsampler [O] - Sampler
+# 42                          SAsampled [DV,M] - YesNoFields
+# 43        SAreasonNotSampled [DV,O] - ReasonForNotSampling
+# 44             SAnonResponseCollected [DV,O] - YesNoFields
+# 45      SAreasonNotSampledFM [DV,O] - ReasonForNotSampling
+# 46      SAreasonNotSampledBV [DV,O] - ReasonForNotSampling
+# 47                         SAtotalWeightMeasured [O] - int
+# 48                        SAsampleWeightMeasured [O] - int
+# 49        SAconversionFactorMeasLive [O] - Decimal0.900-10
+# 50          SAauxiliaryVariableTotal [DV,O] - DecimalPrec3
+# 51          SAauxiliaryVariableValue [DV,O] - DecimalPrec3
+# 52  SAauxiliaryVariableName [DV,O] - AuxiliaryVariableName
+# 53                  SAauxiliaryVariableUnit [DV,O] - MUNIT
+
 
 SA_df<-data.frame(
 		SAid = dataset$VSid,
@@ -546,6 +599,7 @@ SA_df<-data.frame(
 		SAexclusiveEconomicZoneIndicator = "",
 		SAarea = "",
 		SArectangle = "",
+		SAfisheriesManagementUnit = "",
 		SAgsaSubarea = "NotApplicable", #M
 		SAjurisdictionArea = "",
 		SAnationalFishingActivity = "",
@@ -567,11 +621,17 @@ SA_df<-data.frame(
 		SAlowerHierarchy = "D",
 		SAsampler = "Observer",
 		SAsampled = "N", #M
+		SAreasonNotSampled = "",
+		SAnonResponseCollected = "N",
 		SAreasonNotSampledFM = "",
 		SAreasonNotSampledBV = "",
 		SAtotalWeightMeasured = dataset[[target_var]]*100,
 		SAsampleWeightMeasured = dataset[[target_var]]*100,
 		SAconversionFactorMeasLive = 1,
+		SAauxiliaryVariableTotal = "",
+		SAauxiliaryVariableValue = "",
+		SAauxiliaryVariableName = "",
+		SAauxiliaryVariableUnit = "", 
 		stringsAsFactors=FALSE
 )
 
@@ -625,8 +685,12 @@ RDBESlist[[i]][which(grepl(colnames(RDBESlist[[i]]),pat="[A-Z]id"))]<-NULL
 
 #===Save============
 
-
-
+	dir_outputs<-paste0(base_dir_outputs,"/",
+	                    project_name_outputs,"/")
+  dir.create(dir_outputs, recursive=T, showWarnings=FALSE)
+	filename_output_CS <- paste0(project_name_outputs,"_H1.csv")
+	filename_output_SL <- paste0(project_name_outputs,"_HSL.csv")
+	filename_output_VD <- paste0(project_name_outputs,"_HVD.csv")
 
 
 lapply(RDBESlist, function(x, filename1 = paste0(dir_outputs,filename_output_CS)){
@@ -665,7 +729,7 @@ write.table(b$V1, file=paste0(dir_outputs,filename_output_CS), col.names=FALSE, 
 
 
 # saves VD output
-
+	VD_base$VDyear<-DEyear
 	write.table(VD_base, file=paste0(dir_outputs,filename_output_VD), col.names=FALSE, row.names = FALSE, quote=FALSE,sep=",")
 
 
