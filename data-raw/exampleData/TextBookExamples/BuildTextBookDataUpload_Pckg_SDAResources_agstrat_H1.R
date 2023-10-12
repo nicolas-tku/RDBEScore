@@ -1,13 +1,13 @@
 #======Prepares textbook data agstrat as H1 upload file===========
 
 # Info:
-# Table VS and SA contain the core information of \code{data(agstrat)} used in Lohr examples 3.2 and 3.6. 
+# Table VS and SA contain the core information of \code{data(agstrat)} used in Lohr examples 3.2 and 3.6.
 # Table VS is stratified with VSstratumName set to \code{agstrat$region}, and VSnumberSampled and VSnumberTotal set according to \code{agstrat}
 # VSunitName is set to a combination of original \code{agstrat$county}, \code{agstrat$state}, \code{agstrat$region} and \code{agstrat$agstrat} row numbers
 # Table SA contains the variable measured agstrat$acres92 in \code{SAtotalWeightMeasured}, \code{SAsampleWeightMeasured} and \code{SAconversionFactorMeasLive} set to 1.
-# Table DE, SD, FT and FO are for the most dummy tables inserted to meet RDBES model requirements to be aggregated 
-# during estimation tests. Values of mandatory fields have dummy values taken from an onboard programme, with exception 
-# of  *\code{selectionMethod} - that is set to CENSUS - they should be ignored during estimation.  
+# Table DE, SD, FT and FO are for the most dummy tables inserted to meet RDBES model requirements to be aggregated
+# during estimation tests. Values of mandatory fields have dummy values taken from an onboard programme, with exception
+# of  *\code{selectionMethod} - that is set to CENSUS - they should be ignored during estimation.
 # BV, FM, CL, and CE are not provided.
 # SL and VD are subset to the essential rows
 
@@ -30,12 +30,12 @@
 		SDinstitution <- 4484
 		DEsamplingScheme<-"National Routine"
 		#baseDir <- "./data-raw/exampleData/textBooks/"
-		baseDir <- "BuildTextBookExamples/"
-		VD_base <- readRDS(paste0(baseDir,"VD_base.rds"))
-		SL_base <- readRDS(paste0(baseDir,"SL_base.rds"))
+		baseDir <- "./data-raw/exampleData/TextBookExamples/"
+		VD_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/VD_base.rds"))
+		SL_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/SL_base.rds"))
 
 		#nameof the directory where the outputs are saved currently
-		base_dir_outputs <- baseDir
+		base_dir_outputs <- paste0(baseDir,"/BuiltUploads/")
 		dir_outputs<-paste0(base_dir_outputs,
 	                    project_name_outputs,"/")
 		dir.create(dir_outputs, recursive=T, showWarnings=FALSE)
@@ -662,10 +662,10 @@ write.table(b$V1, file=paste0(dir_outputs,filename_output_CS), col.names=FALSE, 
 # -----Clean SL after dowload-----------------
 
 # cleans excess of SL rows frequently present in download
-	# note: 
+	# note:
 		# since it is an example - nicer to do here, fixing directly data input to scripts than patching it over multiple scripts later
 		# since example data are very simple, a simple select is done on specieaListName - this may not be sufficient in some minor cases
-		
+
 filename_download <- "2022_10_14_063321.zip"
 unzip(paste0(dir_outputs, filename_download), exdir = paste0(dir_outputs,"tmp"))
 # reads file to be fixed, fixes it and saves it back overwriting
