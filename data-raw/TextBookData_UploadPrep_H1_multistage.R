@@ -66,7 +66,12 @@ DE_df<-data.frame(
 		  DEhierarchyCorrect = "Y",
 		  DEhierarchy = 1,
 		  DEsampled = "Y",
-		  DEreasonNotSampled = ""
+		  DEreasonNotSampled = "",
+		  DEnonResponseCollected = "N",
+		  DEauxiliaryVariableTotal = "",
+		  DEauxiliaryVariableValue = "",
+		  DEauxiliaryVariableName = "",
+		  DEauxiliaryVariableUnit = ""
 			)
 
 #====SD===========
@@ -159,6 +164,11 @@ VS_df <- data.frame(
   VSinclusionProbCluster = "",
   VSsampled = "Y",#M
   VSreasonNotSampled = "",
+  VSnonResponseCollected = "",
+  VSauxiliaryVariableTotal = "",
+  VSauxiliaryVariableValue = "",
+  VSauxiliaryVariableName = "",
+  VSauxiliaryVariableUnit = "",
   stringsAsFactors=FALSE
   )
 
@@ -246,7 +256,12 @@ makeChildTbl <- function(parent, data, tbl="FT", by = "dname"){
     FTselectionProbCluster="", #[DV,O] - DecimalPrec10
     FTinclusionProbCluster="", #[DV,O] - DecimalPrec10
     FTsampled="Y", #[DV,M] - YesNoFields
-    FTreasonNotSampled= "", #[DV,O] - RS_ReasonForNotSampling
+    FTreasonNotSampled= "", #[DV,O] - RS_ReasonForNotSampling,
+    FTnonResponseCollected = factor("N", levels = c('N', 'Y')),
+    FTauxiliaryVariableTotal = "",
+    FTauxiliaryVariableValue = "",
+    FTauxiliaryVariableName = "",
+    FTauxiliaryVariableUnit = "",
     stringsAsFactors=FALSE)
   if(any(FT_df$FTnumberTotal < FT_df$FTnumberSampled)){
     stop("Sampled is more than total")
@@ -380,6 +395,12 @@ FO_df <- data.frame(
 	FOinclusionProbCluster = "",
 	FOsampled = "Y", #M
 	FOreasonNotSampled = "",
+	FOnonResponseCollected = factor("N", levels = c('N', 'Y')),
+	FOfisheriesManagementUnit = "",
+	FOauxiliaryVariableTotal = "",
+	FOauxiliaryVariableValue = "",
+	FOauxiliaryVariableName = "",
+	FOauxiliaryVariableUnit = "",
 stringsAsFactors=FALSE
 )
 
@@ -456,7 +477,13 @@ SS_df<-data.frame(
 	SSselectionProbCluster = "",
 	SSinclusionProbCluster = "",
 	SSsampled = "Y", #M,
-	SSreasonNotSampled = ""
+	SSreasonNotSampled = "",
+	SSnonResponseCollected = "N",
+	SSauxiliaryVariableTotal = "",
+	SSauxiliaryVariableValue = "",
+	SSauxiliaryVariableName = "",
+	SSauxiliaryVariableUnit = "",
+	stringsAsFactors = F
 )
 
 #====SA===========
@@ -556,6 +583,13 @@ SA_df<-data.frame(
 		SAtotalWeightMeasured = df[[target_var]],
 		SAsampleWeightMeasured = df[[target_var]],
 		SAconversionFactorMeasLive = 1,
+		SAreasonNotSampled = "",
+		SAnonResponseCollected = "N",
+		SAauxiliaryVariableTotal = "",
+		SAauxiliaryVariableValue = "",
+		SAauxiliaryVariableName = "",
+		SAauxiliaryVariableUnit = "",
+		SAfisheriesManagementUnit = "",
 		stringsAsFactors=FALSE
 )
 
@@ -564,7 +598,36 @@ SA_df<-data.frame(
 #====Builds final format===========
 
 
-RDBESlist = list(DE = DE_df,SD = SD_df, VS = VS_df, FT = FT_df, FO = FO_df, SS = SS_df, SA = SA_df)
+Pckg_Survey_apiclust2_asH1 <- RDBEScore::newRDBESDataObject(DE = as.data.table(DE_df),
+                                              SD = as.data.table(SD_df),
+                                              VS = as.data.table(VS_df),
+                                              FT = as.data.table(FT_df),
+                                              FO = as.data.table(FO_df),
+                                              SS = as.data.table(SS_df),
+                                              SA = as.data.table(SA_df))
+
+# Set a key on any data tables in myList - use the XXid column as the key
+for(aTable in names(Pckg_Survey_apiclust2_asH1)){
+  if ('data.table' %in% class(Pckg_Survey_apiclust2_asH1[[aTable]])){
+    data.table::setkeyv(Pckg_Survey_apiclust2_asH1[[aTable]],paste0(aTable,"id"))
+    #Set R names
+    oldNames <- colnames(Pckg_Survey_apiclust2_asH1[[aTable]])
+    rNames <- mapColNamesFieldR$R.Name
+    names(rNames) <- mapColNamesFieldR$Field.Name
+    data.table::setnames(Pckg_Survey_apiclust2_asH1[[aTable]],oldNames, rNames[oldNames], skip_absent = T)
+  }
+}
+
+#check the data
+validateRDBESDataObject(Pckg_Survey_apiclust2_asH1)
+
+RDBESlist <- list(DE = DE_df,
+                  SD = SD_df,
+                  VS = VS_df,
+                  FT = FT_df,
+                  FO = FO_df,
+                  SS = SS_df,
+                  SA = SA_df)
 
 #id table
 a<-merge(DE_df["DEid"],SD_df[c("DEid","SDid")])
@@ -654,5 +717,12 @@ write.table(b$V1, file=paste0(dir_outputs,filename_output_CS), col.names=FALSE, 
 
 # saves VD output
 
-	write.table(VD_base, file=paste0(dir_outputs,filename_output_VD), col.names=FALSE, row.names = FALSE, quote=FALSE,sep=",")
+write.table(VD_base, file=paste0(dir_outputs,filename_output_VD), col.names=FALSE, row.names = FALSE, quote=FALSE,sep=",")
+
+#-------- Export as project example data---------
+#check the data
+validateRDBESDataObject(Pckg_Survey_apiclust2_asH1)
+
+
+usethis::use_data(Pckg_Survey_apiclust2_asH1, overwrite = TRUE)
 
