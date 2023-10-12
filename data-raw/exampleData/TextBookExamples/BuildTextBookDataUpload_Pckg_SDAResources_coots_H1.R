@@ -1,4 +1,4 @@
-#======Prepares textbook data agstrat as H1 upload file===========
+#======Prepares textbook data SDAResources::coots as H1 upload file===========
 
 # Info:
 
@@ -13,26 +13,24 @@
 		target_var<-"gpa"
 
 	# name your project (will be used in filenames for CS, SL and VD)
-		project_name_outputs <- "Pckg_SDAResources_coots_H1"
+		project_name_outputs <- "WGRDBES-EST_TEST_1_Pckg_SDAResources_coots_H1"
 
 
 	# select a year for upload
-		DEyear<-1968
+		DEyear<-1965
 		SDinstitution <- 4484
-		DEsamplingScheme<-"National Routine"
+		DEsamplingScheme<-"WGRDBES-EST TEST 1"
+		DEstratumName <- "Pckg_SDAResources_agstrat_H1"
+    project_name_outputs <- gsub(" ","_", paste0(DEsamplingScheme,"_", DEstratumName))
 		baseDir <- "./data-raw/exampleData/TextBookExamples/"
+		baseDir <- ""
 		VD_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/VD_base.rds"))
 		SL_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/SL_base.rds"))
 
 		#nameof the directory where the outputs are saved currently
-		base_dir_outputs <- paste0(baseDir,"/BuiltUploads/")
+		base_dir_outputs <- paste0(baseDir,"BuiltUploads")
+		dir.create(base_dir_outputs, recursive=T, showWarnings=FALSE)
 
-		dir_outputs<-paste0(base_dir_outputs,
-	                    project_name_outputs,"/")
-		dir.create(dir_outputs, recursive=T, showWarnings=FALSE)
-		filename_output_CS <- paste0(project_name_outputs,"_H1.csv")
-		filename_output_SL <- paste0(project_name_outputs,"_HSL.csv")
-		filename_output_VD <- paste0(project_name_outputs,"_HVD.csv")
 
 #========Outline of Hierarchy 1================
 	# Design
@@ -61,6 +59,11 @@
 # 8             DEhierarchy [M] - RDBESUpperHierarchy
 # 9                    DEsampled [DV,M] - YesNoFields
 # 10 DEreasonNotSampled [DV,O] - ReasonForNotSampling
+# 11	  DEnonResponseCollected [DV,O] - YesNoFields
+# 12    DEauxiliaryVariableTotal [DV,O] - DecimalPrec3
+# 13    DEauxiliaryVariableValue [DV,O] - DecimalPrec3
+# 14 DEauxiliaryVariableName [DV,O] - AuxiliaryVariableName
+# 15 DEauxiliaryVariableUnit[DV,O]-MUNIT
 
 DE_df_base<-expand.grid(DEyear=DEyear,
 						DEstratumName="U",stringsAsFactors=F)
@@ -71,11 +74,17 @@ DE_df<-data.frame(
 		  DEsamplingScheme = DEsamplingScheme,
 		  DEsamplingSchemeType = "NatRouCF",
 		  DEyear = as.integer(DEyear),
-		  DEstratumName = "U",
+		  DEstratumName = DEstratumName,
 		  DEhierarchyCorrect = "Y",
 		  DEhierarchy = 1,
 		  DEsampled = "Y",
-		  DEreasonNotSampled = ""
+		  DEreasonNotSampled = "",
+		  DEnonResponseCollected = "Y",
+		  DEauxiliaryVariableTotal = "",
+		  DEauxiliaryVariableValue = "",
+		  DEauxiliaryVariableName = "",
+		  DEauxiliaryVariableUnit = "", 
+		  stringsAsFactors=FALSE
 			)
 
 #===SD============
@@ -126,6 +135,11 @@ SD_df<-data.frame(
 # 23 VSinclusionProbCluster [DV,O] - Decimal0.0000000000000001-1
 # 24                              VSsampled [DV,M] - YesNoFields
 # 25            VSreasonNotSampled [DV,O] - ReasonForNotSampling
+# 26          	     VSnonResponseCollected [DV,O] - YesNoFields
+# 27              VSauxiliaryVariableTotal [DV,O] - DecimalPrec3
+# 28              VSauxiliaryVariableValue [DV,O] - DecimalPrec3
+# 29      VSauxiliaryVariableName [DV,O] - AuxiliaryVariableName
+# 30                      VSauxiliaryVariableUnit [DV,O] - MUNIT
 
 #check_All_fields("VS")
 
@@ -167,7 +181,13 @@ VS_df <- data.frame(
   VSselectionProbCluster = "",
   VSinclusionProbCluster = "",
   VSsampled = "Y",#M
-  VSreasonNotSampled = "", stringsAsFactors=FALSE
+  VSreasonNotSampled = "", 
+  VSnonResponseCollected = "N",
+  VSauxiliaryVariableTotal = "",
+  VSauxiliaryVariableValue = "",
+  VSauxiliaryVariableName = "",
+  VSauxiliaryVariableUnit = "", 
+  stringsAsFactors=FALSE
   )
 
 
