@@ -15,7 +15,7 @@ createRDBESDataObject(
 extract by the ICES RDBES.  If no path is suppled then an empty
 RDBESDataObject will be returned.}
 
-\item{listOfFileNames}{(Optional) A names list of file names - the list names
+\item{listOfFileNames}{(Optional) A named list of file names - the list names
 shoudl be the two-letter code for the relevent table e.g.
 list("DE" = "DE.csv",... ).  If the parameter is not supplied then the
 default file names used by the RDBES data download will be used e.g.

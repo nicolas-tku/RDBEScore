@@ -1,30 +1,47 @@
-#======Prepares textbook data as H1 upload file===========
+#======Prepares textbook data agstrat as H1 upload file===========
+
+# Info:
+# Table VS and SA contain the core information of \code{data(agstrat)} used in Lohr examples 3.2 and 3.6. 
+# Table VS is stratified with VSstratumName set to \code{agstrat$region}, and VSnumberSampled and VSnumberTotal set according to \code{agstrat}
+# VSunitName is set to a combination of original \code{agstrat$county}, \code{agstrat$state}, \code{agstrat$region} and \code{agstrat$agstrat} row numbers
+# Table SA contains the variable measured agstrat$acres92 in \code{SAtotalWeightMeasured}, \code{SAsampleWeightMeasured} and \code{SAconversionFactorMeasLive} set to 1.
+# Table DE, SD, FT and FO are for the most dummy tables inserted to meet RDBES model requirements to be aggregated 
+# during estimation tests. Values of mandatory fields have dummy values taken from an onboard programme, with exception 
+# of  *\code{selectionMethod} - that is set to CENSUS - they should be ignored during estimation.  
+# BV, FM, CL, and CE are not provided.
+# SL and VD are subset to the essential rows
 
 
 	rm(list=ls())
 	library(data.table)
 
 	# load textbook data
-		library(survey)
-		data(api)
-		dataset<-apistrat
-		target_var<-"enroll"
+		library(SDAResources)
+		data(gpa)
+		dataset<-gpa
+		target_var<-"gpa"
 
 	# name your project (will be used in filenames for CS, SL and VD)
-		project_name_outputs <- "WGRDBES-EST_TEST_Pckg_Survey_data_apistrat_H1"
+		project_name_outputs <- "Pckg_SDAResources_gpa_H1"
 
 
 	# select a year for upload
 		DEyear<-1968
 		SDinstitution <- 4484
-		DEsamplingScheme<-"SWE_CommEMAtSea_RouCF"
-		baseDir <- "./data-raw/exampleData/textBooks/"
+		DEsamplingScheme<-"National Routine"
+		#baseDir <- "./data-raw/exampleData/textBooks/"
+		baseDir <- "BuildTextBookExamples/"
 		VD_base <- readRDS(paste0(baseDir,"VD_base.rds"))
 		SL_base <- readRDS(paste0(baseDir,"SL_base.rds"))
 
 		#nameof the directory where the outputs are saved currently
 		base_dir_outputs <- baseDir
-
+		dir_outputs<-paste0(base_dir_outputs,
+	                    project_name_outputs,"/")
+		dir.create(dir_outputs, recursive=T, showWarnings=FALSE)
+		filename_output_CS <- paste0(project_name_outputs,"_H1.csv")
+		filename_output_SL <- paste0(project_name_outputs,"_HSL.csv")
+		filename_output_VD <- paste0(project_name_outputs,"_HVD.csv")
 
 #========Outline of Hierarchy 1================
 	# Design
@@ -140,19 +157,19 @@ VS_df <- data.frame(
   VDid = "",
   TEid = "",
   VSrecordType = 'VS',
-  VSsequenceNumber = 1:nrow(dataset),# M
+  VSsequenceNumber = rep(c(1,2,3,4),5),# M
   VSencryptedVesselCode = dataset$VSencryptedVesselCode, #M
-  VSstratification = "Y",
-  VSstratumName = dataset$stype, #M
-  VSclustering = "N", #M
-  VSclusterName = "U", #M
+  VSstratification = "N",
+  VSstratumName = "U", #M
+  VSclustering = "Y", #M
+  VSclusterName = "", #M
   VSsampler = "Observer", #M
   VSnumberTotal = "",
   VSnumberSampled = "",
   VSselectionProb = "",
   VSinclusionProb = "",
   VSselectionMethod = "SRSWOR", #M
-  VSunitName = dataset$snum,#M
+  VSunitName = paste(dataset$county, dataset$state, dataset$region, dataset$VSid),#M
   VSselectionMethodCluster = "",
   VSnumberTotalClusters = "",
   VSnumberSampledClusters = "",
@@ -162,10 +179,21 @@ VS_df <- data.frame(
   VSreasonNotSampled = "", stringsAsFactors=FALSE
   )
 
-sampSize<-table(VS_df$VSstratumName)
-VS_df$VSnumberSampled<-sampSize[VS_df$VSstratumName]
-strataSize<-c('E' = 4421, 'M' = 1018, 'H' = 755)
-VS_df$VSnumberTotal<-strataSize[VS_df$VSstratumName]
+VS_df$VSclustering <- "1C"
+
+# units within cluster
+VS_df$VSnumberSampled<-4
+VS_df$VSnumberTotal<-4
+VS_df$VSselectionProb<-1
+VS_df$VSinclusionProb<-1
+VS_df$VSselectionMethod<-"CENSUS"
+
+# clusters
+VS_df$VSnumberTotalClusters<-100
+VS_df$VSnumberSampledClusters<-5
+VS_df$VSselectionMethodCluster<-"SRSWOR"
+VS_df$VSselectionProbCluster<-""
+VS_df$VSinclusionProbCluster<-5/100
 
 #====FT===========
 
@@ -310,19 +338,6 @@ FT_df <- data.frame(
 # 57                                                      FOsampled [DV,M] - YesNoFields
 # 58                                    FOreasonNotSampled [DV,O] - ReasonForNotSampling
 
-# programme specific view: trip/landing event [size reduction]
-	FO_base<-FD2extract[['STATION']]
-
-	# read in Katja's output and get FOmetier6
-		aux<-read.csv(paste0("inputs_CS/dataCall2022/RDBES_metiers_from_Katja/fd2_metier_results_all_columns_CommAtSea_Hlab_2021_2022-09-22.csv"))
-		if(all(tapply(aux$metier_level_6_new, aux$haul_id, function(x) length(unique(x)))==1))
-			{
-			FO_base$FOmetier5<-as.character(aux$metier_level_5_new[match(FO_base$STA_ID, aux$haul_id)])
-			FO_base$FOmetier6<-as.character(aux$metier_level_6_new[match(FO_base$STA_ID, aux$haul_id)])
-			} else stop("check metier unicity")
-			if(	any(FO_base$FOmetier6 %in% codeLists[["Metier6_FishingActivity"]]$Key==FALSE)) stop ("metiers not in list Key")
-
-
 FO_df <- data.frame(
 	FOid = dataset$VSid,
 	FTid = dataset$VSid,
@@ -369,8 +384,8 @@ FO_df <- data.frame(
 	FOincidentalByCatchMitigationDeviceTargetSecond = "NotApplicable",#M
 	FOgearDimensions = "",
 	FOobservationCode = 'So', #M
-	FOnumberTotal = 10,
-	FOnumberSampled = 10,
+	FOnumberTotal = 1,
+	FOnumberSampled = 1,
 	FOselectionProb = 1,
 	FOinclusionProb = 1,
 	FOselectionMethod = "CENSUS", #M
@@ -554,8 +569,8 @@ SA_df<-data.frame(
 		SAsampled = "N", #M
 		SAreasonNotSampledFM = "",
 		SAreasonNotSampledBV = "",
-		SAtotalWeightMeasured = dataset[[target_var]],
-		SAsampleWeightMeasured = dataset[[target_var]],
+		SAtotalWeightMeasured = dataset[[target_var]]*100,
+		SAsampleWeightMeasured = dataset[[target_var]]*100,
 		SAconversionFactorMeasLive = 1,
 		stringsAsFactors=FALSE
 )
@@ -610,12 +625,7 @@ RDBESlist[[i]][which(grepl(colnames(RDBESlist[[i]]),pat="[A-Z]id"))]<-NULL
 
 #===Save============
 
-	dir_outputs<-paste0(base_dir_outputs,
-	                    project_name_outputs,"/")
-  dir.create(dir_outputs, recursive=T, showWarnings=FALSE)
-	filename_output_CS <- paste0(project_name_outputs,"_H1.csv")
-	filename_output_SL <- paste0(project_name_outputs,"_HSL.csv")
-	filename_output_VD <- paste0(project_name_outputs,"_HVD.csv")
+
 
 
 
@@ -657,4 +667,25 @@ write.table(b$V1, file=paste0(dir_outputs,filename_output_CS), col.names=FALSE, 
 # saves VD output
 
 	write.table(VD_base, file=paste0(dir_outputs,filename_output_VD), col.names=FALSE, row.names = FALSE, quote=FALSE,sep=",")
+
+
+
+# -----Clean SL after dowload-----------------
+
+# cleans excess of SL rows frequently present in download
+	# note: 
+		# since it is an example - nicer to do here, fixing directly data input to scripts than patching it over multiple scripts later
+		# since example data are very simple, a simple select is done on specieaListName - this may not be sufficient in some minor cases
+		
+filename_download <- "2022_10_14_090838.zip"
+unzip(paste0(dir_outputs, filename_download), exdir = paste0(dir_outputs,"tmp"))
+# reads file to be fixed, fixes it and saves it back overwriting
+tmp<-fread(paste0(dir_outputs,"tmp/SpeciesList.csv"))
+tmp<-tmp[SLspeciesListName==project_name_outputs,]
+write.csv(tmp, file=paste0(dir_outputs,"tmp/SpeciesList.csv"), quote=F, row.names=F)
+# re-zips the file, puts it in final dir and deletes tmp dir
+library(zip)
+zip::zip(zipfile = paste0(project_name_outputs,".zip"), files =paste0(dir_outputs,"tmp/",dir(paste0(dir_outputs,"tmp"))), mode="cherry-pick")
+unlink(paste0(dir_outputs,"tmp"), force=T, recursive = T)
+
 

@@ -32,9 +32,11 @@ myH1RawObject <-
 myH1RawObject[["SA"]]$SAsampWtLive <-
   round(runif(n = nrow(myH1RawObject[["SA"]]), min = 1, max = 100))
 
+myH1EstObj <- createRDBESEstObject(myH1RawObject, 1)
+
 myStrataEst <- doEstimationForAllStrata(
-  RDBESDataObjectForEstim = myH1RawObject,
-  hierarchyToUse = 1
+  RDBESDataObjectForEstim = myH1EstObj,
+  targetValue = 'SAsampWtLive'
 )
 }
 }
