@@ -1,0 +1,3 @@
+DEid,DErecordType,DEsamplingScheme,DEsamplingSchemeType,DEyear,DEstratumName,DEhierarchyCorrect,DEhierarchy,DEsampled,DEreasonNotSampled,DEnonResponseCollected,DEauxiliaryVariableTotal,DEauxiliaryVariableValue,DEauxiliaryVariableName,DEauxiliaryVariableUnit
+4285,DE,EST_OnShoreCommercialMarkets,NatRouCF,2022,Koha,Y,7,Y,,N,,,,
+4286,DE,EST_OnShoreCommercialMarkets,NatRouCF,2022,Ahven,Y,7,Y,,N,,,,
