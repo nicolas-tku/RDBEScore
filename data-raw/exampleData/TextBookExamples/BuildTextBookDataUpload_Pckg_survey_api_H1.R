@@ -24,6 +24,7 @@
 
 		#nameof the directory where the outputs are saved currently
 		base_dir_outputs <- paste0(baseDir,"BuiltUploads")
+		dir.create(base_dir_outputs, recursive=T, showWarnings=FALSE)
 
 #========Outline of Hierarchy 1================
 	# Design
