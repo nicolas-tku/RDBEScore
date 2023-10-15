@@ -52,4 +52,5 @@ DEyear = 1965
 DEsamplingScheme = "WGRDBES-EST TEST 1"
 DEstratumName = "WGRDBES-EST_TEST1_Pckg_SDAResources_gpa_H1"
 SDcountry = "ZW"
+Notes: # gpa scores are *100 to meet type integer requirement of SAsampleWeightMeasured
 # =============
