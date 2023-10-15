@@ -1,4 +1,5 @@
 # =============
+Type:
 Script: BuildTextBookDataUpload_Pckg_survey_api_H1.R
 Package: survey
 Dataset: api
@@ -12,6 +13,7 @@ SDcountry = "ZW"
 # =============
 
 # =============
+Type: simple random sampling
 Script: BuildTextBookDataUpload_Pckg_SDAResources_agsrs_H1.R
 Package: survey
 Dataset: agsrs
@@ -25,6 +27,7 @@ SDcountry = "ZW"
 # =============
 
 # =============
+Type: 1-stage stratified random sampling
 Script: BuildTextBookDataUpload_Pckg_SDAResources_agstrat_H1.R
 Package: survey
 Dataset: agstrat
@@ -38,14 +41,38 @@ SDcountry = "ZW"
 # =============
 
 # =============
-Script: BuildTextBookDataUpload_Pckg_SDAResources_agstrat_H1.R
+Type: 1-stage cluster sampling with equal probabilities and cluster sizes
+Script: BuildTextBookDataUpload_Pckg_SDAResources_gpa_H1.R
 Package: survey
-Dataset: agstrat
+Dataset: gpa
 As RDBES hierarchy: H1
-Reference:
-Where
+Reference: Lu, Y., & Lohr, S.L. (2021). R Companion for Sampling: Design and Analysis, Third Edition (1st ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9781003228196
+Where: Page 57 Section 5.1
 DEyear = 1965
 DEsamplingScheme = "WGRDBES-EST TEST 1"
-DEstratumName = "WGRDBES-EST_TEST1_Pckg_SDAResources_agstrat_H1"
+DEstratumName = "WGRDBES-EST_TEST1_Pckg_SDAResources_gpa_H1"
 SDcountry = "ZW"
+Notes: # gpa scores are *100 to meet type integer requirement of SAsampleWeightMeasured
+# =============
+
+
+# =============
+Type: 2-stage cluster sampling with unequal probabilities and cluster sizes
+Script: BuildTextBookDataUpload_Pckg_SDAResources_coots_H1.R
+Package: survey
+Dataset: coots
+As RDBES hierarchy: H1
+Reference: 
+  # [1] Lu, Y., & Lohr, S.L. (2021). R Companion for Sampling: Design and Analysis, Third Edition (1st ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9781003228196
+  # [2] Lohr (2021), Sampling: Design and Analysis, 2nd Edition. Boca Raton, FL: CRC Press. 	
+Where:
+  # [1] Page 59 Section 5.2
+  # [2] Page 186 Example 5.7
+DEyear = 1965
+DEsamplingScheme = "WGRDBES-EST TEST 1"
+DEstratumName = "WGRDBES-EST_TEST1_Pckg_SDAResources_coots_H1"
+SDcountry = "ZW"
+Notes: 
+  # gpa scores are *100000000 to meet type integer requirement of SAsampleWeightMeasured
+  # total number of psus unkwnon - example assumes very large so that fpc=1
 # =============
