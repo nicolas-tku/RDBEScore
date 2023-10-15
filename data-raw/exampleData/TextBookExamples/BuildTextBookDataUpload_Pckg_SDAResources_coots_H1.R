@@ -1,6 +1,8 @@
 #======Prepares textbook data SDAResources::coots as H1 upload file===========
 
 # Info:
+# ?coots
+# suites are the clusters
 
 
 	rm(list=ls())

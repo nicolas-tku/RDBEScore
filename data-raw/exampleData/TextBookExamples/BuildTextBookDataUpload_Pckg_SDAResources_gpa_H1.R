@@ -1,8 +1,24 @@
 #======Prepares textbook data SDAResources::gpa as H1 upload file===========
 
 # Info:
+	# suites are th clusters
+	# clusters are equal sized with each cluster having 4 elements with same wt
+		# table(gpa$suite)
+		# table(gpa$suite, gpa$wt)
+	# target variable is gpa
+	
+# how this example is placed in RDBES
+	# 1 DE row with DEstratumName == "Pckg_SDAResources_gpa_H1"
+	# 1 child SD row
+	# 20 child rows in VS (the 20 observations)
+		# each associated to its cluster (suite)
+		# VSnumberTotalClusters is 100 (see page 58)
+		# VSnumberTotal is 4 because all elements in cluster are sampled (1 stage cluster sampling)
+	# tables FT, FO, SS are just 1:1 links to the final data (in SA)
+	# in SA each gpa score is a SAsampleWeightMeasured
+		# ATT gpa scores are *100 to meet type requirement (integer)
 
-
+	
 	rm(list=ls())
 	library(data.table)
 
@@ -15,13 +31,12 @@
 	# name your project (will be used in filenames for CS, SL and VD)
 		project_name_outputs <- "WGRDBES-EST_TEST_1_Pckg_SDAResources_gpa_H1"
 
-
 	# select a year for upload
 		DEyear<-1965
 		SDinstitution <- 4484
 		DEsamplingScheme<-"WGRDBES-EST TEST 1"
-		DEstratumName <- "Pckg_SDAResources_agstrat_H1"
-    project_name_outputs <- gsub(" ","_", paste0(DEsamplingScheme,"_", DEstratumName))
+		DEstratumName <- "Pckg_SDAResources_gpa_H1"
+		project_name_outputs <- gsub(" ","_", paste0(DEsamplingScheme,"_", DEstratumName))
 		baseDir <- "./data-raw/exampleData/TextBookExamples/"
 		baseDir <- ""
 		VD_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/VD_base.rds"))
@@ -29,7 +44,7 @@
 
 		#nameof the directory where the outputs are saved currently
 		base_dir_outputs <- paste0(baseDir,"BuiltUploads")
-		dir.create(base_dir_outputs, recursive=T, showWarnings=FALSE)
+		if(!file.exists(base_dir_outputs)) dir.create(base_dir_outputs, recursive=T, showWarnings=FALSE)
 
 
 #========Outline of Hierarchy 1================
@@ -167,22 +182,22 @@ VS_df <- data.frame(
   VSstratification = "N",
   VSstratumName = "U", #M
   VSclustering = "Y", #M
-  VSclusterName = "", #M
+  VSclusterName = dataset$suite, #M
   VSsampler = "Observer", #M
   VSnumberTotal = "",
   VSnumberSampled = "",
   VSselectionProb = "",
   VSinclusionProb = "",
   VSselectionMethod = "SRSWOR", #M
-  VSunitName = paste(dataset$county, dataset$state, dataset$region, dataset$VSid),#M
-  VSselectionMethodCluster = "",
-  VSnumberTotalClusters = "",
+  VSunitName = dataset$VSid,#M
+  VSselectionMethodCluster = "SRSWOR",
+  VSnumberTotalClusters = "", 
   VSnumberSampledClusters = "",
   VSselectionProbCluster = "",
   VSinclusionProbCluster = "",
   VSsampled = "Y",#M
   VSreasonNotSampled = "", 
-  VSnonResponseCollected = "N",
+  VSnonResponseCollected = "Y",
   VSauxiliaryVariableTotal = "",
   VSauxiliaryVariableValue = "",
   VSauxiliaryVariableName = "",
@@ -270,17 +285,17 @@ FT_df <- data.frame(
   FTsamplingType = "AtSea" , #[M] - RS_SamplingType
   FTnumberOfHaulsOrSets = 1, #[O] - int
   FTdepartureLocation="ZWHWN", #[O] - Harbour_LOCODE
-  FTdepartureDate=seq(from = as.Date("1968-01-01", format='%Y-%m-%d'), by=1, length.out=nrow(dataset)), #[M/O] - date
+  FTdepartureDate=seq(from = as.Date("1965-01-01", format='%Y-%m-%d'), by=1, length.out=nrow(dataset)), #[M/O] - date
   FTdepartureTime="", #[O] - time
   FTarrivalLocation = "ZWHWN", #[M] - Harbour_LOCODE
-  FTarrivalDate=seq(from = as.Date("1968-01-01", format='%Y-%m-%d'), by=1, length.out=nrow(dataset)), #[M] - date
+  FTarrivalDate=seq(from = as.Date("1965-01-01", format='%Y-%m-%d'), by=1, length.out=nrow(dataset)), #[M] - date
   FTarrivalTime="", #[O] - time
   FTnumberTotal= 1, #[DV,O] - int
   FTnumberSampled=1, #[DV,O] - int
   FTselectionProb=1, #[DV,O] - DecimalPrec10
   FTinclusionProb=1, #[DV,O] - DecimalPrec10
   FTselectionMethod="CENSUS", #[DV,M] - RS_SelectionMethod
-  FTunitName = dataset$VSid, #[DV,M] - string
+  FTunitName = dataset$VSencryptedVesselCode, #[DV,M] - string
   FTselectionMethodCluster="", #[DV,O] - RS_SelectionMethod
   FTnumberTotalClusters="", #[DV,O] - int
   FTnumberSampledClusters="", #[DV,O] - int
@@ -391,7 +406,7 @@ FO_df <- data.frame(
 	FOstartLon="", # ATT!
 	FOstopLat="",
 	FOstopLon="",
-	FOexclusiveEconomicZoneIndicator = "", # might differ!!
+	FOexclusiveEconomicZoneIndicator = "", # 
 	FOarea = "27.3.a.21", #M
 	FOrectangle = "",
 	FOfisheriesManagementUnit = "",
@@ -625,8 +640,8 @@ SA_df<-data.frame(
 		SAnonResponseCollected = "N",
 		SAreasonNotSampledFM = "",
 		SAreasonNotSampledBV = "",
-		SAtotalWeightMeasured = dataset[[target_var]]*100,
-		SAsampleWeightMeasured = dataset[[target_var]]*100,
+		SAtotalWeightMeasured = dataset[[target_var]]*100, # *100 to meet type required (integer)
+		SAsampleWeightMeasured = dataset[[target_var]]*100, # *100 to meet type required (integer)
 		SAconversionFactorMeasLive = 1,
 		SAauxiliaryVariableTotal = "",
 		SAauxiliaryVariableValue = "",
