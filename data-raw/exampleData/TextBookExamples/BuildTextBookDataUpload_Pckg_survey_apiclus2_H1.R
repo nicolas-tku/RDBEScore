@@ -597,30 +597,6 @@ SA_df<-data.frame(
 
 #====Builds final format===========
 
-
-Pckg_Survey_apiclust2_asH1 <- RDBEScore::newRDBESDataObject(DE = as.data.table(DE_df),
-                                              SD = as.data.table(SD_df),
-                                              VS = as.data.table(VS_df),
-                                              FT = as.data.table(FT_df),
-                                              FO = as.data.table(FO_df),
-                                              SS = as.data.table(SS_df),
-                                              SA = as.data.table(SA_df))
-
-# Set a key on any data tables in myList - use the XXid column as the key
-for(aTable in names(Pckg_Survey_apiclust2_asH1)){
-  if ('data.table' %in% class(Pckg_Survey_apiclust2_asH1[[aTable]])){
-    data.table::setkeyv(Pckg_Survey_apiclust2_asH1[[aTable]],paste0(aTable,"id"))
-    #Set R names
-    oldNames <- colnames(Pckg_Survey_apiclust2_asH1[[aTable]])
-    rNames <- mapColNamesFieldR$R.Name
-    names(rNames) <- mapColNamesFieldR$Field.Name
-    data.table::setnames(Pckg_Survey_apiclust2_asH1[[aTable]],oldNames, rNames[oldNames], skip_absent = T)
-  }
-}
-
-#check the data
-validateRDBESDataObject(Pckg_Survey_apiclust2_asH1)
-
 RDBESlist <- list(DE = DE_df,
                   SD = SD_df,
                   VS = VS_df,
@@ -628,6 +604,8 @@ RDBESlist <- list(DE = DE_df,
                   FO = FO_df,
                   SS = SS_df,
                   SA = SA_df)
+
+Pckg_Survey_apiclust2_asH1 <- RDBEScore:::dfs2RDBESDataObject(RDBESlist, F)
 
 #id table
 a<-merge(DE_df["DEid"],SD_df[c("DEid","SDid")])
