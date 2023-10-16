@@ -9,7 +9,7 @@ test_that("createRDBESDataObject can create an empty object without errors
 test_that("createRDBESDataObject can create an object from an H1 data extract
           without errors or warnings",  {
 
-  myPath <- "./h1_v_1_19_13"
+  myPath <- "./h1_v_1_19_18"
 
   myObject <- expect_warning(createRDBESDataObject(rdbesExtractPath = myPath),NA)
   myObject <- expect_error(createRDBESDataObject(rdbesExtractPath = myPath),NA)
@@ -17,7 +17,7 @@ test_that("createRDBESDataObject can create an object from an H1 data extract
 test_that("createRDBESDataObject can create an object from an H1 data extract
           without errors or warnings (when castToCorrectDataTypes = FALSE)",  {
 
-  myPath <- "./h1_v_1_19_13"
+  myPath <- "./h1_v_1_19_18"
 
   myObject <- expect_warning(
     createRDBESDataObject(rdbesExtractPath = myPath,
@@ -29,7 +29,7 @@ test_that("createRDBESDataObject can create an object from an H1 data extract
 test_that("createRDBESDataObject can create an object from an H5 data extract
           without errors or warnings",  {
 
-  myPath <- "./h5_v_1_19_13"
+  myPath <- "./h5_v_1_19_18"
 
   myObject <- expect_warning(createRDBESDataObject(rdbesExtractPath = myPath),NA)
   myObject <- expect_error(createRDBESDataObject(rdbesExtractPath = myPath),NA)
@@ -37,7 +37,7 @@ test_that("createRDBESDataObject can create an object from an H5 data extract
 test_that("createRDBESDataObject can create an object from an H5 data extract
           without errors or warnings (when castToCorrectDataTypes = FALSE)",  {
 
-    myPath <- "./h5_v_1_19_13"
+    myPath <- "./h5_v_1_19_18"
 
     myObject <- expect_warning(
               createRDBESDataObject(rdbesExtractPath = myPath,
@@ -48,7 +48,7 @@ test_that("createRDBESDataObject can create an object from an H5 data extract
 })
 test_that("createRDBESDataObject can create an object from an H1 data extract by specifying file names without errors or warnings",  {
 
-  myPath <- "./h1_v_1_19_13"
+  myPath <- "./h1_v_1_19_18"
   myFileNames <- list("DE"="DE.csv","SD"="SD.csv")
 
   myObject <- expect_warning(createRDBESDataObject(rdbesExtractPath = myPath, listOfFileNames = myFileNames),NA)
@@ -61,7 +61,7 @@ test_that("createRDBESDataObject will give a warning if given a dir with no rele
 })
 test_that("createRDBESDataObject creates an object with the correct data types",  {
 
-  myPath <- "./h1_v_1_19_13"
+  myPath <- "./h1_v_1_19_18"
 
   myRDBESDataObject <- createRDBESDataObject(rdbesExtractPath = myPath,
                          castToCorrectDataTypes = TRUE)
@@ -73,7 +73,7 @@ test_that("createRDBESDataObject creates an object with the correct data types",
 })
 test_that("createRDBESDataObject creates an H1 object with keys on the data tables",  {
 
-  myPath <- "./h1_v_1_19_13"
+  myPath <- "./h1_v_1_19_18"
 
   myRDBESDataObject <- createRDBESDataObject(rdbesExtractPath = myPath)
 
@@ -94,7 +94,7 @@ test_that("createRDBESDataObject creates an H1 object with keys on the data tabl
 })
 test_that("createRDBESDataObject creates an H5 object with keys on the data tables",  {
 
-  myPath <- "./h5_v_1_19_13"
+  myPath <- "./h5_v_1_19_18"
 
   myRDBESDataObject <- createRDBESDataObject(rdbesExtractPath = myPath)
 
@@ -115,7 +115,7 @@ test_that("createRDBESDataObject creates an H5 object with keys on the data tabl
 })
 test_that("createRDBESDataObject creates an H7 object with keys on the data tables",  {
 
-  myPath <- "./h7_v_1_19_13"
+  myPath <- "./h7_v_1_19_18"
 
   myRDBESDataObject <- createRDBESDataObject(rdbesExtractPath = myPath)
 

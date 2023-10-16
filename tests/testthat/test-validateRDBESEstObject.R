@@ -17,14 +17,14 @@ test_that("validateRDBESEstObject does not error for valid empty object",  {
 })
 test_that("validateRDBESEstObject does not error for valid object from H1 data",  {
 
-  myObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
+  myObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_18")
   myEStObj <- createRDBESEstObject(myObject,1)
   expect_error(validateRDBESEstObject(myEStObj),NA)
 
 })
 test_that("validateRDBESEstObject does not error for valid object from H5 data",  {
 
-  myObject <- createRDBESDataObject(rdbesExtractPath = "./h5_v_1_19_13")
+  myObject <- createRDBESDataObject(rdbesExtractPath = "./h5_v_1_19_18")
   myEStObj <- createRDBESEstObject(myObject,5)
   expect_error(validateRDBESEstObject(myEStObj),NA)
 
