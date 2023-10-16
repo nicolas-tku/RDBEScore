@@ -7,7 +7,7 @@ designVariables <- c(
   "selectMethCluster", "numTotalClusters",
   "numSampClusters", "selProbCluster",
   "incProbCluster", "samp", "noSampReason",
-  "nonResponseCollected", "auxVarTot", "auxVarValue",
+  "nonRespCol", "auxVarTot", "auxVarValue",
   "auxVarName", "auxVarUnit"
 )
 
