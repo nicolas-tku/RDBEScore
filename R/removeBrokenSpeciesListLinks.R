@@ -76,7 +76,8 @@ removeBrokenSpeciesListLinks <- function(objectToCheck, verbose = FALSE) {
       joinedTables <- dplyr::inner_join(myTable,
                                     objectToCheck[["SL"]],
                                     by = c("SSspecListName" = "SLspeclistName"),
-                                    multiple = "all"
+                                    multiple = "all",
+                                    relationship="many-to-many"
       )
 
       # Update the results for any matches we found
