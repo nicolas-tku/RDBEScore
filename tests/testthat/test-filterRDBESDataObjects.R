@@ -1,25 +1,36 @@
 capture.output({  ## suppresses printing of console output when running test()
 
 test_that("filterRDBESDataObject returns the correct result for
-          single field/value", {
-  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
+          H1 (1)", {
+
+  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_18")
+
+  # Only use a subset of the test data
+  myH1RawObject <- filterRDBESDataObject(myH1RawObject,c("DEstratumName"),c("DE_stratum1_H1","DE_stratum2_H1","DE_stratum3_H1"))
+  myH1RawObject <- findAndKillOrphans(myH1RawObject, verbose = FALSE)
+
   myFields <- c("FTarvLoc")
   myValues <- c("ZWBFO")
   myFilteredObject <- filterRDBESDataObject(myH1RawObject,
     fieldsToFilter = myFields,
     valuesToFilter = myValues
   )
+  myFilteredObject <- findAndKillOrphans(myFilteredObject, verbose = FALSE)
 
   # Check the filtered object is ok (should return the object)
   expect_equal(myFilteredObject, validateRDBESDataObject(myFilteredObject,
                                                          verbose = FALSE))
   # Check the expected number of FT rows are returned
-  expect_equal(nrow(myFilteredObject[["FT"]]), 17)
+  expect_equal(nrow(myFilteredObject[["FT"]]), 20)
 })
 
-test_that("filterRDBESDataObject returns the correct result for single field/
-          two values", {
-  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
+test_that("filterRDBESDataObject returns the correct result for H1 (2)", {
+  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_18")
+
+  # Only use a subset of the test data
+  myH1RawObject <- filterRDBESDataObject(myH1RawObject,c("DEstratumName"),c("DE_stratum1_H1","DE_stratum2_H1","DE_stratum3_H1"))
+  myH1RawObject <- findAndKillOrphans(myH1RawObject, verbose = FALSE)
+
   myFields <- c("FTarvLoc")
   myValues <- c("ZWBFO", "ZWBZH")
   myFilteredObject <- filterRDBESDataObject(myH1RawObject,
@@ -31,11 +42,11 @@ test_that("filterRDBESDataObject returns the correct result for single field/
   expect_equal(myFilteredObject, validateRDBESDataObject(myFilteredObject,
                                                          verbose = FALSE))
   # Check the expected number of FT rows are returned
-  expect_equal(nrow(myFilteredObject[["FT"]]), 37)
+  expect_equal(nrow(myFilteredObject[["FT"]]), 35)
 })
 test_that("filterRDBESDataObject returns the correct result for two fields/
           two values", {
-  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
+  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_18")
   myFields <- c("DEyear", "DEhierarchy")
   myValues <- c(1965, 2)
   myFilteredObject <- filterRDBESDataObject(myH1RawObject,
@@ -49,9 +60,11 @@ test_that("filterRDBESDataObject returns the correct result for two fields/
   # Check the expected number of DE rows are returned
   expect_equal(nrow(myFilteredObject[["DE"]]), 0)
 })
-test_that("filterRDBESDataObject returns the correct result for two fields/ two
-          values", {
-  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
+test_that("filterRDBESDataObject returns the correct result for H1 (3)", {
+  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_18")
+  # Only use a subset of the test data
+  myH1RawObject <- filterRDBESDataObject(myH1RawObject,c("DEstratumName"),c("DE_stratum1_H1","DE_stratum2_H1","DE_stratum3_H1"))
+  myH1RawObject <- findAndKillOrphans(myH1RawObject, verbose = FALSE)
   myFields <- c("DEyear", "DEhierarchy")
   myValues <- c(1965, 1)
   myFilteredObject <- filterRDBESDataObject(myH1RawObject,
@@ -67,7 +80,7 @@ test_that("filterRDBESDataObject returns the correct result for two fields/ two
 })
 test_that("filterRDBESDataObject returns the correct result for three fields/
           three values", {
-  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
+  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_18")
   myFields <- c("DEsampSchemeType", "DEsampScheme", "DEstratumName")
   myValues <- c("NatPilCF", "National Routine", "DE_stratum3_H1")
   myFilteredObject <- filterRDBESDataObject(myH1RawObject,
@@ -82,7 +95,7 @@ test_that("filterRDBESDataObject returns the correct result for three fields/
   expect_equal(nrow(myFilteredObject[["DE"]]), 1)
 })
 test_that("filterRDBESDataObject returns a warning if incorrect field name is used", {
-  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
+  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_18")
   myFields <- c("DEabc")
   myValues <- c("ZWBFO")
 
@@ -96,7 +109,7 @@ test_that("filterRDBESDataObject returns a warning if incorrect field name is us
 })
 
 test_that("filterRDBESDataObject successfully removes orphans", {
-  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
+  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_18")
 
   # remove all the VS rows (but not any other rows)
   myFields <- c("VSunitName")
@@ -118,7 +131,7 @@ test_that("filterRDBESDataObject successfully removes orphans", {
 })
 
 test_that("filterRDBESDataObject does not removes orphans when killOrphans = FALSE", {
-  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_13")
+  myH1RawObject <- createRDBESDataObject(rdbesExtractPath = "./h1_v_1_19_18")
 
   # remove all the VS rows (but not any other rows)
   myFields <- c("VSunitName")
