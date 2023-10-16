@@ -37,7 +37,7 @@ default is \code{FALSE}.
 \dontrun{
 
 myH1RawObject <-
-  createRDBESDataObject(rdbesExtractPath = "tests\\\\testthat\\\\h1_v_1_19")
+  importRDBESDataCSV(rdbesExtractPath = "tests\\\\testthat\\\\h1_v_1_19")
 
 myFields <- c("SDctry", "VDctry", "VDflgCtry", "FTarvLoc")
 myValues <- c("ZW", "ZWBZH", "ZWVFA")

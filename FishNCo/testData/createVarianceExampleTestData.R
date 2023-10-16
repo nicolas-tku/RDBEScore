@@ -3,7 +3,7 @@ library(dplyr)
 
 
 # Load the test data
-testData <- RDBEScore::createRDBESDataObject("./FishNCo/testData/RegionalTestData")
+testData <- createRDBESDataObject("./FishNCo/testData/RegionalTestData")
 
 
 # show the non-null table names

@@ -3,7 +3,7 @@ test_that("removeBrokenVesselLinks runs without errors
 
   myPath <- "./h1_v_1_19_18"
   myH1RawObject <-
-    createRDBESDataObject(rdbesExtractPath = myPath)
+    importRDBESDataCSV(rdbesExtractPath = myPath)
 
   myObjectValidVesselLinks <- expect_warning(
     removeBrokenVesselLinks(objectToCheck = myH1RawObject, verbose = FALSE)
@@ -14,7 +14,7 @@ test_that("removeBrokenVesselLinks produces an error if the VD table is null ", 
 
   myPath <- "./h1_v_1_19_18"
   myH1RawObject <-
-    createRDBESDataObject(rdbesExtractPath = myPath)
+    importRDBESDataCSV(rdbesExtractPath = myPath)
   myH1RawObject["VD"] <- list(NULL)
 
   myObjectValidVesselLinks <- expect_error(
@@ -27,7 +27,7 @@ test_that("removeBrokenVesselLinks runs without errors
 
   myPath <- "./h1_v_1_19_18"
   myH1RawObject <-
-      createRDBESDataObject(rdbesExtractPath = myPath)
+      importRDBESDataCSV(rdbesExtractPath = myPath)
   myFields <- c("VDlenCat")
   myValues <- c("18-<24" )
   myFilteredObject <- filterRDBESDataObject(myH1RawObject,

@@ -79,7 +79,7 @@ names(importedTables[!unlist(lapply(importedTables, is.null))])
 It can also import the unzipped `.csv` files with the default RDBES names:
 
 ```{r}
-importedH5 <- createRDBESDataObject("../tests/testthat/h5_v_1_19_13")
+importedH5 <- importRDBESDataCSV("../tests/testthat/h5_v_1_19_13")
 #print the not NULL table names
 names(importedTables[!unlist(lapply(importedTables, is.null))])
 ```

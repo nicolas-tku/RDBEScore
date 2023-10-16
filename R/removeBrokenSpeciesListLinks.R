@@ -14,7 +14,7 @@
 #' \dontrun{
 #'
 #' myH1RawObject <-
-#'   createRDBESDataObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
+#'   importRDBESDataCSV(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
 #' myFields <- c("SLspeclistName")
 #' myValues <- c("WGRDBES-EST TEST 5 - sprat data")
 #' myFilteredObject <- filterRDBESDataObject(myH1RawObject,

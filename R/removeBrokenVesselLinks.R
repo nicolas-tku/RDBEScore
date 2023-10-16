@@ -12,7 +12,7 @@
 #' \dontrun{
 #'
 #' myH1RawObject <-
-#'   createRDBESDataObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
+#'   importRDBESDataCSV(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
 #' myFields <- c("VDlenCat")
 #' myValues <- c("18-<24")
 #' myFilteredObject <- filterRDBESDataObject(myH1RawObject,

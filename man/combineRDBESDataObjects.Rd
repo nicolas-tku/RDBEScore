@@ -25,9 +25,9 @@ tables one by one
 \dontrun{
 
 myH1RawObject <-
-    createRDBESDataObject(rdbesExtractPath = "tests\\\\testthat\\\\h1_v_1_19")
+    importRDBESDataCSV(rdbesExtractPath = "tests\\\\testthat\\\\h1_v_1_19")
 myH5RawObject <-
-    createRDBESDataObject(rdbesExtractPath = "tests\\\\testthat\\\\h5_v_1_19")
+    importRDBESDataCSV(rdbesExtractPath = "tests\\\\testthat\\\\h5_v_1_19")
 
 myCombinedRawObject <- combineRDBESDataObjects(RDBESDataObject1=myH1RawObject,
                                              RDBESDataObject2=myH5RawObject)

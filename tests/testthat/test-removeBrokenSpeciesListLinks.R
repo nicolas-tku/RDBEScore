@@ -5,7 +5,7 @@ test_that("removeBrokenSpeciesListLinks runs without errors
 
     myPath <- "./h1_v_1_19_18"
     myH1RawObject <-
-    createRDBESDataObject(rdbesExtractPath = myPath)
+    importRDBESDataCSV(rdbesExtractPath = myPath)
 
     myObjectValidSpeciesListLinks <- expect_warning(
               removeBrokenSpeciesListLinks(objectToCheck = myH1RawObject,
@@ -18,7 +18,7 @@ test_that("removeBrokenSpeciesListLinks prduces an error
 
     myPath <- "./h1_v_1_19_18"
     myH1RawObject <-
-    createRDBESDataObject(rdbesExtractPath = myPath)
+    importRDBESDataCSV(rdbesExtractPath = myPath)
     myH1RawObject["SL"] <- list(NULL)
 
     myObjectValidSpeciesListLinks <- expect_error(
@@ -32,7 +32,7 @@ test_that("removeBrokenSpeciesListLinks runs without errors
 
     myPath <- "./h1_v_1_19_18"
     myH1RawObject <-
-      createRDBESDataObject(rdbesExtractPath = myPath)
+      importRDBESDataCSV(rdbesExtractPath = myPath)
     myFields <- c("SLspeclistName")
     myValues <- c("WGRDBES-EST TEST 5 - sprat data" )
     myFilteredObject <- filterRDBESDataObject(myH1RawObject,

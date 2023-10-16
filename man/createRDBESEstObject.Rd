@@ -32,7 +32,7 @@ Creates an rdbesEStObject from prepared RDBES data
 \examples{
 \dontrun{
 myH1RawObject <-
-  createRDBESDataObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
+  importRDBESDataCSV(rdbesExtractPath = "tests/testthat/h1_v_1_19")
 myH1EstObj <- createRDBESEstObject(myH1RawObject, 1)
 }
 }
