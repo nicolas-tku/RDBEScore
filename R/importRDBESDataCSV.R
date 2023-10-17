@@ -19,10 +19,10 @@
 #' @return A RDBESDataObject.  If a path to RDBES extract files is provided then
 #' it will contain the data from those files.  If no path is supplied then
 #' an empty RDBESDataObject will be returned.
-#' @export
 #'
 #' @examples
 #' myEmptyRDBESObject <- importRDBESDataCSV()
+
 importRDBESDataCSV <- function(rdbesExtractPath = NA,
                                  listOfFileNames = NA,
                                  castToCorrectDataTypes = TRUE) {

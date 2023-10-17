@@ -7,25 +7,37 @@
 importRDBESDataDFS(myList, castToCorrectDataTypes = TRUE)
 }
 \arguments{
-\item{myList}{A list of data tables. Each element of the list should be a data frame or NULL.}
+\item{myList}{A list of data tables. Each element of the list should be a
+data frame or NULL.}
 
-\item{castToCorrectDataTypes}{A logical value indicating whether to cast the columns to the correct data types. Default is TRUE.}
+\item{castToCorrectDataTypes}{A logical value indicating whether to cast the
+columns to the correct data types. Default is TRUE.}
 }
 \value{
-An RDBESDataObject with each element being a data table from the input list.
+An RDBESDataObject with each element being a data table from the
+  input list.
 }
 \description{
 This function converts a list of data frames into an RDBESDataObject.
 }
 \details{
-The function first defines a helper function, `makeDT`, which converts its input into a data table using `data.table::as.data.table`.
-If the input is NULL, it returns NULL.
+The function first defines a helper function, `makeDT`, which
+converts its input into a data table using `data.table::as.data.table`. If
+the input is NULL, it returns NULL.
 
-It then uses the `RDBEScore::newRDBESDataObject` function to create a new RDBESDataObject, with each element being the result of applying `makeDT` to the corresponding element of `myList`.
+It then uses the `RDBEScore::newRDBESDataObject` function to create a new
+RDBESDataObject, with each element being the result of applying `makeDT` to
+the corresponding element of `myList`.
 
-The function then iterates over each element of `dt`. If an element is a data table, it sets a key on it using the 'XXid' column as the key, where 'XX' is the name of the data table. It also renames the columns according to `RDBEScore::mapColNamesFieldR$R.Name`, and replaces all empty strings with NA.
+The function then iterates over each element of `dt`. If an element is a data
+table, it sets a key on it using the 'XXid' column as the key, where 'XX' is
+the name of the data table. It also renames the columns according to
+`RDBEScore::mapColNamesFieldR$R.Name`, and replaces all empty strings with
+NA.
 
-If `castToCorrectDataTypes` is TRUE, it then ensures all columns are of the correct data type using `RDBEScore:::setRDBESDataObjectDataTypes`.
+If `castToCorrectDataTypes` is TRUE, it then ensures all columns are of the
+correct data type using `RDBEScore:::setRDBESDataObjectDataTypes`.
 
-Finally, it validates the RDBESDataObject using `RDBEScore::validateRDBESDataObject` and returns it.
+Finally, it validates the RDBESDataObject using
+`RDBEScore::validateRDBESDataObject` and returns it.
 }

@@ -12,13 +12,13 @@
 #'
 #' @return a list of all the RDBES data tables
 #' The table that are not in input data are NULL
-#' @export
 #'
 #' @seealso \code{\link{importRDBESDataCSV}}
 #'
 #' @examples
 #' files <- c("./tests/testthat/h1_v_1_19/H1_2021_000_example.zip")
 #' obj <- importRDBESDataZIP(files)
+
 importRDBESDataZIP <- function(filenames,
                                     castToCorrectDataTypes = TRUE) {
   randInt <- paste0(sample(1:100, 3), collapse = "")

@@ -10,20 +10,24 @@
 		target_var<-"enroll"
 
 	# name your project (will be used in filenames for CS, SL and VD)
-		project_name_outputs <- "WGRDBES-EST_TEST1_Pckg_survey_data_apistrat_H1"
+		project_name_outputs <- "WGRDBES-EST_TEST_1_Pckg_survey_apistrat_H1"
 
 
 	# select a year for upload
 		DEyear<-1965
 		SDinstitution <- 4484
 		DEsamplingScheme<-"WGRDBES-EST TEST 1"
+		DEstratumName <- "Pckg_survey_apistrat_H1"
+		project_name_outputs <- gsub(" ","_", paste0(DEsamplingScheme,"_", DEstratumName))
 		baseDir <- "./data-raw/exampleData/TextBookExamples"
+		baseDir <- ""
 		VD_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/VD_base.rds"))
 		SL_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/SL_base.rds"))
 
 		#nameof the directory where the outputs are saved currently
-		base_dir_outputs <- paste0(baseDir,"/BuiltUploads/")
-		dir.create(base_dir_outputs, recursive=T, showWarnings=FALSE)
+		base_dir_outputs <- paste0(baseDir,"BuiltUploads")
+		if(!file.exists(base_dir_outputs)) dir.create(base_dir_outputs, recursive=T, showWarnings=FALSE)
+
 
 #========Outline of Hierarchy 1================
 	# Design
@@ -67,7 +71,7 @@ DE_df<-data.frame(
 		  DEsamplingScheme = DEsamplingScheme,
 		  DEsamplingSchemeType = "NatRouCF",
 		  DEyear = as.integer(DEyear),
-		  DEstratumName = project_name_outputs,
+		  DEstratumName = DEstratumName,
 		  DEhierarchyCorrect = "Y",
 		  DEhierarchy = 1,
 		  DEsampled = "Y",
