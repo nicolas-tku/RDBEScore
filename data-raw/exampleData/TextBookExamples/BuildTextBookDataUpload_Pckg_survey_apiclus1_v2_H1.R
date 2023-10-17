@@ -1,43 +1,71 @@
-#=======Prepares textbook data as H1 upload file==========
+#=======Prepares textbook data survey::apiclus1 as H1 upload file==========
+
+# Info:
+# ?api
+	# from help: 
+		# The Academic Performance Index is computed for all California schools based on standardised testing of 
+		# students. The data sets contain information for all schools with at least 100 students and for various 
+		# probability samples of the data. 
+	# interpretation 
+		# design is 1-stage cluster sampling with clusters of unequal sizes
+		# An SRS of 15 districts is selected (psus) from the 757 districts in the population.  
+		# All schools within district are selected (ssus)
+		# the weights (pw) do not match 757/15 probably because they have 
+			# been calibrated (see https://cran.r-project.org/web/packages/survey/vignettes/precalibrated.pdf)
+	# target variable is enroll
+
+# how this example is placed in RDBES
+	# 1 DE row with DEstratumName == "Pckg_SDAResources_apiclus1_v2_H1"
+	# 1 child SD row
+	# 183 child rows in VS (the 186 schools finally observed)
+		# each associated to its cluster (dname)
+		# VSnumberTotalClusters is 757
+		# VSnumberTotal is the number of schools in the cluster (census)
+	# tables FT, FO, SS are just 1:1 links to the final data (in SA)
+	# in SA SAsampleWeightMeasured is enroll
+	# calibrated weights are provided as 1/pw in VSinclusionProbCluster
+	
+	# it is labelled v2 because the ssus and psus are in the same table
 
 
+	rm(list=ls())
 	library(data.table)
 
-# load textbook data
-library(survey)
-data(api)
-df<-apiclus2
-target_var<-"enroll"
+	# load textbook data
+		library(survey)
+		data(api)
+		dataset<-apiclus1
+		target_var<-"enroll"
 
-# name your project (will be used in filenames for CS, SL and VD)
-project_name_outputs <- "WGRDBES-EST_TEST_1_Pckg_survey_apiclus2_H1"
+	# name your project (will be used in filenames for CS, SL and VD)
+		project_name_outputs <- "WGRDBES-EST_TEST_1_Pckg_survey_apiclus1_v2_H1"
 
-# select a year for upload
-DEyear<-1965
-SDinstitution <- 4484
-DEsamplingScheme<-"WGRDBES-EST TEST 1"
-DEstratumName <- "Pckg_survey_apiclus2_H1"
-project_name_outputs <- gsub(" ","_", paste0(DEsamplingScheme,"_", DEstratumName))
-baseDir <- "./data-raw/exampleData/TextBookExamples/"
-#baseDir <- ""
-VD_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/VD_base.rds"))
-SL_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/SL_base.rds"))
+	# select a year for upload
+		DEyear<-1965
+		SDinstitution <- 4484
+		DEsamplingScheme<-"WGRDBES-EST TEST 1"
+		DEstratumName <- "Pckg_SDAResources_apiclus1_v2_H1"
+		project_name_outputs <- gsub(" ","_", paste0(DEsamplingScheme,"_", DEstratumName))
+		baseDir <- "./data-raw/exampleData/TextBookExamples/"
+		baseDir <- ""
+		VD_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/VD_base.rds"))
+		SL_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/SL_base.rds"))
 
-#nameof the directory where the outputs are saved currently
-base_dir_outputs <- paste0(baseDir,"BuiltUploads/")
-if(!file.exists(base_dir_outputs)) dir.create(base_dir_outputs, recursive=T, showWarnings=FALSE)
+		#nameof the directory where the outputs are saved currently
+		base_dir_outputs <- paste0(baseDir,"BuiltUploads")
+		if(!file.exists(base_dir_outputs)) dir.create(base_dir_outputs, recursive=T, showWarnings=FALSE)
 
 
 #=========Outline of Hierarchy 1===============
-# Design
-# Sampling details
-# Vessel Selection
-# Fishing Trip
-# Fishing Operation
-# Species Selection
-# Sample
-# Length
-# Biological variables
+	# Design
+	# Sampling details
+	# Vessel Selection
+	# Fishing Trip
+	# Fishing Operation
+	# Species Selection
+	# Sample
+	# Length
+		# Biological variables
 
 
 
@@ -62,31 +90,31 @@ if(!file.exists(base_dir_outputs)) dir.create(base_dir_outputs, recursive=T, sho
 # 15 DEauxiliaryVariableUnit[DV,O]-MUNIT
 
 DE_df_base<-expand.grid(DEyear=DEyear,
-                        DEstratumName="U",stringsAsFactors=F)
+						DEstratumName="U",stringsAsFactors=F)
 
 DE_df<-data.frame(
-  DEid = 1:nrow(DE_df_base),
-  DErecordType = "DE",
-  DEsamplingScheme = DEsamplingScheme,
-  DEsamplingSchemeType = "NatRouCF",
-  DEyear = as.integer(DEyear),
-  DEstratumName = DEstratumName,
-  DEhierarchyCorrect = "Y",
-  DEhierarchy = 1,
-  DEsampled = "Y",
-  DEreasonNotSampled = "",
-  DEnonResponseCollected = "Y",
-  DEauxiliaryVariableTotal = "",
-  DEauxiliaryVariableValue = "",
-  DEauxiliaryVariableName = "",
-  DEauxiliaryVariableUnit = "",
-  stringsAsFactors=FALSE
-)
+		  DEid = 1:nrow(DE_df_base),
+		  DErecordType = "DE",
+		  DEsamplingScheme = DEsamplingScheme,
+		  DEsamplingSchemeType = "NatRouCF",
+		  DEyear = as.integer(DEyear),
+		  DEstratumName = DEstratumName,
+		  DEhierarchyCorrect = "Y",
+		  DEhierarchy = 1,
+		  DEsampled = "Y",
+		  DEreasonNotSampled = "",
+		  DEnonResponseCollected = "Y",
+		  DEauxiliaryVariableTotal = "",
+		  DEauxiliaryVariableValue = "",
+		  DEauxiliaryVariableName = "",
+		  DEauxiliaryVariableUnit = "", 
+		  stringsAsFactors=FALSE
+			)
 
 #====SD===========
 
 
-# x
+                          # x
 # 1            SDid [M] - int
 # 2            DEid [M] - int
 # 3 SDrecordType [M] - string
@@ -130,42 +158,43 @@ SD_df<-data.frame(
 # 23 VSinclusionProbCluster [DV,O] - Decimal0.0000000000000001-1
 # 24                              VSsampled [DV,M] - YesNoFields
 # 25            VSreasonNotSampled [DV,O] - ReasonForNotSampling
+# 26          	     VSnonResponseCollected [DV,O] - YesNoFields
+# 27              VSauxiliaryVariableTotal [DV,O] - DecimalPrec3
+# 28              VSauxiliaryVariableValue [DV,O] - DecimalPrec3
+# 29      VSauxiliaryVariableName [DV,O] - AuxiliaryVariableName
+# 30                      VSauxiliaryVariableUnit [DV,O] - MUNIT
 
+#check_All_fields("VS")
+	dataset$VSid <- 1:nrow(dataset)
+	
+	aux_sampleSizes<-as.data.table(dataset)[,list(Npsu=757,npsu=15, Nssu="",nssu=.N),list(dnum, dname)]
+	aux<-data.table(apipop)[,list(.N, x=length(unique(snum))), dnum] # gets Nssu from population data
+	aux_sampleSizes$Nssu<-aux$N[match(aux_sampleSizes$dnum,aux$dnum)]
 
-# The PSU will be Vessels and the SSU will be Trips
-df_vessel <- df[!duplicated(df[c("dname")]),]
-# adds VSid to df
-	df_vessel$VSid <- 1:nrow(df_vessel)
-
-# creates a dummyVD and adds df
-	# restricts VD_base to what is needed
-	VD_base <- VD_base[1:nrow(df_vessel),]
-
-	df_vessel$VSencryptedVesselCode<-VD_base$VDencryptedVesselCode
-	# should be 0
-	test<-sum(duplicated(df_vessel$VSencryptedVesselCode))==0
-	if(!test) stop( "duplicated VSencryptedVesselCode")
+	VS_base <- dataset
+	VD_base <- VD_base[1:nrow(VS_base),]
+	VS_base$VSencryptedVesselCode<-VD_base$VDencryptedVesselCode
 
 
 VS_df <- data.frame(
-  VSid = df_vessel$VSid,
+  VSid = dataset$VSid,
   SDid = as.integer(1),
   VDid = "",
   TEid = "",
   VSrecordType = 'VS',
-  VSsequenceNumber = 1:nrow(df_vessel),# M
-  VSencryptedVesselCode = df_vessel$VSencryptedVesselCode, #M
-  VSstratification = "Y",
+  VSsequenceNumber = unlist(lapply(aux_sampleSizes$nssu, function(x) 1:x)),# M
+  VSencryptedVesselCode = VS_base$VSencryptedVesselCode, #M
+  VSstratification = "N",
   VSstratumName = "U", #M
-  VSclustering = "N", #M
-  VSclusterName = "U", #M
+  VSclustering = "1C", #M
+  VSclusterName = dataset$dname, #M
   VSsampler = "Observer", #M
-  VSnumberTotal = df_vessel$fpc1,
-  VSnumberSampled = nrow(df_vessel),
+  VSnumberTotal = "",
+  VSnumberSampled = "",
   VSselectionProb = "",
   VSinclusionProb = "",
   VSselectionMethod = "SRSWOR", #M
-  VSunitName = df_vessel$dname,#M
+  VSunitName = VS_base$sname,#M
   VSselectionMethodCluster = "",
   VSnumberTotalClusters = "",
   VSnumberSampledClusters = "",
@@ -173,14 +202,28 @@ VS_df <- data.frame(
   VSinclusionProbCluster = "",
   VSsampled = "Y",#M
   VSreasonNotSampled = "",
-  VSnonResponseCollected = "",
+  VSnonResponseCollected = "Y",
   VSauxiliaryVariableTotal = "",
   VSauxiliaryVariableValue = "",
-  VSauxiliaryVariableName = "",
+  VSauxiliaryVariableName = "", 
   VSauxiliaryVariableUnit = "",
   stringsAsFactors=FALSE
   )
 
+
+# units within cluster
+VS_df$VSnumberSampled<-aux_sampleSizes$nssu[match(VS_df$VSclusterName,aux_sampleSizes$dname)]
+VS_df$VSnumberTotal<-aux_sampleSizes$Nssu[match(VS_df$VSclusterName,aux_sampleSizes$dname)]
+VS_df$VSselectionProb<-1
+VS_df$VSinclusionProb<-1
+VS_df$VSselectionMethod<-"CENSUS"
+
+# clusters
+VS_df$VSnumberTotalClusters<-757
+VS_df$VSnumberSampledClusters<-15
+VS_df$VSselectionMethodCluster<-"SRSWOR"
+VS_df$VSselectionProbCluster<-""
+VS_df$VSinclusionProbCluster<-1/VS_base$pw # based on the original weights provided in apiclus1
 
 #===FT============
 
@@ -194,7 +237,7 @@ VS_df <- data.frame(
 # 7                                             TEid [M/O] - int
 # 8                                    FTrecordType [M] - string
 # 9                  FTencryptedVesselCode [M] - StringLength100
-# 10                      FTsequenceNumber [M] - StringLength100
+# 10                             	  FTsequenceNumber [M] - int
 # 11                       FTstratification [DV,M] - YesNoFields
 # 12                      FTstratumName [DV,M] - StringLength100
 # 13                            FTclustering [DV,M] - Clustering
@@ -204,84 +247,74 @@ VS_df <- data.frame(
 # 17                  FTnumberOfHaulsOrSets [M/O] - IntZeroToMax
 # 18                  FTdepartureLocation [M/O] - Harbour_LOCODE
 # 19                                FTdepartureDate [M/O] - Date
-# 20                                FTdepartureTime [M/O] - Time
+# 20                 FTdepartureTime [M/O] - StringLength60
 # 21                      FTarrivalLocation [M] - Harbour_LOCODE
 # 22                                    FTarrivalDate [M] - Date
-# 23                                  FTarrivalTime [M/O] - Time
+# 23                   FTarrivalTime [M/O] - StringLength60
 # 24                                  FTnumberTotal [DV,O] - int
 # 25                                FTnumberSampled [DV,O] - int
-# 26        FTselectionProb [DV,O] - Decimal0.0000000000000001-1
-# 27        FTinclusionProb [DV,O] - Decimal0.0000000000000001-1
+# 26                    FTselectionProb [DV,O] - Decimal0-1
+# 27                    FTinclusionProb [DV,O] - Decimal0-1
 # 28                  FTselectionMethod [DV,M] - SelectionMethod
 # 29                         FTunitName [DV,M] - StringLength100
 # 30           FTselectionMethodCluster [DV,O] - SelectionMethod
 # 31                          FTnumberTotalClusters [DV,O] - int
 # 32                        FTnumberSampledClusters [DV,O] - int
-# 33 FTselectionProbCluster [DV,O] - Decimal0.0000000000000001-1
-# 34 FTinclusionProbCluster [DV,O] - Decimal0.0000000000000001-1
+# 33             FTselectionProbCluster [DV,O] - Decimal0-1
+# 34             FTinclusionProbCluster [DV,O] - Decimal0-1
 # 35                              FTsampled [DV,M] - YesNoFields
 # 36            FTreasonNotSampled [DV,O] - ReasonForNotSampling
+# 37            FTnonResponseCollected [DV,O] - YesNoFields
+# 38         FTauxiliaryVariableTotal [DV,O] - DecimalPrec3
+# 39         FTauxiliaryVariableValue [DV,O] - DecimalPrec3
+# 40 FTauxiliaryVariableName [DV,O] - AuxiliaryVariableName
+# 41                 FTauxiliaryVariableUnit [DV,O] - MUNIT
 
-makeChildTbl <- function(parent, data, tbl="FT", by = "dname"){
-
-  if(tbl !="FT"){stop("Not implemented!")}
-  mergeCols <- c(setdiff(colnames(parent), colnames(data)), by)
-  df <- merge(data, parent[mergeCols], by=by)
-  sc <- table(df[[by]])
-  df$sampled_count <- as.vector(sc[df[[by]]])
-  FT_df <- data.frame(
-    FTid = 1:nrow(df),#[M] - int
-    OSid = "",#  [M/O] - int
-    VSid = df$VSid, #[M/O]
-    VDid = "", #[M] - int
-    SDid = "", #[M/O] - int
-    FOid = "", #[M/O] - int
-    TEid = "", #[M/O] - int
-    FTrecordType='FT', #[M] - string
-    FTencryptedVesselCode = df$VSencryptedVesselCode, #[M]
-    FTsequenceNumber = as.integer(1:nrow(df)), #[M] - string
-    FTstratification = "N", #[DV,M] - RS_Stratification
-    FTstratumName = "U", #[DV,M] - string
-    FTclustering = "N", #[DV,M] - RS_Clustering
-    FTclusterName = "U", #[DV,M] - string
-    FTsampler = "Observer", #[M] - RS_Sampler
-    FTsamplingType = "AtSea" , #[M] - RS_SamplingType
-    FTnumberOfHaulsOrSets = 1, #[O] - int
-    FTdepartureLocation="ZWHWN", #[O] - Harbour_LOCODE
-    FTdepartureDate=seq(from = as.Date("1968-01-01", format='%Y-%m-%d'), by=1, length.out=nrow(df)), #[M/O] - date
-    FTdepartureTime="", #[O] - time
-    FTarrivalLocation = "ZWHWN", #[M] - Harbour_LOCODE
-    FTarrivalDate=seq(from = as.Date("1968-01-01", format='%Y-%m-%d'), by=1, length.out=nrow(df)), #[M] - date
-    FTarrivalTime="", #[O] - time
-    FTnumberTotal= as.vector(df$fpc2), #[DV,O] - int
-    FTnumberSampled=df$sampled_count, #[DV,O] - int
-    FTselectionProb="", #[DV,O] - DecimalPrec10
-    FTinclusionProb="", #[DV,O] - DecimalPrec10
-    FTselectionMethod="SRSWOR", #[DV,M] - RS_SelectionMethod
-    FTunitName = df$VSid, #[DV,M] - string
-    FTselectionMethodCluster="", #[DV,O] - RS_SelectionMethod
-    FTnumberTotalClusters="", #[DV,O] - int
-    FTnumberSampledClusters="", #[DV,O] - int
-    FTselectionProbCluster="", #[DV,O] - DecimalPrec10
-    FTinclusionProbCluster="", #[DV,O] - DecimalPrec10
-    FTsampled="Y", #[DV,M] - YesNoFields
-    FTreasonNotSampled= "", #[DV,O] - RS_ReasonForNotSampling,
-    FTnonResponseCollected = factor("N", levels = c('N', 'Y')),
-    FTauxiliaryVariableTotal = "",
-    FTauxiliaryVariableValue = "",
-    FTauxiliaryVariableName = "",
-    FTauxiliaryVariableUnit = "",
-    stringsAsFactors=FALSE)
-  if(any(FT_df$FTnumberTotal < FT_df$FTnumberSampled)){
-    stop("Sampled is more than total")
-  }
-  FT_df
-}
-
-
-FT_df <- makeChildTbl(df_vessel, df, by="dname")
-
-
+FT_df <- data.frame(
+  FTid = dataset$VSid,#[M] - int
+  OSid = "",#  [M/O] - int
+  VSid = dataset$VSid, #[M/O]
+  VDid = "", #[M] - int
+  SDid = "", #[M/O] - int
+  FOid = "", #[M/O] - int
+  TEid = "", #[M/O] - int
+  FTrecordType='FT', #[M] - string
+  FTencryptedVesselCode = VS_base$VSencryptedVesselCode, #[M]
+  FTsequenceNumber = as.integer(1:nrow(dataset)), #[M] - string
+  FTstratification = "N", #[DV,M] - RS_Stratification
+  FTstratumName = "U", #[DV,M] - string
+  FTclustering = "N", #[DV,M] - RS_Clustering
+  FTclusterName = "U", #[DV,M] - string
+  FTsampler = "Observer", #[M] - RS_Sampler
+  FTsamplingType = "AtSea" , #[M] - RS_SamplingType
+  FTnumberOfHaulsOrSets = 1, #[O] - int
+  FTdepartureLocation="ZWHWN", #[O] - Harbour_LOCODE
+  FTdepartureDate=seq(from = as.Date("1965-01-01", format='%Y-%m-%d'), by=1, length.out=nrow(dataset)), #[M/O] - date
+  FTdepartureTime="", #[O] - time
+  FTarrivalLocation = "ZWHWN", #[M] - Harbour_LOCODE
+  FTarrivalDate=seq(from = as.Date("1965-01-01", format='%Y-%m-%d'), by=1, length.out=nrow(dataset)), #[M] - date
+  FTarrivalTime="", #[O] - time
+  FTnumberTotal= 1, #[DV,O] - int
+  FTnumberSampled=1, #[DV,O] - int
+  FTselectionProb=1, #[DV,O] - DecimalPrec10
+  FTinclusionProb=1, #[DV,O] - DecimalPrec10
+  FTselectionMethod="CENSUS", #[DV,M] - RS_SelectionMethod
+  FTunitName = VS_base$VSencryptedVesselCode, #[DV,M] - string
+  FTselectionMethodCluster="", #[DV,O] - RS_SelectionMethod
+  FTnumberTotalClusters="", #[DV,O] - int
+  FTnumberSampledClusters="", #[DV,O] - int
+  FTselectionProbCluster="", #[DV,O] - DecimalPrec10
+  FTinclusionProbCluster="", #[DV,O] - DecimalPrec10
+  FTsampled="Y", #[DV,M] - YesNoFields
+  FTreasonNotSampled= "", #[DV,O] - RS_ReasonForNotSampling
+  FTnonResponseCollected = "N",
+  FTauxiliaryVariableTotal = "",
+  FTauxiliaryVariableValue = "",
+  FTauxiliaryVariableName = "",
+  FTauxiliaryVariableUnit = "", 
+  stringsAsFactors=FALSE
+)
+ 
 #====FO===========
 
 
@@ -312,46 +345,52 @@ FT_df <- makeChildTbl(df_vessel, df, by="dname")
 # 25                                     FOexclusiveEconomicZoneIndicator [O] - ISO_3166
 # 26                                                              FOarea [M] - ICES_Area
 # 27                                                           FOrectangle [O] - StatRec
-# 28                                                   FOgsaSubarea [M] - Areas_GFCM_GSA
-# 29                                           FOjurisdictionArea [O] - JurisdictionArea
-# 30                                                            FOfishingDepth [O] - int
-# 31                                                              FOwaterDepth [O] - int
-# 32                             FOnationalFishingActivity [O] - NationalFishingActivity
-# 33                                             FOmetier5 [O] - Metier5_FishingActivity
-# 34                                             FOmetier6 [M] - Metier6_FishingActivity
-# 35                                                               FOgear [M] - GearType
-# 36                                                                FOmeshSize [O] - int
-# 37                                             FOselectionDevice [O] - SelectionDevice
-# 38                                                 FOselectionDeviceMeshSize [O] - int
-# 39                                                 FOtargetSpecies [O] - TargetSpecies
-# 40              FOincidentalByCatchMitigationDeviceFirst [M] - BycatchMitigationDevice
-# 41  FOincidentalByCatchMitigationDeviceTargetFirst [M] - BycatchMitigationDeviceTarget
-# 42             FOincidentalByCatchMitigationDeviceSecond [M] - BycatchMitigationDevice
-# 43 FOincidentalByCatchMitigationDeviceTargetSecond [M] - BycatchMitigationDeviceTarget
-# 44                                                          FOgearDimensions [O] - int
-# 45                                             FOobservationCode [M] - ObservationCode
-# 46                                                          FOnumberTotal [DV,O] - int
-# 47                                                        FOnumberSampled [DV,O] - int
-# 48                                FOselectionProb [DV,O] - Decimal0.0000000000000001-1
-# 49                                FOinclusionProb [DV,O] - Decimal0.0000000000000001-1
-# 50                                          FOselectionMethod [DV,M] - SelectionMethod
-# 51                                                 FOunitName [DV,M] - StringLength100
-# 52                                   FOselectionMethodCluster [DV,O] - SelectionMethod
-# 53                                                  FOnumberTotalClusters [DV,O] - int
-# 54                                                FOnumberSampledClusters [DV,O] - int
-# 55                         FOselectionProbCluster [DV,O] - Decimal0.0000000000000001-1
-# 56                         FOinclusionProbCluster [DV,O] - Decimal0.0000000000000001-1
-# 57                                                      FOsampled [DV,M] - YesNoFields
-# 58                                    FOreasonNotSampled [DV,O] - ReasonForNotSampling
+# 28                                          FOfisheriesManagementUnit [O] - AreaNonFAO
+# 29                                                   FOgsaSubarea [M] - Areas_GFCM_GSA
+# 30                                           FOjurisdictionArea [O] - JurisdictionArea
+# 31                                                            FOfishingDepth [O] - int
+# 32                                                              FOwaterDepth [O] - int
+# 33                             FOnationalFishingActivity [O] - NationalFishingActivity
+# 34                                             FOmetier5 [O] - Metier5_FishingActivity
+# 35                                             FOmetier6 [M] - Metier6_FishingActivity
+# 36                                                               FOgear [M] - GearType
+# 37                                                                FOmeshSize [O] - int
+# 38                                             FOselectionDevice [O] - SelectionDevice
+# 39                                                 FOselectionDeviceMeshSize [O] - int
+# 40                                                 FOtargetSpecies [O] - TargetSpecies
+# 41              FOincidentalByCatchMitigationDeviceFirst [M] - BycatchMitigationDevice
+# 42  FOincidentalByCatchMitigationDeviceTargetFirst [M] - BycatchMitigationDeviceTarget
+# 43             FOincidentalByCatchMitigationDeviceSecond [M] - BycatchMitigationDevice
+# 44 FOincidentalByCatchMitigationDeviceTargetSecond [M] - BycatchMitigationDeviceTarget
+# 45                                                          FOgearDimensions [O] - int
+# 46                                             FOobservationCode [M] - ObservationCode
+# 47                                                          FOnumberTotal [DV,O] - int
+# 48                                                        FOnumberSampled [DV,O] - int
+# 49                                FOselectionProb [DV,O] - Decimal0.0000000000000001-1
+# 50                                FOinclusionProb [DV,O] - Decimal0.0000000000000001-1
+# 51                                          FOselectionMethod [DV,M] - SelectionMethod
+# 52                                                 FOunitName [DV,M] - StringLength100
+# 53                                   FOselectionMethodCluster [DV,O] - SelectionMethod
+# 54                                                  FOnumberTotalClusters [DV,O] - int
+# 55                                                FOnumberSampledClusters [DV,O] - int
+# 56                         FOselectionProbCluster [DV,O] - Decimal0.0000000000000001-1
+# 57                         FOinclusionProbCluster [DV,O] - Decimal0.0000000000000001-1
+# 58                                                      FOsampled [DV,M] - YesNoFields
+# 59                                    FOreasonNotSampled [DV,O] - ReasonForNotSampling
+# 60                                         FOnonResponseCollected [DV,O] - YesNoFields
+# 61                                      FOauxiliaryVariableTotal [DV,O] - DecimalPrec3
+# 62                                      FOauxiliaryVariableValue [DV,O] - DecimalPrec3
+# 63                              FOauxiliaryVariableName [DV,O] - AuxiliaryVariableName
+# 64                                              FOauxiliaryVariableUnit [DV,O] - MUNIT
 
 
 FO_df <- data.frame(
-	FOid = FT_df$FTid,
-	FTid = FT_df$FTid,
+	FOid = dataset$VSid,
+	FTid = dataset$VSid,
 	SDid = "",
 	FOrecordType = "FO",#M
 	FOstratification = "N",#M
-	FOsequenceNumber = as.integer(1:nrow(FT_df)),#M
+	FOsequenceNumber = as.integer(1:nrow(dataset)),#M
 	FOstratumName = "U",#M
 	FOclustering = "N",#M
 	FOclusterName = "U",#M
@@ -370,7 +409,7 @@ FO_df <- data.frame(
 	FOstartLon="", # ATT!
 	FOstopLat="",
 	FOstopLon="",
-	FOexclusiveEconomicZoneIndicator = "", #
+	FOexclusiveEconomicZoneIndicator = "", # 
 	FOarea = "27.3.a.21", #M
 	FOrectangle = "",
 	FOfisheriesManagementUnit = "",
@@ -392,12 +431,12 @@ FO_df <- data.frame(
 	FOincidentalByCatchMitigationDeviceTargetSecond = "NotApplicable",#M
 	FOgearDimensions = "",
 	FOobservationCode = 'So', #M
-	FOnumberTotal = 10,
-	FOnumberSampled = 10,
+	FOnumberTotal = 1,
+	FOnumberSampled = 1,
 	FOselectionProb = 1,
 	FOinclusionProb = 1,
 	FOselectionMethod = "CENSUS", #M
-	FOunitName = FT_df$FTid, #M
+	FOunitName = VS_df$VSid, #M
 	FOselectionMethodCluster = "",
 	FOnumberTotalClusters = "",
 	FOnumberSampledClusters = "",
@@ -405,8 +444,7 @@ FO_df <- data.frame(
 	FOinclusionProbCluster = "",
 	FOsampled = "Y", #M
 	FOreasonNotSampled = "",
-	FOnonResponseCollected = factor("N", levels = c('N', 'Y')),
-	FOfisheriesManagementUnit = "",
+	FOnonResponseCollected = "N",
 	FOauxiliaryVariableTotal = "",
 	FOauxiliaryVariableValue = "",
 	FOauxiliaryVariableName = "",
@@ -415,6 +453,7 @@ stringsAsFactors=FALSE
 )
 
 
+#===SS============
 
 # 1                                                SSid [] - int
 # 2                                             LEid [M/O] - int
@@ -450,19 +489,22 @@ stringsAsFactors=FALSE
 # 32 SSinclusionProbCluster [DV,O] - Decimal0.0000000000000001-1
 # 33                              SSsampled [DV,M] - YesNoFields
 # 34            SSreasonNotSampled [DV,O] - ReasonForNotSampling
-
-#====SS===========
+# 35                SSnonResponseCollected [DV,O] - YesNoFields
+# 36             SSauxiliaryVariableTotal [DV,O] - DecimalPrec3
+# 37             SSauxiliaryVariableValue [DV,O] - DecimalPrec3
+# 38     SSauxiliaryVariableName [DV,O] - AuxiliaryVariableName
+# 39                     SSauxiliaryVariableUnit [DV,O] - MUNIT
 
 SS_df<-data.frame(
-	SSid = FO_df$FOid,
+	SSid = dataset$VSid,
 	LEid = "",
-	FOid = FO_df$FOid,
+	FOid = dataset$VSid,
 	FTid = "",
 	OSid = "",
 	TEid = "",
 	SLid = "",
 	SSrecordType = "SS", #M
-	SSsequenceNumber = FO_df$FOid, #M
+	SSsequenceNumber = as.integer(dataset$VSid), #M
 	SSstratification = "N", #M
 	SSstratumName = "U", #M
 	SSclustering = "N", #M
@@ -480,7 +522,7 @@ SS_df<-data.frame(
 	SSselectionProb = 1,
 	SSinclusionProb = 1,
 	SSselectionMethod = "CENSUS",
-	SSunitName = as.character(FO_df$FOid),
+	SSunitName = dataset$VSid,
 	SSselectionMethodCluster = "",
 	SSnumberTotalClusters = "",
 	SSnumberSampledClusters = "",
@@ -493,7 +535,7 @@ SS_df<-data.frame(
 	SSauxiliaryVariableValue = "",
 	SSauxiliaryVariableName = "",
 	SSauxiliaryVariableUnit = "",
-	stringsAsFactors = F
+	stringsAsFactors=FALSE	
 )
 
 #====SA===========
@@ -519,38 +561,46 @@ SS_df<-data.frame(
 # 18         SAexclusiveEconomicZoneIndicator [O] - ISO_3166
 # 19                                  SAarea [O] - ICES_Area
 # 20                               SArectangle [O] - StatRec
-# 21                       SAgsaSubarea [M] - Areas_GFCM_GSA
-# 22               SAjurisdictionArea [O] - JurisdictionArea
-# 23 SAnationalFishingActivity [O] - NationalFishingActivity
-# 24                 SAmetier5 [O] - Metier5_FishingActivity
-# 25                 SAmetier6 [O] - Metier6_FishingActivity
-# 26                                   SAgear [O] - GearType
-# 27                                    SAmeshSize [O] - int
-# 28                 SAselectionDevice [O] - SelectionDevice
-# 29                     SAselectionDeviceMeshSize [O] - int
-# 30                           SAunitType [M] - SamplingUnit
-# 31                             SAtotalWeightLive [O] - int
-# 32                            SAsampleWeightLive [O] - int
-# 33             SAnumberTotal [DV,O] - Decimal0.1-999999999
-# 34           SAnumberSampled [DV,O] - Decimal0.1-999999999
-# 35    SAselectionProb [DV,O] - Decimal0.0000000000000001-1
-# 36    SAinclusionProb [DV,O] - Decimal0.0000000000000001-1
-# 37              SAselectionMethod [DV,M] - SelectionMethod
-# 38                     SAunitName [DV,M] - StringLength100
-# 39                 SAlowerHierarchy [M/O] - LowerHierarchy
-# 40                                 SAsampler [O] - Sampler
-# 41                          SAsampled [DV,M] - YesNoFields
-# 42      SAreasonNotSampledFM [DV,O] - ReasonForNotSampling
-# 43      SAreasonNotSampledBV [DV,O] - ReasonForNotSampling
-# 44                         SAtotalWeightMeasured [O] - int
-# 45                        SAsampleWeightMeasured [O] - int
-# 46        SAconversionFactorMeasLive [O] - Decimal0.900-10
+# 21              SAfisheriesManagementUnit [O] - AreaNonFAO
+# 22                       SAgsaSubarea [M] - Areas_GFCM_GSA
+# 23               SAjurisdictionArea [O] - JurisdictionArea
+# 24 SAnationalFishingActivity [O] - NationalFishingActivity
+# 25                 SAmetier5 [O] - Metier5_FishingActivity
+# 26                 SAmetier6 [O] - Metier6_FishingActivity
+# 27                                   SAgear [O] - GearType
+# 28                                    SAmeshSize [O] - int
+# 29                 SAselectionDevice [O] - SelectionDevice
+# 30                     SAselectionDeviceMeshSize [O] - int
+# 31                           SAunitType [M] - SamplingUnit
+# 32                             SAtotalWeightLive [O] - int
+# 33                            SAsampleWeightLive [O] - int
+# 34             SAnumberTotal [DV,O] - Decimal0.1-999999999
+# 35           SAnumberSampled [DV,O] - Decimal0.1-999999999
+# 36                     SAselectionProb [DV,O] - Decimal0-1
+# 37                     SAinclusionProb [DV,O] - Decimal0-1
+# 38              SAselectionMethod [DV,M] - SelectionMethod
+# 39                     SAunitName [DV,M] - StringLength100
+# 40                 SAlowerHierarchy [M/O] - LowerHierarchy
+# 41                                 SAsampler [O] - Sampler
+# 42                          SAsampled [DV,M] - YesNoFields
+# 43        SAreasonNotSampled [DV,O] - ReasonForNotSampling
+# 44             SAnonResponseCollected [DV,O] - YesNoFields
+# 45      SAreasonNotSampledFM [DV,O] - ReasonForNotSampling
+# 46      SAreasonNotSampledBV [DV,O] - ReasonForNotSampling
+# 47                         SAtotalWeightMeasured [O] - int
+# 48                        SAsampleWeightMeasured [O] - int
+# 49        SAconversionFactorMeasLive [O] - Decimal0.900-10
+# 50          SAauxiliaryVariableTotal [DV,O] - DecimalPrec3
+# 51          SAauxiliaryVariableValue [DV,O] - DecimalPrec3
+# 52  SAauxiliaryVariableName [DV,O] - AuxiliaryVariableName
+# 53                  SAauxiliaryVariableUnit [DV,O] - MUNIT
+
 
 SA_df<-data.frame(
-		SAid = SS_df$SSid,
-		SSid = SS_df$SSid,
+		SAid = 1:nrow(dataset),
+		SSid = dataset$VSid,
 		SArecordType = "SA", #M
-		SAsequenceNumber = SS_df$SSid, #M
+		SAsequenceNumber = dataset$VSid, #M
 		SAparentSequenceNumber = "",
 		SAstratification = "N", #M
 		SAstratumName = "U", #M
@@ -585,7 +635,7 @@ SA_df<-data.frame(
 		SAselectionProb = 1,
 		SAinclusionProb = 1,
 		SAselectionMethod = "CENSUS", #M
-		SAunitName = SS_df$SSid, #M
+		SAunitName = dataset$VSid, #M
 		SAlowerHierarchy = "D",
 		SAsampler = "Observer",
 		SAsampled = ifelse(!is.na(dataset[[target_var]]),"Y","N"), #M
@@ -593,11 +643,11 @@ SA_df<-data.frame(
 		SAnonResponseCollected = "Y",
 		SAreasonNotSampledFM = "",
 		SAreasonNotSampledBV = "",
-		SAtotalWeightMeasured = ifelse(!is.na(dataset[[target_var]]),dataset[[target_var]],""), #
+		SAtotalWeightMeasured = ifelse(!is.na(dataset[[target_var]]),dataset[[target_var]],""), # 
 		SAsampleWeightMeasured = ifelse(!is.na(dataset[[target_var]]),dataset[[target_var]],""), #
 		SAconversionFactorMeasLive = 1,
 		SAauxiliaryVariableTotal = "",
-		SAauxiliaryVariableValue = "",
+		SAauxiliaryVariableValue = "", 
 		SAauxiliaryVariableName = "",
 		SAauxiliaryVariableUnit = "",
 		stringsAsFactors=FALSE
@@ -607,13 +657,8 @@ SA_df<-data.frame(
 
 #====Builds final format===========
 
-RDBESlist <- list(DE = DE_df,
-                  SD = SD_df,
-                  VS = VS_df,
-                  FT = FT_df,
-                  FO = FO_df,
-                  SS = SS_df,
-                  SA = SA_df)
+
+RDBESlist = list(DE = DE_df,SD = SD_df, VS = VS_df, FT = FT_df, FO = FO_df, SS = SS_df, SA = SA_df)
 
 #id table
 a<-merge(DE_df["DEid"],SD_df[c("DEid","SDid")])
@@ -656,9 +701,9 @@ for (i in names(RDBESlist))
 RDBESlist[[i]][which(grepl(colnames(RDBESlist[[i]]),pat="[A-Z]id"))]<-NULL
 }
 
-#===Save=============
+#===Save============
 
-	dir_outputs<-paste0(base_dir_outputs,
+	dir_outputs<-paste0(base_dir_outputs,"/",
 	                    project_name_outputs,"/")
   dir.create(dir_outputs, recursive=T, showWarnings=FALSE)
 	filename_output_CS <- paste0(project_name_outputs,"_H1.csv")
@@ -689,7 +734,8 @@ b$V1<-as.character(b$V1)
 # saves CS output
 write.table(b$V1, file=paste0(dir_outputs,filename_output_CS), col.names=FALSE, row.names = FALSE, quote=FALSE,sep=",")
 
-#---- Builds and saves dummySL ------------
+# -----Builds and saves dummySL-----------------
+
 
 	SL_base$SLspeciesListName<-project_name_outputs
 	SL_base$SLyear<-DEyear
@@ -698,11 +744,31 @@ write.table(b$V1, file=paste0(dir_outputs,filename_output_CS), col.names=FALSE, 
 	write.table(SL_base,  file=paste0(dir_outputs,filename_output_SL), col.names=FALSE, row.names = FALSE, quote=FALSE,sep=",")
 
 
-#-------Builds and saves dummyVD---------------
+# -----Builds and saves dummyVD-----------------
 
 
 # saves VD output
+	VD_base$VDyear<-DEyear
+	write.table(VD_base, file=paste0(dir_outputs,filename_output_VD), col.names=FALSE, row.names = FALSE, quote=FALSE,sep=",")
 
-write.table(VD_base, file=paste0(dir_outputs,filename_output_VD), col.names=FALSE, row.names = FALSE, quote=FALSE,sep=",")
+
+
+# -----Clean SL after dowload-----------------
+
+# cleans excess of SL rows frequently present in download
+	# note:
+		# since it is an example - nicer to do here, fixing directly data input to scripts than patching it over multiple scripts later
+		# since example data are very simple, a simple select is done on specieaListName - this may not be sufficient in some minor cases
+
+filename_download <- "2022_10_14_090838.zip"
+unzip(paste0(dir_outputs, filename_download), exdir = paste0(dir_outputs,"tmp"))
+# reads file to be fixed, fixes it and saves it back overwriting
+tmp<-fread(paste0(dir_outputs,"tmp/SpeciesList.csv"))
+tmp<-tmp[SLspeciesListName==project_name_outputs,]
+write.csv(tmp, file=paste0(dir_outputs,"tmp/SpeciesList.csv"), quote=F, row.names=F)
+# re-zips the file, puts it in final dir and deletes tmp dir
+library(zip)
+zip::zip(zipfile = paste0(project_name_outputs,".zip"), files =paste0(dir_outputs,"tmp/",dir(paste0(dir_outputs,"tmp"))), mode="cherry-pick")
+unlink(paste0(dir_outputs,"tmp"), force=T, recursive = T)
 
 

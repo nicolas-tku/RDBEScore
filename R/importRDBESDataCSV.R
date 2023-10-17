@@ -22,6 +22,10 @@
 #'
 #' @examples
 #' myEmptyRDBESObject <- importRDBESDataCSV()
+#' rdbesExtractPath <- "./tests/testthat/h7_v_1_19_18/"
+#' obj <- importRDBESDataCSV(rdbesExtractPath)
+
+
 
 importRDBESDataCSV <- function(rdbesExtractPath = NA,
                                  listOfFileNames = NA,
