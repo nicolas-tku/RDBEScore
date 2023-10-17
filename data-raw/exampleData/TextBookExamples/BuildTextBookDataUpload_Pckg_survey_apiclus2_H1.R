@@ -3,38 +3,41 @@
 
 	library(data.table)
 
-	# load textbook data
-		library(survey)
-		data(api)
-		df<-apiclus2
-		target_var<-"enroll"
+# load textbook data
+library(survey)
+data(api)
+df<-apiclus2
+target_var<-"enroll"
 
-	# name your project (will be used in filenames for CS, SL and VD)
-		project_name_outputs <- "Pckg_Survey_apiclust2_H1"
+# name your project (will be used in filenames for CS, SL and VD)
+project_name_outputs <- "WGRDBES-EST_TEST_1_Pckg_survey_apiclus2_H1"
 
-	# select a year for upload
-		DEyear<-1969
-		SDinstitution <- 4484
-		DEsamplingScheme<-"SWE_CommEMAtSea_RouCF"
-		baseDir <- "./data-raw/exampleData/TextBookExamples/"
-		VD_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/VD_base.rds"))
-		SL_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/SL_base.rds"))
+# select a year for upload
+DEyear<-1965
+SDinstitution <- 4484
+DEsamplingScheme<-"WGRDBES-EST TEST 1"
+DEstratumName <- "Pckg_survey_apiclus2_H1"
+project_name_outputs <- gsub(" ","_", paste0(DEsamplingScheme,"_", DEstratumName))
+baseDir <- "./data-raw/exampleData/TextBookExamples/"
+#baseDir <- ""
+VD_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/VD_base.rds"))
+SL_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/SL_base.rds"))
 
-		#nameof the directory where the outputs are saved currently
-		base_dir_outputs <- paste0(baseDir,"/BuiltUploads/")
+#nameof the directory where the outputs are saved currently
+base_dir_outputs <- paste0(baseDir,"BuiltUploads/")
+if(!file.exists(base_dir_outputs)) dir.create(base_dir_outputs, recursive=T, showWarnings=FALSE)
 
 
 #=========Outline of Hierarchy 1===============
-# Outline of Hierarchy 1
-	# Design
-	# Sampling details
-	# Vessel Selection
-	# Fishing Trip
-	# Fishing Operation
-	# Species Selection
-	# Sample
-	# Length
-		# Biological variables
+# Design
+# Sampling details
+# Vessel Selection
+# Fishing Trip
+# Fishing Operation
+# Species Selection
+# Sample
+# Length
+# Biological variables
 
 
 
@@ -52,32 +55,38 @@
 # 8             DEhierarchy [M] - RDBESUpperHierarchy
 # 9                    DEsampled [DV,M] - YesNoFields
 # 10 DEreasonNotSampled [DV,O] - ReasonForNotSampling
+# 11	  DEnonResponseCollected [DV,O] - YesNoFields
+# 12    DEauxiliaryVariableTotal [DV,O] - DecimalPrec3
+# 13    DEauxiliaryVariableValue [DV,O] - DecimalPrec3
+# 14 DEauxiliaryVariableName [DV,O] - AuxiliaryVariableName
+# 15 DEauxiliaryVariableUnit[DV,O]-MUNIT
 
 DE_df_base<-expand.grid(DEyear=DEyear,
-						DEstratumName="U",stringsAsFactors=F)
+                        DEstratumName="U",stringsAsFactors=F)
 
 DE_df<-data.frame(
-		  DEid = 1:nrow(DE_df_base),
-		  DErecordType = "DE",
-		  DEsamplingScheme = DEsamplingScheme,
-		  DEsamplingSchemeType = "NatRouCF",
-		  DEyear = as.integer(DEyear),
-		  DEstratumName = "U",
-		  DEhierarchyCorrect = "Y",
-		  DEhierarchy = 1,
-		  DEsampled = "Y",
-		  DEreasonNotSampled = "",
-		  DEnonResponseCollected = "N",
-		  DEauxiliaryVariableTotal = "",
-		  DEauxiliaryVariableValue = "",
-		  DEauxiliaryVariableName = "",
-		  DEauxiliaryVariableUnit = ""
-			)
+  DEid = 1:nrow(DE_df_base),
+  DErecordType = "DE",
+  DEsamplingScheme = DEsamplingScheme,
+  DEsamplingSchemeType = "NatRouCF",
+  DEyear = as.integer(DEyear),
+  DEstratumName = DEstratumName,
+  DEhierarchyCorrect = "Y",
+  DEhierarchy = 1,
+  DEsampled = "Y",
+  DEreasonNotSampled = "",
+  DEnonResponseCollected = "Y",
+  DEauxiliaryVariableTotal = "",
+  DEauxiliaryVariableValue = "",
+  DEauxiliaryVariableName = "",
+  DEauxiliaryVariableUnit = "",
+  stringsAsFactors=FALSE
+)
 
 #====SD===========
 
 
-                          # x
+# x
 # 1            SDid [M] - int
 # 2            DEid [M] - int
 # 3 SDrecordType [M] - string
@@ -361,9 +370,10 @@ FO_df <- data.frame(
 	FOstartLon="", # ATT!
 	FOstopLat="",
 	FOstopLon="",
-	FOexclusiveEconomicZoneIndicator = "", # might differ!!
+	FOexclusiveEconomicZoneIndicator = "", #
 	FOarea = "27.3.a.21", #M
 	FOrectangle = "",
+	FOfisheriesManagementUnit = "",
 	FOgsaSubarea = "NotApplicable", #M
 	FOjurisdictionArea = "",
 	FOfishingDepth = "",
@@ -557,6 +567,7 @@ SA_df<-data.frame(
 		SAexclusiveEconomicZoneIndicator = "",
 		SAarea = "",
 		SArectangle = "",
+		SAfisheriesManagementUnit = "",
 		SAgsaSubarea = "NotApplicable", #M
 		SAjurisdictionArea = "",
 		SAnationalFishingActivity = "",
@@ -585,13 +596,10 @@ SA_df<-data.frame(
 		SAtotalWeightMeasured = ifelse(!is.na(dataset[[target_var]]),dataset[[target_var]],""), #
 		SAsampleWeightMeasured = ifelse(!is.na(dataset[[target_var]]),dataset[[target_var]],""), #
 		SAconversionFactorMeasLive = 1,
-		SAreasonNotSampled = "",
-		SAnonResponseCollected = "N",
 		SAauxiliaryVariableTotal = "",
 		SAauxiliaryVariableValue = "",
 		SAauxiliaryVariableName = "",
 		SAauxiliaryVariableUnit = "",
-		SAfisheriesManagementUnit = "",
 		stringsAsFactors=FALSE
 )
 
