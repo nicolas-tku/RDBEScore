@@ -51,7 +51,6 @@ colsToDelete<-c("SDctry", "SDinst","SSspecListName","DEyear","SScatchFra")
   ls2 <- lapply(ls1, function(x) {
     for (w in tmpSL$tmpKey) {
          if (!w %in% tmpSA$tmpKey) {
-		 browser()
           # duplicates SA row
           y <- x[1, ]
   		  # handles the key
