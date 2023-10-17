@@ -41,7 +41,7 @@ importRDBESDataZIP <- function(filenames,
       unzipped <- unzipped[grep("*.csv", unzipped)]
       intersected <- intersect(unzipped, all_unzipped)
       if(length(intersected) != 0) {
-        warning(paste0("Duplicate unzipped files detected in ", x,":\n", paste0("\t", unzipped, collapse="\n")))
+        warning(paste0("Duplicate unzipped files detected:\n",  paste0("\t", intersected, collapse="\n")))
       }
       all_unzipped <<- c(all_unzipped, unzipped)
       return(unzipped)

@@ -6,6 +6,8 @@
 #' @param stopTable PLEASE DOCUMENT THIS
 #' @param verbose (Optional) Set to TRUE if you want informative text printed
 #' out, or FALSE if you don't.  The default is FALSE.
+#' @param strict (Optional) This function validates its input data - should
+#' the validation be strict? The default is TRUE.
 #'
 #' @return An object of class RDBESEstObject ready for use in design based
 #' estimation
@@ -20,15 +22,17 @@
 createRDBESEstObject <- function(rdbesPrepObject,
                                  hierarchyToUse,
                                  stopTable = NULL,
-                                 verbose = FALSE) {
+                                 verbose = FALSE,
+                                 strict = TRUE) {
 
-  validateRDBESDataObject(rdbesPrepObject, verbose = FALSE)
   if (!hierarchyToUse %in% 1:13) {
     stop(paste0(
       "An invalid value was used for the 'hierarchyToUse' parameter",
       " - createRDBESEstObject will not proceed"
     ))
   }
+
+  validateRDBESDataObject(rdbesPrepObject, verbose = verbose, strict = strict)
 
   # Copy the input data table so we don't change the original data
   rdbesPrepObjectCopy <- data.table::copy(rdbesPrepObject)

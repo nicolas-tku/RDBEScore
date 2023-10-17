@@ -4,6 +4,8 @@
 #' https://github.com/ices-eg/WK_RDBES/tree/master/WKRDB-EST2/chairs/Nuno
 #'
 #' @param x RDBES data frame
+#' @param strict (Optional) This function validates its input data - should
+#' the validation be strict? The default is TRUE.
 #'
 #' @return RDBES data frame where SA was complemented with species looked for
 #' (sensu in sampling objectives) but not registered in sample
@@ -11,10 +13,11 @@
 #'
 
 
-generateZerosUsingSL <- function(x) {
+generateZerosUsingSL <- function(x,
+                                 strict = TRUE) {
 
   # Check we have a valid RDBESDataObject before doing anything else
-  validateRDBESDataObject(x, verbose = FALSE)
+  validateRDBESDataObject(x, verbose = FALSE, strict = strict)
 
   if (!(nrow(x[["SA"]]) >= 1 && nrow(x[["SL"]]) >= 1)) stop("no SA and/or SL")
 

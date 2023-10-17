@@ -7,20 +7,30 @@
 #'  - A `zip` file downloaded from RDBES (or multiple zip files if you want to include or overwrite tables, for example CL and CE data)
 #'  - A folder containing `csv` files downloaded from RDBES (e.g. the unzipped file), or any set of csv files of the RDBES tables.
 #'  - A `list` of data frames in the current environment representing different tables in the hierarchy.
-#'  - A `NULL` input will return and emopty RDBES data object
+#'  - A `NULL` input will return and empty RDBES data object
 #'
 #' @details
 #'
 #' ***ZIP file inputs***
-#' This input should be a path to a zip file downloaded from RDBES. Multiple zip
-#' files can be entered if you want to include additional tables, for example CL
-#' and CE. The main hierarchy input should be the first input. E.g. `input =
-#' c("path/to/H1.zip", "path/to/CL.zip"). If any tables in the first input will
-#' be overwritten by other inputs a warning is given.
+#' This `input` should be a path to a zip file downloaded from RDBES. Multiple
+#' zip files can be entered if you want to include additional tables, for
+#' example CL and CE. E.g. `input = c("path/to/H1.zip", "path/to/CL.zip"). If
+#' any tables in the first input are overwritten by other inputs a warning is
+#' given. You should not input different hierarchy files; this function will not
+#' combine them.
 #'
 #' ***CSV file inputs***
+#' This `input` should be a path to a folder of `csv` files. These can be the
+#' `csv` files downloaded from RDBES (e.g. an unzipped hierarchy), or *any* set
+#' of csv files containing RDBES tables. If the files do not have the default
+#' RDBES name (e.g. 'Design.csv') the `listOfFileNames` input can by used to
+#' specify the file names e.g. `list("DE" = "DE.csv", "SD" = "SD.csv", etc.)`.
 #'
 #' ***List of data frames inputs***
+#' This `input` should be a `list` object containing data frames (or
+#' data.tables) for each table in your hierarchy. They should be named with the appropriate 2-letter code
+#' (`DE`, `SD`, etc.). Note
+#'
 #'
 #' ***NULL inputs***
 #'
@@ -30,13 +40,13 @@
 #'   from RDBES (or multiple zip files - see details), or path to a folder of
 #'   `csv` files, or a list object in the current environment containing data
 #'   frames of each table. If `NULL` an emoty `RDBESDataObject` is created.
-#' @param listOfFileNames `list` of Strings, Optional. For csv inputs only, and
-#'   only required if the csv file names are *not* the default file names used
-#'   by RDBES when downloading data (for instance if you created them yourself).
-#'   The names should be a `list` of the two-letter code for the relevant table
-#'   e.g. `list("DE" = "DE.csv", "SD" = "SD.csv", etc.)`.  If not supplied then
-#'   it is assumed the files have the default file names used by the RDBES data
-#'   download ("Design.csv" etc).
+#' @param listOfFileNames `list` of Strings, Optional. For use with `csv` inputs
+#'   only, and only required if the csv file names are *not* the default file
+#'   names used by RDBES when downloading data (for instance if you created them
+#'   yourself). The names should be a `list` of the two-letter code for the
+#'   relevant table e.g. `list("DE" = "DE.csv", "SD" = "SD.csv", etc.)`.  If not
+#'   supplied then it is assumed the files have the default file names used by
+#'   the RDBES data download ("Design.csv" etc).
 #' @param castToCorrectDataTypes Logical. If `TRUE` then the function will
 #'   attempt to cast the required columns to the correct data type.  If `FALSE`
 #'   then the column data types will be determined by how the csv files are read
@@ -52,14 +62,6 @@
 createRDBESDataObject <- function(input = NULL,
                                   listOfFileNames = NA,
                                   castToCorrectDataTypes = TRUE) {
-
-  # x <- c("1.zip", "2.zip")
-  # x <- c("tests/testthat/h5_v_1_19_18/2023_10_16_112208.zip")
-  # x <- c("tests/testthat/h5_v_1_19_18")
-  # x <- c("1.csv", "2.zip")
-  # x <- c("Something else")
-
-  #  x <- "tests/testthat/h1_v_1_19_18/2023_10_16_104555.zip"
 
   # if input is string and zip file
   if(any(is.character(input)) && any(grepl(".zip", input))) {
@@ -89,8 +91,8 @@ createRDBESDataObject <- function(input = NULL,
 
 
   if(import.type == "list.of.dfs") {
-    warning("NOTE: creating RDBES objects from list of data frames bypasses the ICES data checks. Make sure you know what you are doing.")
-    importRDBESDataDFS()
+    warning("NOTE: Creating RDBES data objects from a list of data frames bypasses the ICES data integrity checks.")
+    output <- importRDBESDataDFS(myList = input, castToCorrectDataTypes = castToCorrectDataTypes)
   }
 
   if(import.type == "null") {
