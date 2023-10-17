@@ -98,6 +98,23 @@ test_that("validateRDBESDataObject produces error for object with a required
   expect_error(validateRDBESDataObject(objectToCheck = myObject,
                                      verbose = FALSE))
 })
+test_that("validateRDBESDataObject produces error for object with a
+           'non-essential' field removed (when strict)",  {
+            myObject <- importRDBESDataCSV(rdbesExtractPath = "./h1_v_1_19_18")
+            myObject[['FT']]$FTdepLoc <- NULL
+            expect_error(validateRDBESDataObject(objectToCheck = myObject,
+                                                 verbose = FALSE,
+                                                 strict = TRUE))
+})
+test_that("validateRDBESDataObject does not produce an error for object with a
+           'non-essential' field removed (when not strict)",  {
+             myObject <- importRDBESDataCSV(rdbesExtractPath = "./h1_v_1_19_18")
+             myObject[['FT']]$FTdepLoc <- NULL
+             expect_error(validateRDBESDataObject(objectToCheck = myObject,
+                                                  verbose = FALSE,
+                                                  strict = FALSE),
+                                                  NA)
+           })
 test_that("validateRDBESDataObject produces error for object with duplicate
           rows",  {
   myObject <- importRDBESDataCSV(rdbesExtractPath = "./h1_v_1_19_18")
