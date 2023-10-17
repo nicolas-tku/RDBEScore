@@ -28,32 +28,32 @@
 
 createRDBESDataObject <- function(x = NULL) {
 
-  #listOfFileNames = NA,
-  #castToCorrectDataTypes = TRUE)
-
-  #  x <- "tests/testthat/h1_v_1_19_18/2023_10_16_104555.zip"
-
-  # if input is string and zip file
-  if(is.character(x) && grepl(".zip", x)) import.type <- "zip" else
-    # if input is string and folder assume it contains only csv files
-    if(is.character(x) && file_test("-d", x)) import.type <- "folder" else
-      # if input is string and folder assume it contains only csv files
-      if(is.list(x)) import.type <- "list" else
-        stop("x input type not recognised. Should be a RDBES zip file, folder of csv files, or list of data frames.")
-
-
-      # -------------------------------------------------------------------------
-
-      if(import.type == "zip") importRDBESDataZIP()
-
-
-      if(import.type == "folder") importRDBESDataCSV()
-
-
-      if(import.type == "list") {
-        warning("NOTE: creating RDBES objects from list of data frames bypasses the ICES data checks. Make sure you know what you are doing.")
-        importRDBESDataDFS()s
-      }
-
-      # check for duplicate tables
+  # #listOfFileNames = NA,
+  # #castToCorrectDataTypes = TRUE)
+  #
+  # #  x <- "tests/testthat/h1_v_1_19_18/2023_10_16_104555.zip"
+  #
+  # # if input is string and zip file
+  # if(is.character(x) && grepl(".zip", x)) import.type <- "zip" else
+  #   # if input is string and folder assume it contains only csv files
+  #   if(is.character(x) && file_test("-d", x)) import.type <- "folder" else
+  #     # if input is string and folder assume it contains only csv files
+  #     if(is.list(x)) import.type <- "list" else
+  #       stop("x input type not recognised. Should be a RDBES zip file, folder of csv files, or list of data frames.")
+  #
+  #
+  #     # -------------------------------------------------------------------------
+  #
+  #     if(import.type == "zip") importRDBESDataZIP()
+  #
+  #
+  #     if(import.type == "folder") importRDBESDataCSV()
+  #
+  #
+  #     if(import.type == "list") {
+  #       warning("NOTE: creating RDBES objects from list of data frames bypasses the ICES data checks. Make sure you know what you are doing.")
+  #       importRDBESDataDFS()s
+  #     }
+  #
+  #     # check for duplicate tables
 }
