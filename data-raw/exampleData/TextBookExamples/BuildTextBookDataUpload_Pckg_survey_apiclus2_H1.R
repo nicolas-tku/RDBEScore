@@ -577,11 +577,13 @@ SA_df<-data.frame(
 		SAunitName = SS_df$SSid, #M
 		SAlowerHierarchy = "D",
 		SAsampler = "Observer",
-		SAsampled = "N", #M
+		SAsampled = ifelse(!is.na(dataset[[target_var]]),"Y","N"), #M
+		SAreasonNotSampled = "",
+		SAnonResponseCollected = "Y",
 		SAreasonNotSampledFM = "",
 		SAreasonNotSampledBV = "",
-		SAtotalWeightMeasured = df[[target_var]],
-		SAsampleWeightMeasured = df[[target_var]],
+		SAtotalWeightMeasured = ifelse(!is.na(dataset[[target_var]]),dataset[[target_var]],""), #
+		SAsampleWeightMeasured = ifelse(!is.na(dataset[[target_var]]),dataset[[target_var]],""), #
 		SAconversionFactorMeasLive = 1,
 		SAreasonNotSampled = "",
 		SAnonResponseCollected = "N",
@@ -604,8 +606,6 @@ RDBESlist <- list(DE = DE_df,
                   FO = FO_df,
                   SS = SS_df,
                   SA = SA_df)
-
-Pckg_Survey_apiclust2_asH1 <- RDBEScore:::importRDBESDataDFS(RDBESlist, F)
 
 #id table
 a<-merge(DE_df["DEid"],SD_df[c("DEid","SDid")])
@@ -697,10 +697,4 @@ write.table(b$V1, file=paste0(dir_outputs,filename_output_CS), col.names=FALSE, 
 
 write.table(VD_base, file=paste0(dir_outputs,filename_output_VD), col.names=FALSE, row.names = FALSE, quote=FALSE,sep=",")
 
-#-------- Export as project example data---------
-#check the data
-validateRDBESDataObject(Pckg_Survey_apiclust2_asH1)
-
-
-usethis::use_data(Pckg_Survey_apiclust2_asH1, overwrite = TRUE)
 
