@@ -21,14 +21,20 @@
 
 importRDBESDataZIP <- function(filenames,
                                castToCorrectDataTypes = TRUE) {
+
+
+
+  # Generates random number for the temp import folder name
   randInt <- paste0(sample(1:100, 3), collapse = "")
   tmp <- paste0(tempdir(), "/downloadImport", randInt)
   dir.create(tmp)
   all_unzipped <- c()
   unzipFile <- function(x, tmp) {
+
     if (!file.exists(x)) {
       return()
     }
+
     if (is.zip(x)) {
       unzipped <- utils::unzip(x, exdir= tmp)
       unzipped <- basename(unzipped)
@@ -40,17 +46,7 @@ importRDBESDataZIP <- function(filenames,
       all_unzipped <<- c(all_unzipped, unzipped)
       return(unzipped)
     }
-    if (fileExt(x) == "csv") {
-      newName <- paste0(tmp, "/", basename(x))
-      if (file.exists(newName)) {
-        warning(paste0(
-          "Overwriting file: ", basename(x),
-          ", this might be intended!\n"
-        ), call. = FALSE)
-      }
-      file.copy(x, tmp)
-      return(newName)
-    }
+
   }
 
 
@@ -60,4 +56,5 @@ importRDBESDataZIP <- function(filenames,
                             castToCorrectDataTypes = castToCorrectDataTypes)
   unlink(tmp, recursive = T)
   res
+
 }
