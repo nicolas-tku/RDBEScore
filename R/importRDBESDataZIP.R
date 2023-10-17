@@ -10,12 +10,17 @@
 #' FALSE then the column data types will be determined by how the csv files
 #' are read in.  The default is TRUE.
 #'
+#' @export
+#'
 #' @return a list of all the RDBES data tables
 #' The table that are not in input data are NULL
 #'
 #' @seealso \code{\link{importRDBESDataCSV}}
 #'
 #' @examples
+#' rdbesExtractPath <- "./tests/testthat/h7_v_1_19_18/2022_FPN_FPE_H7.zip"
+#' obj <- importRDBESDataZIP(rdbesExtractPath)
+
 
 
 
