@@ -23,6 +23,10 @@ Read the .zip files and/or .csv files downloadable from the ICES RDBES
 web page. The function accepts a list of paths to csv and zip files. Unzips
 an then uses \code{\link{importRDBESDataCSV}}
 }
+\examples{
+rdbesExtractPath <- "./tests/testthat/h7_v_1_19_18/2022_FPN_FPE_H7.zip"
+obj <- importRDBESDataZIP(rdbesExtractPath)
+}
 \seealso{
 \code{\link{importRDBESDataCSV}}
 }

@@ -31,22 +31,42 @@ validateRDBESDataObjectFieldNames <- function(objectToCheck,
         ]
     requiredColumnNames[is.na(requiredColumnNames$R.Name), "R.Name"] <-
       requiredColumnNames[is.na(requiredColumnNames$R.Name), "Field.Name"]
+    # Only a subset of the columns are "essential" for estimation
+    essentialColumnNames <-
+      requiredColumnNames[requiredColumnNames$EssentialForEst == TRUE,"R.Name"]
     requiredColumnNames <- requiredColumnNames$R.Name
 
-    allRequiredColumns <- FALSE
+    allNeededColumns <- FALSE
     extraColumns <- FALSE
 
-    # Are all the required names present?
-    if (all(requiredColumnNames %in% names(x))) {
-      allRequiredColumns <- TRUE
+    if (strict){
+      # If we're being strict - check all columns
+      # Are all the required names present?
+      if (all(requiredColumnNames %in% names(x))) {
+        allNeededColumns <- TRUE
+      } else {
+        # Missing columns
+        missingColumnNames <-
+          requiredColumnNames[!requiredColumnNames %in% names(x)]
+        print(paste("The following required columns are missing from table",
+                    tableName,":",
+                    paste(missingColumnNames,collapse = ",")))
+      }
     } else {
-      # Missing columns
-      missingColumnNames <-
-        requiredColumnNames[!requiredColumnNames %in% names(x)]
-      print(paste("The following required columns are missing from table",
-            tableName,":",
-            paste(missingColumnNames,collapse = ",")))
+      # If we're not being strict - just check the essential columns
+      # Are all the essential names present?
+      if (all(essentialColumnNames %in% names(x))) {
+        allNeededColumns <- TRUE
+      } else {
+        # Missing columns
+        missingColumnNames <-
+          essentialColumnNames[!essentialColumnNames %in% names(x)]
+        print(paste("The following essential columns are missing from table",
+                    tableName,":",
+                    paste(missingColumnNames,collapse = ",")))
+      }
     }
+
     # Are there any extra columns in the data?
     extraColumnNames <-
       names(x)[!names(x) %in% requiredColumnNames]
@@ -60,9 +80,9 @@ validateRDBESDataObjectFieldNames <- function(objectToCheck,
     }
     # Decide whether this was valid or not (default is invalid)
     valueToReturn <- FALSE
-    if (allRequiredColumns){
+    if (allNeededColumns){
       if(!strict){
-        # if we're not being strict then just having all required cols is fine
+        # if we're not being strict then just having all needed cols is fine
         valueToReturn <- TRUE
       } else if (strict & !extraColumns){
         # if we are being strict we also check there are no extra cols
