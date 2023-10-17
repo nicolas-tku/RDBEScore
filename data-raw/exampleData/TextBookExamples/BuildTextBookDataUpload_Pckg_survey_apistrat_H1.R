@@ -1,4 +1,4 @@
-#======Prepares textbook survey::api as H1 upload file===========
+#======Prepares textbook survey::apistrat as H1 upload file===========
 
 	rm(list=ls())
 	library(data.table)
@@ -138,7 +138,7 @@ SD_df<-data.frame(
 # 29      VSauxiliaryVariableName [DV,O] - AuxiliaryVariableName
 # 30                      VSauxiliaryVariableUnit [DV,O] - MUNIT
 
-#check_All_fields("VS")
+
 
 # adds VSid to dataset
 	dataset$VSid <- 1:nrow(dataset)
