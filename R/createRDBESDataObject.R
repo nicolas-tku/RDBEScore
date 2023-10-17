@@ -40,7 +40,7 @@ createRDBESDataObject <- function(input = NULL,
 
   # if input is string and zip file
   if(any(is.character(input)) && any(grepl(".zip", input))) {
-    if(!(all(grepl(".zip", input)))) stop("Cannot mix csv and zip inputs")
+    if(!(all(grepl(".zip", input)))) stop("You cannot import a mix of 'csv' and 'zip' inputs. To import multiple tables unzip all files and import as a folder of 'csv' files.")
     import.type <- "zip"
     # if input is string and folder assume it contains only csv files
   } else if(length(input) == 1 && is.character(input) && file_test("-d", input)) {
