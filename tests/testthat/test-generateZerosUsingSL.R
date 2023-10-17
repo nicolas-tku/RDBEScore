@@ -6,7 +6,7 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 # species*catchFrac in SL and not in SA: expected behavior -> generate a 0 row in SA
 
 	# create test data from download
-	myH1DataObject <- importRDBESDownloadData("./h1_v_1_19_13/WGRDBES-EST_TEST_Pckg_Survey_data_apistrat_H1.zip")
+	myH1DataObject <- importRDBESDownloadData("./h1_v_1_19_18/WGRDBES-EST_TEST_Pckg_Survey_data_apistrat_H1.zip")
 	validateRDBESDataObject(myH1DataObject, checkDataTypes = TRUE)
 
 	df1 <- data.frame('31830','SL','ZW','4484','WGRDBES-EST_TEST_Pckg_Survey_data_apistrat_H1','1968','Dis','107254','107254')
@@ -47,7 +47,7 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 
 # species*catchFrac in SL and in SA: expected behavior -> do not generate a 0 row in SA
 
-	myH1DataObject <- importRDBESDownloadData("./h1_v_1_19_13/WGRDBES-EST_TEST_Pckg_Survey_data_apistrat_H1.zip")
+	myH1DataObject <- importRDBESDownloadData("./h1_v_1_19_18/WGRDBES-EST_TEST_Pckg_Survey_data_apistrat_H1.zip")
 	myH1DataObject[["SS"]]<-myH1DataObject[["SS"]][1,]
 	myH1DataObject <- filterRDBESDataObject(myH1DataObject, c("SAid"), c(653280), killOrphans = TRUE)
 	validateRDBESDataObject(myH1DataObject, checkDataTypes = TRUE)
