@@ -4,7 +4,13 @@
 \alias{applyGenerateProbs}
 \title{Generate probabilities missing from RDBES Data}
 \usage{
-applyGenerateProbs(x, probType, overwrite, runInitialProbChecks = TRUE)
+applyGenerateProbs(
+  x,
+  probType,
+  overwrite,
+  runInitialProbChecks = TRUE,
+  strict = TRUE
+)
 }
 \arguments{
 \item{x}{- RDBES raw object}
@@ -13,10 +19,13 @@ applyGenerateProbs(x, probType, overwrite, runInitialProbChecks = TRUE)
 probabilities are calculated), "inclusion" (only inclusion probabilities are
 calculated) or "both" (both types of probabilities are calculated)}
 
-\item{overwrite}{- if TRUE will overwrite probabilties already existing for
+\item{overwrite}{- if TRUE will overwrite probabilities already existing for
 SRSWR and SRSWOR}
 
 \item{runInitialProbChecks}{- if TRUE runs runChecksOnSelectionAndProbs}
+
+\item{strict}{(Optional) This function validates its input data - should
+the validation be strict? The default is TRUE.}
 }
 \value{
 a list of all the RDBES data tables with probabilites calculated

@@ -58,6 +58,8 @@ importRDBESDataDFS <- function(myList,
                                       CL = makeDT(myList[["CL"]]),
                                       CE = makeDT(myList[["CE"]]))
 
+    # Ensure all the columns are the correct data type
+  if(castToCorrectDataTypes) dt <- RDBEScore:::setRDBESDataObjectDataTypes(dt)
 
   # Set a key on any data tables in myList - use the XXid column as the key
   for(aTable in names(dt)){
@@ -66,20 +68,17 @@ importRDBESDataDFS <- function(myList,
     if(is.null(dt[[aTable]])){
       next
     } else {
+      # SET KEY
       data.table::setkeyv(dt[[aTable]], paste0(aTable,"id")) # essentially orders rows by id column?
-      # Set R names
+      # SET NAMES - skipped for now
       #oldNames <- colnames(dt[[aTable]])
-      rNames <- convert.col.names(table = aTable, new.names = "R.name")
+      #rNames <- convert.col.names(table = aTable, new.names = "R.name")
       #names(rNames) <- RDBEScore::mapColNamesFieldR$Field.Name[RDBEScore::mapColNamesFieldR$Table.Prefix == aTable]
-      data.table::setnames(dt[[aTable]], rNames, skip_absent = T)
-      #set all empty strings to NA
+      #data.table::setnames(dt[[aTable]], rNames, skip_absent = T)
+
+      # SET all empty strings to NA
       dt[[aTable]][dt[[aTable]]==""] <- NA
     }
-  }
-
-  if (castToCorrectDataTypes){
-    # Ensure all the columns are the correct data type
-   dt <- RDBEScore:::setRDBESDataObjectDataTypes(dt)
   }
 
   #check the data

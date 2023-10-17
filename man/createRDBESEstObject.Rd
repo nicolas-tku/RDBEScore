@@ -8,7 +8,8 @@ createRDBESEstObject(
   rdbesPrepObject,
   hierarchyToUse,
   stopTable = NULL,
-  verbose = FALSE
+  verbose = FALSE,
+  strict = TRUE
 )
 }
 \arguments{
@@ -21,6 +22,9 @@ create an estimation object}
 
 \item{verbose}{(Optional) Set to TRUE if you want informative text printed
 out, or FALSE if you don't.  The default is FALSE.}
+
+\item{strict}{(Optional) This function validates its input data - should
+the validation be strict? The default is TRUE.}
 }
 \value{
 An object of class RDBESEstObject ready for use in design based

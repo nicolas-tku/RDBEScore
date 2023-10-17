@@ -8,7 +8,8 @@ filterRDBESDataObject(
   RDBESDataObjectToFilter,
   fieldsToFilter,
   valuesToFilter,
-  killOrphans = FALSE
+  killOrphans = FALSE,
+  strict = TRUE
 )
 }
 \arguments{
@@ -19,6 +20,9 @@ filterRDBESDataObject(
 \item{valuesToFilter}{A vector of the field values you wish to filter for}
 
 \item{killOrphans}{Controls if orphan rows are removed. Default is \code{FALSE}.}
+
+\item{strict}{(Optional) This function validates its input data - should
+the validation be strict? The default is TRUE.}
 }
 \value{
 the filtered input object of the same class as
