@@ -9,9 +9,11 @@
 #' @param probType - string. Can be set to "selection" (only selection
 #' probabilities are calculated), "inclusion" (only inclusion probabilities are
 #' calculated) or "both" (both types of probabilities are calculated)
-#' @param overwrite - if TRUE will overwrite probabilties already existing for
+#' @param overwrite - if TRUE will overwrite probabilities already existing for
 #' SRSWR and SRSWOR
 #' @param runInitialProbChecks - if TRUE runs runChecksOnSelectionAndProbs
+#' @param strict (Optional) This function validates its input data - should
+#' the validation be strict? The default is TRUE.
 #'
 #' @return a list of all the RDBES data tables with probabilites calculated
 #'
@@ -25,10 +27,11 @@
 #'
 
 applyGenerateProbs <- function(x, probType, overwrite,
-                               runInitialProbChecks = TRUE) {
+                               runInitialProbChecks = TRUE,
+                               strict = TRUE) {
 
   # Check we have a valid RDBESDataObject before doing anything else
-  validateRDBESDataObject(x, verbose = FALSE)
+  validateRDBESDataObject(x, verbose = FALSE, strict = strict)
 
   if (runInitialProbChecks) {
     print("========start runChecksOnSelectionAndProbs=======")

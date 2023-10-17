@@ -4,6 +4,8 @@
 #'
 #' @param RDBESDataObject1 The first object to combine
 #' @param RDBESDataObject2 The second object to combine
+#' @param strict (Optional) This function validates its input data - should
+#' the validation be strict? The default is TRUE.
 #'
 #' @return the combination of \code{RDBESDataObject1} and  \code{RDBESDataObject2}
 #' @seealso  \link[data.table]{rbindlist}
@@ -20,9 +22,11 @@
 #' myCombinedRawObject <- combineRDBESDataObjects(RDBESDataObject1=myH1RawObject,
 #'                                              RDBESDataObject2=myH5RawObject)
 #' }
-combineRDBESDataObjects <- function(RDBESDataObject1, RDBESDataObject2) {
-  validateRDBESDataObject(RDBESDataObject1, verbose = FALSE)
-  validateRDBESDataObject(RDBESDataObject2, verbose = FALSE)
+combineRDBESDataObjects <- function(RDBESDataObject1,
+                                    RDBESDataObject2,
+                                    strict = TRUE) {
+  validateRDBESDataObject(RDBESDataObject1, verbose = FALSE, strict = strict)
+  validateRDBESDataObject(RDBESDataObject2, verbose = FALSE, strict = strict)
   # Create an empty RDBESDataObject as the basis of what we will return
   myRDBESDataObject <- importRDBESDataCSV()
 
