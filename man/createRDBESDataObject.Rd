@@ -5,16 +5,17 @@
 \title{Create an RDBES Data Object}
 \usage{
 createRDBESDataObject(
-  x = NULL,
+  input = NULL,
   listOfFileNames = NA,
   castToCorrectDataTypes = TRUE
 )
 }
 \arguments{
-\item{x}{The path to the zip file extracted from RDBES, or path to a folder
-of \code{csv} files, or a list object in the current environment containing data frames of each table.}
+\item{input}{The path to the zip file extracted from RDBES (or multiple zip
+files), or path to a folder of \code{csv} files, or a list object in the current
+environment containing data frames of each table.}
 
-\item{listOfFileNames}{(Optional) A named list of file names - the list names
+\item{listOfFileNames}{(Optional) For csv input only. A named list of file names - the list names
 shoudl be the two-letter code for the relevent table e.g. list("DE" =
 "DE.csv",... ).  If the parameter is not supplied then the default file
 names used by the RDBES data download will be used e.g. "Design.csv" etc.}
