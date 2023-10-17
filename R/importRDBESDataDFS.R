@@ -30,12 +30,10 @@
 #' Finally, it validates the RDBESDataObject using
 #' `RDBEScore::validateRDBESDataObject` and returns it.
 
-importRDBESDataDFS <- function(myList, castToCorrectDataTypes = TRUE){
+# myList = H5list
+# castToCorrectDataTypes = TRUE
 
-  makeDT <- function(x){
-    if(is.null(x)) return(NULL)
-    data.table::as.data.table(x)
-  }
+importRDBESDataDFS <- function(myList, castToCorrectDataTypes = TRUE){
 
   dt <- RDBEScore::newRDBESDataObject(DE = makeDT(myList[["DE"]]),
                                       SD = makeDT(myList[["SD"]]),
@@ -59,20 +57,21 @@ importRDBESDataDFS <- function(myList, castToCorrectDataTypes = TRUE){
   # Set a key on any data tables in myList - use the XXid column as the key
   for(aTable in names(dt)){
     #skip redundant tables
+    # aTable = "DE"
     if(is.null(dt[[aTable]])){
       next
-    }
-    if ('data.table' %in% class(dt[[aTable]])){
-      data.table::setkeyv(dt[[aTable]],paste0(aTable,"id"))
-      #Set R names
-      oldNames <- colnames(dt[[aTable]])
-      rNames <- RDBEScore::mapColNamesFieldR$R.Name
-      names(rNames) <- RDBEScore::mapColNamesFieldR$Field.Name
-      data.table::setnames(dt[[aTable]],oldNames, rNames[oldNames], skip_absent = T)
+    } else {
+      data.table::setkeyv(dt[[aTable]], paste0(aTable,"id")) # essentially orders rows by id column?
+      # Set R names
+      #oldNames <- colnames(dt[[aTable]])
+      rNames <- convert.col.names(table = aTable, new.names = "R.name")
+      #names(rNames) <- RDBEScore::mapColNamesFieldR$Field.Name[RDBEScore::mapColNamesFieldR$Table.Prefix == aTable]
+      data.table::setnames(dt[[aTable]], rNames, skip_absent = T)
       #set all empty strings to NA
       dt[[aTable]][dt[[aTable]]==""] <- NA
     }
   }
+
   if (castToCorrectDataTypes){
     # Ensure all the columns are the correct data type
    dt <- RDBEScore:::setRDBESDataObjectDataTypes(dt)
