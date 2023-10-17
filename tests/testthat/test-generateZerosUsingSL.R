@@ -59,7 +59,7 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 
 	# Only use a subset of the test data
 	myH1DataObject <- filterRDBESDataObject(myH1DataObject,c("DEstratumName"),c("Pckg_survey_apistrat_H1"))
-	myH1DataObject <- filterRDBESDataObject(myH1DataObject,c("SLspeclistName"),c("WGRDBES-EST_TEST_Pckg_survey_data_apistrat_H1"))
+	myH1DataObject <- filterRDBESDataObject(myH1DataObject,c("SLspeclistName"),c("WGRDBES-EST_TEST_1_Pckg_survey_apistrat_H1"))
 	myH1DataObject <- findAndKillOrphans(myH1DataObject, verbose = FALSE)
 
 	myH1DataObject[["SS"]]<-myH1DataObject[["SS"]][1,]
