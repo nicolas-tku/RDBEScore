@@ -4,7 +4,7 @@
 \alias{importRDBESDataDFS}
 \title{Convert List of Data Frames to a  RDBES Data Object}
 \usage{
-importRDBESDataDFS(myList, castToCorrectDataTypes = TRUE)
+importRDBESDataDFS(myList, castToCorrectDataTypes = TRUE, strict = TRUE)
 }
 \arguments{
 \item{myList}{A list of data tables. Each element of the list should be a
@@ -12,6 +12,9 @@ data frame or NULL.}
 
 \item{castToCorrectDataTypes}{A logical value indicating whether to cast the
 columns to the correct data types. Default is TRUE.}
+
+\item{strict}{(Optional) This function validates the RDBESDataObject it
+creates - should the validation be strict? The default is TRUE.}
 }
 \value{
 An RDBESDataObject with each element being a data table from the

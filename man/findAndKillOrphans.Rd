@@ -7,13 +7,16 @@ RDBESDataObject.  Normally data that has been downloaded from the RDBES
 will not contain orphan records - however if the data is subsequently
 filtered it is possible to introduce orphan records.}
 \usage{
-findAndKillOrphans(objectToCheck, verbose = FALSE)
+findAndKillOrphans(objectToCheck, verbose = FALSE, strict = TRUE)
 }
 \arguments{
 \item{objectToCheck}{an RDBESDataObject.}
 
 \item{verbose}{(Optional) If set to TRUE more detailed text will be printed
 out by the function.  Default is TRUE.}
+
+\item{strict}{(Optional) This function validates its input data - should
+the validation be strict? The default is TRUE.}
 }
 \value{
 an RDBESDataObject with any orphan records removed
