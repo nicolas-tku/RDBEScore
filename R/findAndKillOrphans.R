@@ -6,6 +6,8 @@
 #' @param objectToCheck an RDBESDataObject.
 #' @param verbose (Optional) If set to TRUE more detailed text will be printed
 #' out by the function.  Default is TRUE.
+#' @param strict (Optional) This function validates its input data - should
+#' the validation be strict? The default is TRUE.
 #'
 #' @return an RDBESDataObject with any orphan records removed
 #' @export
@@ -23,10 +25,12 @@
 #' myObjectNoOrphans <- findAndKillOrphans(objectToCheck = myFilteredObject,
 #'                                        verbose = FALSE)
 #' }
-findAndKillOrphans <- function(objectToCheck, verbose = FALSE) {
+findAndKillOrphans <- function(objectToCheck,
+                               verbose = FALSE,
+                               strict = TRUE) {
 
   # Check we have a valid RDBESDataObject before doing anything else
-  validateRDBESDataObject(objectToCheck, verbose = FALSE)
+  validateRDBESDataObject(objectToCheck, verbose = verbose, strict = strict)
 
   # Get all the XXid fields and SAparSequNum
   myIds <- RDBEScore::mapColNamesFieldR[

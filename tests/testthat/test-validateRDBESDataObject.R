@@ -63,6 +63,12 @@ test_that("validateRDBESDataObject produces error for NA",  {
                                      verbose = FALSE))
 
 })
+test_that("validateRDBESDataObject produces error for NULL",  {
+
+  expect_error(validateRDBESDataObject(objectToCheck = NULL,
+                                       verbose = FALSE))
+
+})
 test_that("validateRDBESDataObject produces error for object that is not a
           list",  {
 
@@ -143,6 +149,26 @@ test_that("validateRDBESDataObject produces error if keys aren't set on a data t
   data.table::setkey(myObject[['DE']],NULL)
   expect_error(validateRDBESDataObject(objectToCheck = myObject,
                                         verbose = TRUE), regexp = "DE does not have a key set")
+})
+
+test_that("validateRDBESDataObject prints unnecessary column note",  {
+
+  myObject <- importRDBESDataCSV(rdbesExtractPath = "./h1_v_1_19_18")
+  myObject[['FT']]$myExtraColumn <- 'Test'
+  expect_output(validateRDBESDataObject(objectToCheck = myObject,
+                                       verbose = TRUE, strict = FALSE),
+                regexp = ".*The following unnecessary columns were found in table FT : myExtraColumn.*")
+
+})
+
+test_that("validateRDBESDataObject produces error for unnecessary column when strict = TRUE",  {
+
+  myObject <- importRDBESDataCSV(rdbesExtractPath = "./h1_v_1_19_18")
+  myObject[['FT']]$myExtraColumn <- 'Test'
+  expect_error(validateRDBESDataObject(objectToCheck = myObject,
+                                        verbose = TRUE, strict = TRUE),
+                regexp = ".*objectToCheck contains the following tables which either don't contain all required fields or they include unnecessary columns FT*")
+
 })
 
 

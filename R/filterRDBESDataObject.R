@@ -11,6 +11,8 @@
 #' @param fieldsToFilter A vector of the field names you wish to check
 #' @param valuesToFilter A vector of the field values you wish to filter for
 #' @param killOrphans Controls if orphan rows are removed. Default is `FALSE`.
+#' @param strict (Optional) This function validates its input data - should
+#' the validation be strict? The default is TRUE.
 #'
 #' @return the filtered input object of the same class as
 #'   `RDBESDataObjectToFilter`
@@ -35,10 +37,13 @@
 filterRDBESDataObject <- function(RDBESDataObjectToFilter,
                                  fieldsToFilter,
                                  valuesToFilter,
-                                 killOrphans = FALSE) {
+                                 killOrphans = FALSE,
+                                 strict = TRUE) {
 
   # Check we have a valid RDBESDataObject before doing anything else
-  validateRDBESDataObject(RDBESDataObjectToFilter, verbose = FALSE)
+  validateRDBESDataObject(RDBESDataObjectToFilter,
+                          verbose = FALSE,
+                          strict = strict)
 
   # Check if the requested columns actually exist in the object
   allColNames <- unlist(lapply(RDBESDataObjectToFilter, names))

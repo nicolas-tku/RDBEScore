@@ -6,6 +6,8 @@
 #'   data frame or NULL.
 #' @param castToCorrectDataTypes A logical value indicating whether to cast the
 #'   columns to the correct data types. Default is TRUE.
+#' @param strict (Optional) This function validates the RDBESDataObject it
+#' creates - should the validation be strict? The default is TRUE.
 #'
 #' @return An RDBESDataObject with each element being a data table from the
 #'   input list.
@@ -33,7 +35,10 @@
 # myList = H5list
 # castToCorrectDataTypes = TRUE
 
-importRDBESDataDFS <- function(myList, castToCorrectDataTypes = TRUE){
+importRDBESDataDFS <- function(myList,
+                               castToCorrectDataTypes = TRUE,
+                               strict = TRUE
+                               ){
 
   dt <- RDBEScore::newRDBESDataObject(DE = makeDT(myList[["DE"]]),
                                       SD = makeDT(myList[["SD"]]),
@@ -77,7 +82,9 @@ importRDBESDataDFS <- function(myList, castToCorrectDataTypes = TRUE){
   }
 
   #check the data
-  RDBEScore::validateRDBESDataObject(dt, checkDataTypes = castToCorrectDataTypes)
+  RDBEScore::validateRDBESDataObject(dt,
+                                     checkDataTypes = castToCorrectDataTypes,
+                                     strict = strict)
 
   return(dt)
 }
