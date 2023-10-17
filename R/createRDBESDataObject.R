@@ -69,5 +69,4 @@ createRDBESDataObject <- function(x = NULL) {
   #     }
   #
   #     # check for duplicate tables
-  #
   }
