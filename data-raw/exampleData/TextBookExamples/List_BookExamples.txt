@@ -1,19 +1,38 @@
 # =============
-Type:
-Script: BuildTextBookDataUpload_Pckg_survey_api_H1.R
+Type: stratified sampling
+Script: BuildTextBookDataUpload_Pckg_survey_apistrat_H1.R
 Package: survey
-Dataset: api
+Dataset: apistrat
 As RDBES hierarchy: H1
 Reference:
 Where
 DEyear = 1965
 DEsamplingScheme = "WGRDBES-EST TEST 1"
-DEstratumName = "WGRDBES-EST_TEST1_Pckg_survey_data_apistrat_H1"
+DEstratumName = "WGRDBES-EST_TEST_1_Pckg_survey_data_apistrat_H1"
 SDcountry = "ZW"
 # =============
 
 # =============
-Type: 2-stage cluster sampling with equal probabilities and unequal cluster sizes
+Type: 1-stage cluster sampling with equal probabilities. Unequal cluster sizes
+Script: BuildTextBookDataUpload_Pckg_survey_apiclus1_H1.R
+Package: survey
+Dataset: apiclus1
+As RDBES hierarchy: H1
+Reference: 
+  # [1] T. Lumley (2023) "survey: analysis of complex survey samples". R package version 4.2
+Where:
+  # [1] see example in ?survey::api; also in https://cran.r-project.org/web/packages/survey/vignettes/precalibrated.pdf
+DEyear = 1965
+DEsamplingScheme = "WGRDBES-EST TEST 1"
+DEstratumName = "WGRDBES-EST_TEST_1_Pckg_survey_data_apiclus1_H1"
+SDcountry = "ZW"
+Notes: 
+	# 1-stage clustering (1C) in table VS; 
+	# original pw provided as VSinclusionProbCluster [from vignette: The sampling weights pw are already calibrated to sum to the known number of schools in the population]
+# =============
+
+# =============
+Type: 2-stage cluster sampling with equal probabilities. Unequal cluster sizes
 Script: BuildTextBookDataUpload_Pckg_SDAResources_apiclus2_v2_H1.R
 Package: SDAResources
 Dataset: apiclus2 (enroll)
