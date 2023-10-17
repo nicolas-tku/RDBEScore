@@ -1,6 +1,18 @@
 # This is a file to store general internal utility functions
 
 
+# Deal with "no visible binding for global variable.." warnings in R CMD CHECK
+globalVariables(c("mapColNamesFieldR", "mapColNamesFieldR", "SAid",
+                  "rdbesEstimObj", "..targetProbColumns",
+                  "..targetProbColumns2", "finalInclusionProb_to_su1",
+                  "targetValue", "su1unitName", "su1inclusionProb",
+                  "..target_prob_columns2", "su1selectionProb",
+                  "..varsNeeded", "%>%", "parentTableID", "est.total",
+                  "recType", "parentTableStratum", "stratumName",
+                  "parentIDandStratum", "studyVariable", "..myColNames",
+                  "..methColNames", "tblName", "all_of"))
+
+
 #' as.integer.or.dbl
 #'
 #' This function checks if any value in a vector is above 2e+09, and if so runs
@@ -23,17 +35,6 @@ as.integer.or.dbl <- function(x){
 
   return(out)
 }
-
-# Deal with "no visible binding for global variable.." warnings in R CMD CHECK
-globalVariables(c("mapColNamesFieldR", "mapColNamesFieldR", "SAid",
-                  "rdbesEstimObj", "..targetProbColumns",
-                  "..targetProbColumns2", "finalInclusionProb_to_su1",
-                  "targetValue", "su1unitName", "su1inclusionProb",
-                  "..target_prob_columns2", "su1selectionProb",
-                  "..varsNeeded", "%>%", "parentTableID", "est.total",
-                  "recType", "parentTableStratum", "stratumName",
-                  "parentIDandStratum", "studyVariable", "..myColNames",
-                  "..methColNames", "tblName", "all_of"))
 
 
 #' fileExt
@@ -76,4 +77,32 @@ is.zip <- function(x) {
   FALSE
 }
 
+
+#' convert.col.names
+#'
+#' Converts table column names to field name or R name
+#'
+#' @param table Table to change names of
+#' @param new.names "field.name" or "R.name"
+#'
+#' @return a vector of strings of new column names
+#' @keywords internal
+
+convert.col.names <- function(table, new.names = "R.name"){
+
+  # subset mapColNamesFieldR to appropriate table
+  mapColNamesFieldR.sub <- mapColNamesFieldR[mapColNamesFieldR$Table.Prefix == table,]
+
+  if(new.names == "R.name") nms.new <- mapColNamesFieldR.sub$R.Name
+  if(new.names == "field.name") nms.new <- mapColNamesFieldR.sub$Field.Name
+
+  return(nms.new)
+}
+
+# Convert all elements of a list of data.frames into data.tables
+# Levaes existing NULL elements as NULL
+makeDT <- function(x){
+  if(is.null(x)) return(NULL)
+  data.table::as.data.table(x)
+}
 

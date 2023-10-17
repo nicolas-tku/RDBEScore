@@ -4,7 +4,11 @@
 \alias{createRDBESDataObject}
 \title{Create an RDBES Data Object}
 \usage{
-createRDBESDataObject(x = NULL)
+createRDBESDataObject(
+  x = NULL,
+  listOfFileNames = NA,
+  castToCorrectDataTypes = TRUE
+)
 }
 \arguments{
 \item{x}{The path to the zip file extracted from RDBES, or path to a folder
