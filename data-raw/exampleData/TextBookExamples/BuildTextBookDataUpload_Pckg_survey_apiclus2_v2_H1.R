@@ -33,7 +33,7 @@
 		target_var<-"enroll"
 
 	# name your project (will be used in filenames for CS, SL and VD)
-		project_name_outputs <- "WGRDBES-EST_TEST_1_Pckg_survey_apiclust2_v2_H1"
+		project_name_outputs <- "WGRDBES-EST_TEST_1_Pckg_survey_apiclus2_v2_H1"
 
 	# select a year for upload
 		DEyear<-1965

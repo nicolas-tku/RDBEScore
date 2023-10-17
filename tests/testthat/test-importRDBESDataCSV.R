@@ -120,7 +120,7 @@ test_that("importRDBESDataCSV creates an H7 object with keys on the data tables"
   myRDBESDataObject <- importRDBESDataCSV(rdbesExtractPath = myPath)
 
   # Not all of the RDBES table types are in the sample data
-  expectedNumberOfTablesWithKeys <- 12
+  expectedNumberOfTablesWithKeys <- 13
   actualNumberOfTablesWithKeys <- 0
 
   for(aTable in names(myRDBESDataObject)){

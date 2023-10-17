@@ -16,11 +16,11 @@
 #' @seealso \code{\link{importRDBESDataCSV}}
 #'
 #' @examples
-#' files <- c("./tests/testthat/h1_v_1_19/H1_2021_000_example.zip")
-#' obj <- importRDBESDataZIP(files)
+
+
 
 importRDBESDataZIP <- function(filenames,
-                                    castToCorrectDataTypes = TRUE) {
+                               castToCorrectDataTypes = TRUE) {
   randInt <- paste0(sample(1:100, 3), collapse = "")
   tmp <- paste0(tempdir(), "/downloadImport", randInt)
   dir.create(tmp)
@@ -53,28 +53,11 @@ importRDBESDataZIP <- function(filenames,
     }
   }
 
-  fileExt <- function(x) {
-    ext <- strsplit(x, ".", fixed = TRUE)[[1]]
-    ext[length(ext)]
-  }
-
-  is.zip <- function(x) {
-    # let's assume that the file extension is .zip to be on the safe side
-    ext <- fileExt(x)
-    # the zip starts with a local file header signature 50 4b 03 04
-    # see: https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
-    b <- readBin(x, "raw", 4)
-    if (setequal(as.character(b), c("50", "4b", "03", "04")) &
-      ext == "zip") {
-      return(TRUE)
-    }
-    FALSE
-  }
 
   # the files are not used currently but can be if we want to
   files <- unique(unlist(sapply(filenames, unzipFile, tmp)))
   res <- importRDBESDataCSV(tmp,
-                              castToCorrectDataTypes = castToCorrectDataTypes)
+                            castToCorrectDataTypes = castToCorrectDataTypes)
   unlink(tmp, recursive = T)
   res
 }

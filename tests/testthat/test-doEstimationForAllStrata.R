@@ -4,8 +4,12 @@ capture.output({  ## suppresses printing of console output when running test()
 
     ## Step 1) load and prepare some test data
 
-    myH1RawObject <-
-      importRDBESDataCSV(rdbesExtractPath = "./h1_v_1_19_13")
+    myH1RawObject <- importRDBESDataCSV(rdbesExtractPath = "./h1_v_1_19_18")
+
+    # Only use a subset of the test data
+    myH1RawObject <- filterRDBESDataObject(myH1RawObject,c("DEstratumName"),c("DE_stratum1_H1","DE_stratum2_H1","DE_stratum3_H1"))
+    myH1RawObject <- findAndKillOrphans(myH1RawObject, verbose = FALSE)
+
 
     #Filter our data for WGRDBES-EST TEST 1, 1965, H1
     myValues <- c(1965,1,"National Routine","DE_stratum1_H1",1019159)
@@ -112,7 +116,12 @@ test_that("doEstimationForAllStrata creates correct est.total for SAsampWtMes us
 
 test_that("doEstimationForAllStrata creates get correct results for Lohr worked examples",  {
 
-  myTestData <- RDBEScore:::importRDBESDataZIP("../../data-raw/exampleData/WGRDBES-EST_TEST_LOHR_eg_3_2_3_6.zip")
+  myTestData <- RDBEScore:::importRDBESDataZIP("./h1_v_1_19_18/ZW_1965_WGRDBES-EST_TEST_1.zip")
+
+  # Only use a subset of the test data
+  myTestData <- filterRDBESDataObject(myTestData,c("DEstratumName"),c("Pckg_SDAResources_agstrat_H1"))
+  myTestData <- findAndKillOrphans(myTestData, verbose = FALSE)
+
   validateRDBESDataObject(myTestData, checkDataTypes = TRUE)
 
   # ensure the numer of sampled and total items is set on the relevent levels
