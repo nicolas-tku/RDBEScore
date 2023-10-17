@@ -1,16 +1,30 @@
 capture.output({  ## suppresses printing of console output when running test()
 
 
-  # Test ZIP inputs ---------------------------------------------------------
+
 
   # common parameters
   dirH1 <- "tests/testthat/h1_v_1_19_18/"
+  dirH5 <- "tests/testthat/h5_v_1_19_18/"
+
   expObjH1 <- readRDS(paste0(dirH1, "H1_2023_10_16.rds"))
 
-  # LEid is present in H1 due to the export (it should not be there)
+  # LEid is present in H1 due to the export
   class(expObjH1$FT$LEid) <- "integer"
   class(expObjH1$SA$LEid) <- "integer"
   zipH1 <- "tests/testthat/h1_v_1_19_18/H1_2023_10_16.zip"
+
+  # TEST GENERAL BEHAVIOUR --------------------------------------------------
+
+  test_that("createRDBESDataObject will give a warning if given a dir with no relevant  files in it",  {
+
+    myPath <- "."
+    expect_warning(createRDBESDataObject(input = myPath),"No relevent files found in given directory - an empty object will be created")
+
+
+  })
+
+  # Test ZIP inputs ---------------------------------------------------------
 
   test_that("importing zipped H1 example data works", {
     zipFiles <- c(
@@ -91,72 +105,92 @@ capture.output({  ## suppresses printing of console output when running test()
 
 
 
+
 # Test CSV inputs ---------------------------------------------------------
 
+
+
+  # NULL tests ?
   # test_that("createRDBESDataObject can create an empty object without errors
   #         or warnings",  {
   #
   #           myObject <- expect_warning(createRDBESDataObject(),NA)
   #           myObject <-expect_error(createRDBESDataObject(),NA)
   #         })
+  #
 
-  test_that("createRDBESDataObject can create an object from an H1 data extract
+
+  test_that("createRDBESDataObject can create an object from a H1 data extract
           without errors or warnings",  {
 
-            myPath <- "tests/testthat/h1_v_1_19_18"
+            csvFilesH1 <- dirH1
 
-            expect_warning(createRDBESDataObject(input = myPath),
-                                       NA)
-
-            expect_error(createRDBESDataObject(input = myPath),
-                         )
+            expect_warning(createRDBESDataObject(input = csvFilesH1), NA)
+            expect_error(createRDBESDataObject(input = csvFilesH1), NA)
           })
 
-  test_that("createRDBESDataObject can create an object from an H1 data extract
+
+
+  test_that("createRDBESDataObject can create an object from a H1 data extract
           without errors or warnings (when castToCorrectDataTypes = FALSE)",  {
 
-            myPath <- "./h1_v_1_19_18"
+            csvFilesH1 <- dirH1
 
-            myObject <- expect_warning(
-              createRDBESDataObject(rdbesExtractPath = myPath,
-                                 castToCorrectDataTypes = FALSE),NA)
-            myObject <- expect_error(
-              createRDBESDataObject(rdbesExtractPath = myPath,
-                                 castToCorrectDataTypes = FALSE),NA)
+            expect_warning(
+              createRDBESDataObject(input = csvFilesH1,
+                                 castToCorrectDataTypes = FALSE), NA)
+            expect_error(
+              createRDBESDataObject(input = csvFilesH1,
+                                 castToCorrectDataTypes = FALSE), NA)
           })
+
+
   test_that("createRDBESDataObject can create an object from an H5 data extract
           without errors or warnings",  {
 
-            myPath <- "./h5_v_1_19_18"
+            csvFilesH5 <- dirH5
 
-            myObject <- expect_warning(createRDBESDataObject(rdbesExtractPath = myPath),NA)
-            myObject <- expect_error(createRDBESDataObject(rdbesExtractPath = myPath),NA)
+          expect_warning(createRDBESDataObject(input = csvFilesH5), NA)
+          expect_error(createRDBESDataObject(input = csvFilesH5), NA)
           })
+
+
   test_that("createRDBESDataObject can create an object from an H5 data extract
           without errors or warnings (when castToCorrectDataTypes = FALSE)",  {
 
-            myPath <- "./h5_v_1_19_18"
+            csvFilesH5 <- dirH5
 
-            myObject <- expect_warning(
-              createRDBESDataObject(rdbesExtractPath = myPath,
-                                 castToCorrectDataTypes = FALSE),NA)
-            myObject <- expect_error(
-              createRDBESDataObject(rdbesExtractPath = myPath,
-                                 castToCorrectDataTypes = FALSE),NA)
+           expect_warning(
+              createRDBESDataObject(input = csvFilesH5,
+                                 castToCorrectDataTypes = FALSE), NA)
+            expect_error(
+              createRDBESDataObject(input = csvFilesH5,
+                                 castToCorrectDataTypes = FALSE), NA)
           })
+
+
   test_that("createRDBESDataObject can create an object from an H1 data extract by specifying file names without errors or warnings",  {
 
-    myPath <- "./h1_v_1_19_18"
+    csvFilesH1 <- dirH1
     myFileNames <- list("DE"="DE.csv","SD"="SD.csv")
 
-    myObject <- expect_warning(createRDBESDataObject(rdbesExtractPath = myPath, listOfFileNames = myFileNames),NA)
-    myObject <- expect_error(createRDBESDataObject(rdbesExtractPath = myPath, listOfFileNames = myFileNames),NA)
+    myObject <- expect_warning(createRDBESDataObject(input = csvFilesH1, listOfFileNames = myFileNames), NA)
+    myObject <- expect_error(createRDBESDataObject(input = csvFilesH1, listOfFileNames = myFileNames), NA)
+
   })
+
+
+
   test_that("createRDBESDataObject will give a warning if given a dir with no relevent files in it",  {
 
     myPath <- "."
-    myObject <- expect_warning(createRDBESDataObject(rdbesExtractPath = myPath),"No relevent files found in given directory - an empty object will be created")
+    expect_warning(createRDBESDataObject(input = myPath),"No relevent files found in given directory - an empty object will be created")
+
+
   })
+
+
+
   test_that("createRDBESDataObject creates an object with the correct data types",  {
 
     myPath <- "./h1_v_1_19_18"
@@ -169,6 +203,10 @@ capture.output({  ## suppresses printing of console output when running test()
     numberOfDifferences <- nrow(myDiffs)
     expect_equal(numberOfDifferences,0)
   })
+
+
+
+
   test_that("createRDBESDataObject creates an H1 object with keys on the data tables",  {
 
     myPath <- "./h1_v_1_19_18"
@@ -235,4 +273,11 @@ capture.output({  ## suppresses printing of console output when running test()
 
 
 
+
+
+
+
 }) ## end capture.output
+
+
+
