@@ -2,10 +2,8 @@ capture.output({  ## suppresses printing of console output when running test()
 
 test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLyear*SLcatchFrac*SLcommTaxon", {
 
-
-# species*catchFrac in SL and not in SA: expected behavior -> generate a 0 row in SA
-
-	# create test data from download
+# create test data from download
+	
 	myH1DataObject <- RDBEScore:::importRDBESDataZIP("./h1_v_1_19_18/ZW_1965_WGRDBES-EST_TEST_1.zip")
 
 	# Only use a subset of the test data
@@ -37,6 +35,8 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 	myH1DataObject <- filterRDBESDataObject(myH1DataObject, c("SAid"), c(572813), killOrphans = TRUE)
 	validateRDBESDataObject(myH1DataObject, checkDataTypes = TRUE)
 
+# species*catchFrac in SL and not in SA: expected behavior -> generate a 0 row in SA
+
 	  # check generateZerosUsingSL is creating missing catchCateg in SA
 		myTest3 <- generateZerosUsingSL(myH1DataObject)
 
@@ -55,20 +55,15 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 
 # species*catchFrac in SL and in SA: expected behavior -> do not generate a 0 row in SA
 
-	myH1DataObject <- RDBEScore:::importRDBESDataZIP("./h1_v_1_19_18/ZW_1965_WGRDBES-EST_TEST_1.zip")
+	myH1DataObject2<-myH1DataObject
+	myH1DataObject2[["SS"]]<-myH1DataObject2[["SS"]][1,]
+	myH1DataObject2<-filterRDBESDataObject(myH1DataObject, c("SLid"), myH1DataObject2[["SS"]]$SLid, killOrphans = TRUE)
+	
+	validateRDBESDataObject(myH1DataObject2, checkDataTypes = TRUE)
 
-	# Only use a subset of the test data
-	myH1DataObject <- filterRDBESDataObject(myH1DataObject,c("DEstratumName"),c("Pckg_survey_apistrat_H1"))
-	myH1DataObject <- filterRDBESDataObject(myH1DataObject,c("SLspeclistName"),c("WGRDBES-EST_TEST_1_Pckg_survey_apistrat_H1"))
-	myH1DataObject <- findAndKillOrphans(myH1DataObject, verbose = FALSE)
+	result <- generateZerosUsingSL(myH1DataObject2)
 
-	myH1DataObject[["SS"]]<-myH1DataObject[["SS"]][1,]
-	myH1DataObject <- filterRDBESDataObject(myH1DataObject, c("SAid"), c(572813), killOrphans = TRUE)
-	validateRDBESDataObject(myH1DataObject, checkDataTypes = TRUE)
-
-	toCheck <- generateZerosUsingSL(myH1DataObject)
-
-	expect_equal(toCheck, myH1DataObject)
+	expect_equal(result, myH1DataObject2)
 
 })
 
