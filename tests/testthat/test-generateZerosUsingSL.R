@@ -2,7 +2,7 @@ capture.output({  ## suppresses printing of console output when running test()
 
 test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLyear*SLcatchFrac*SLcommTaxon", {
 
-# create test data from download
+# create test data from download [to be used in different tests]
 	
 	myH1DataObject <- RDBEScore:::importRDBESDataZIP("./h1_v_1_19_18/ZW_1965_WGRDBES-EST_TEST_1.zip")
 
