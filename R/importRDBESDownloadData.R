@@ -18,8 +18,8 @@
 #'
 #' @examples
 #' files <- c("./tests/testthat/h1_v_1_19/H1_2021_000_example.zip")
-#' obj <- importRDBESDownloadData(files)
-importRDBESDownloadData <- function(filenames,
+#' obj <- importRDBESDataZIP(files)
+importRDBESDataZIP <- function(filenames,
                                     castToCorrectDataTypes = TRUE) {
   randInt <- paste0(sample(1:100, 3), collapse = "")
   tmp <- paste0(tempdir(), "/downloadImport", randInt)

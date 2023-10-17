@@ -45,7 +45,7 @@ zipFiles <- paste0(ddir, zipFiles)
 It can directly import the `.zip` archive from the RDBES download containing all mandatory Hierarchy tables plus VD and SL:
 
 ```{r}
-importedH1 <- importRDBESDownloadData("../tests/testthat/h1_v_1_19_13/H1_2022_10_05.zip")
+importedH1 <- RDBEScore:::importRDBESDataZIP("../tests/testthat/h1_v_1_19_13/H1_2022_10_05.zip")
 #print the not NULL table names
 names(importedH1[!unlist(lapply(importedH1, is.null))])
 ```
@@ -53,7 +53,7 @@ names(importedH1[!unlist(lapply(importedH1, is.null))])
 It can import the VD or SL tables `.zip` archives, but will include all other tables as `NULL`:
 
 ```{r}
-importedSL <- importRDBESDownloadData("../tests/testthat/h1_v_1_19_13/HSL_2022_10_05.zip")
+importedSL <- RDBEScore:::importRDBESDataZIP("../tests/testthat/h1_v_1_19_13/HSL_2022_10_05.zip")
 #print the not NULL table names
 str(importedSL)
 ```
@@ -61,7 +61,7 @@ str(importedSL)
 or a combination of both
 
 ```{r}
-importedTables <- importRDBESDownloadData(zipFiles[1:3])
+importedTables <- RDBEScore:::importRDBESDataZIP(zipFiles[1:3])
 #print the not NULL table names
 names(importedTables[!unlist(lapply(importedTables, is.null))])
 ```
@@ -70,7 +70,7 @@ It can also handle overwriting zip file original files with files apearing later
 
 
 ```{r}
-importedTables <- importRDBESDownloadData(zipFiles)
+importedTables <- RDBEScore:::importRDBESDataZIP(zipFiles)
 #print the not NULL table names
 names(importedTables[!unlist(lapply(importedTables, is.null))])
 ```
@@ -90,7 +90,7 @@ names(importedTables[!unlist(lapply(importedTables, is.null))])
 It should be noted that the objects created are of the S3 class "RDBESDataObject"
 
 ```{r}
-importedTables <- importRDBESDownloadData(zipFiles)
+importedTables <- RDBEScore:::importRDBESDataZIP(zipFiles)
 class(importedTables)
 ```
 
@@ -98,7 +98,7 @@ class(importedTables)
 RDBESDataObject structure can be validated using the validateRDBESDataObject() function.
 
 ```{r}
-importedTables <- importRDBESDownloadData(zipFiles)
+importedTables <- RDBEScore:::importRDBESDataZIP(zipFiles)
 validateRDBESDataObject(importedTables, verbose = FALSE)
 ```
 

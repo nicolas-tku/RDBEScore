@@ -10,7 +10,7 @@ test_that("importing zipped H1 example data works", {
     "H1_2022_10_05.zip"
   )
 
-  genObj <- importRDBESDownloadData(paste0(ddir, zipFiles),
+  genObj <- RDBEScore:::importRDBESDataZIP(paste0(ddir, zipFiles),
                                     castToCorrectDataTypes = TRUE)
 
   expect_equal(genObj, expObj)
@@ -25,7 +25,7 @@ test_that("importing some data that is not zipped H1 example data works", {
   )
 
   genObj <- expect_warning(
-    importRDBESDownloadData(paste0(ddir, zipFiles),
+    RDBEScore:::importRDBESDataZIP(paste0(ddir, zipFiles),
                             castToCorrectDataTypes = TRUE),
     "Overwriting file: VesselDetails.csv, this might be intended!"
   )
@@ -39,7 +39,7 @@ test_that("importing subset H1 example data works", {
     "VesselDetails.csv"
   )
 
-  genObj <- importRDBESDownloadData(paste0(ddir, zipFiles),
+  genObj <- RDBEScore:::importRDBESDataZIP(paste0(ddir, zipFiles),
                                     castToCorrectDataTypes = TRUE)
   expect_equal(genObj$VD, expObj$VD)
   expect_equal(genObj$SS, NULL)
@@ -53,7 +53,7 @@ test_that("Overwriting a table from a csv file produces a warning", {
   )
 
   expect_warning(
-    importRDBESDownloadData(paste0(ddir, zipFiles),
+    RDBEScore:::importRDBESDataZIP(paste0(ddir, zipFiles),
                             castToCorrectDataTypes = FALSE),
     "Overwriting file: VesselDetails.csv, this might be intended!"
   )
@@ -67,7 +67,7 @@ test_that("Overwriting a table from a zip file produces a warning", {
   )
 
   expect_warning(
-    importRDBESDownloadData(paste0(ddir, zipFiles),
+    RDBEScore:::importRDBESDataZIP(paste0(ddir, zipFiles),
                             castToCorrectDataTypes = FALSE),
     "Duplicate unzipped files detected in"
   )

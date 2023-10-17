@@ -112,7 +112,7 @@ test_that("doEstimationForAllStrata creates correct est.total for SAsampWtMes us
 
 test_that("doEstimationForAllStrata creates get correct results for Lohr worked examples",  {
 
-  myTestData <- importRDBESDownloadData("../../data-raw/exampleData/WGRDBES-EST_TEST_LOHR_eg_3_2_3_6.zip")
+  myTestData <- RDBEScore:::importRDBESDataZIP("../../data-raw/exampleData/WGRDBES-EST_TEST_LOHR_eg_3_2_3_6.zip")
   validateRDBESDataObject(myTestData, checkDataTypes = TRUE)
 
   # ensure the numer of sampled and total items is set on the relevent levels
