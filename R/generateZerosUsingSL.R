@@ -36,7 +36,7 @@ generateZerosUsingSL <- function(x) {
 	tmpSA$DEyear <- x$DE$DEyear[match(aux$DEid[match(tmpSA$SAid,aux$SAid)], x$DE$DEid)]
 	tmpSA$SScatchFra <- x$SS$SScatchFra[match(aux$SSid[match(tmpSA$SAid,aux$SAid)], x$SS$SSid)]
 
-	tmpSA[ ,tmpKey := paste(SDctry, SDinst, SSspecListName, DEyear, SScatchFra, SAspeCode)]
+	tmpSA[ ,tmpKey := paste(DEyear, SDctry, SDinst, SSspecListName, SScatchFra, SAspeCode)]
 
 colsToDelete<-c("SDctry", "SDinst","SSspecListName","DEyear","SScatchFra")
 
@@ -44,7 +44,7 @@ colsToDelete<-c("SDctry", "SDinst","SSspecListName","DEyear","SScatchFra")
         .SDcols = colsToDelete]
 
 	# creates tmpKey in SL
-	tmpSL[, tmpKey := paste(SLcou, SLinst, SLspeclistName, SLyear, SLcatchFrac, SLcommTaxon)]
+	tmpSL[, tmpKey := paste(SLyear, SLcou, SLinst, SLspeclistName, SLcatchFrac, SLcommTaxon)]
 
 
   ls1 <- split(tmpSA, tmpSA$SSid)
