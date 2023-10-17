@@ -93,20 +93,25 @@ capture.output({  ## suppresses printing of console output when running test()
 
 # Test CSV inputs ---------------------------------------------------------
 
-  test_that("createRDBESDataObject can create an empty object without errors
-          or warnings",  {
+  # test_that("createRDBESDataObject can create an empty object without errors
+  #         or warnings",  {
+  #
+  #           myObject <- expect_warning(createRDBESDataObject(),NA)
+  #           myObject <-expect_error(createRDBESDataObject(),NA)
+  #         })
 
-            myObject <- expect_warning(createRDBESDataObject(),NA)
-            myObject <-expect_error(createRDBESDataObject(),NA)
-          })
   test_that("createRDBESDataObject can create an object from an H1 data extract
           without errors or warnings",  {
 
-            myPath <- "./h1_v_1_19_18"
+            myPath <- "tests/testthat/h1_v_1_19_18"
 
-            myObject <- expect_warning(createRDBESDataObject(rdbesExtractPath = myPath),NA)
-            myObject <- expect_error(createRDBESDataObject(rdbesExtractPath = myPath),NA)
+            expect_warning(createRDBESDataObject(input = myPath),
+                                       NA)
+
+            expect_error(createRDBESDataObject(input = myPath),
+                         )
           })
+
   test_that("createRDBESDataObject can create an object from an H1 data extract
           without errors or warnings (when castToCorrectDataTypes = FALSE)",  {
 

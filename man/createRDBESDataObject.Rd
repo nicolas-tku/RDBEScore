@@ -11,10 +11,10 @@ createRDBESDataObject(
 )
 }
 \arguments{
-\item{input}{Strings or \code{list} object. The path to the zip file extracted
+\item{input}{Strings or \code{list} object. The path to the zip file downloaded
 from RDBES (or multiple zip files - see details), or path to a folder of
-\code{csv} files, or a list object in the current environment containing data
-frames of each table. If \code{NULL} an emoty \code{RDBESDataObject} is created.}
+\code{csv} files, or a \code{list} object in the current environment containing data
+frames of each table. If \code{NULL} an empty \code{RDBESDataObject} is created.}
 
 \item{listOfFileNames}{\code{list} of Strings, Optional. For use with \code{csv} inputs
 only, and only required if the csv file names are \emph{not} the default file
@@ -62,10 +62,21 @@ specify the file names e.g. \code{list("DE" = "DE.csv", "SD" = "SD.csv", etc.)}.
 
 \emph{\strong{List of data frames inputs}}
 This \code{input} should be a \code{list} object containing data frames (or
+<<<<<<< HEAD
+data.tables) for each table in your hierarchy. They should be named with the
+appropriate 2-letter code (\code{DE}, \code{SD}, etc.), and the columns should have the
+correct "R Names" as specified in the data model (i.e. at this stage no
+renaming or checking of column names is performed). Note if you choose to
+create an \code{RDBESDAtaObject} from local data frames these may have not passed
+the data integrity checks performed when you upload to RDBES!
+=======
 data.tables) for each table in your hierarchy. They should be named with the appropriate 2-letter code
 (\code{DE}, \code{SD}, etc.). Note
+>>>>>>> 32d06d2d2a8803f55d3f36f17b52c1e89a7522f9
 
 \emph{\strong{NULL inputs}}
+This \code{input} produces an empty \code{RDBESDataObject}, i.e. all tables with
+correct data types but the tables will be empty.
 }
 \examples{
 myEmptyRDBESObject <- importRDBESDataCSV(input = NULL)
