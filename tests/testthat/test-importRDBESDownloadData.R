@@ -1,13 +1,13 @@
 capture.output({  ## suppresses printing of console output when running test()
 
 # common parameters
-ddir <- "./h1_v_1_19_13/"
-expObj <- readRDS(paste0(ddir, "h1_RDBESDataObject.rds"))
+ddir <- "./h1_v_1_19_18/"
+expObj <- readRDS(paste0(ddir, "H1_2023_10_16.rds"))
 
 
 test_that("importing zipped H1 example data works", {
   zipFiles <- c(
-    "H1_2022_10_05.zip"
+    "H1_2023_10_16.zip"
   )
 
   genObj <- importRDBESDownloadData(paste0(ddir, zipFiles),
@@ -19,8 +19,8 @@ test_that("importing zipped H1 example data works", {
 
 test_that("importing some data that is not zipped H1 example data works", {
   zipFiles <- c(
-    "H1_2022_10_05.zip",
-    "HSL_2022_10_05.zip",
+    "H1_2023_10_16.zip",
+    "HSL_2023_10_16.zip",
     "VesselDetails.csv"
   )
 
@@ -35,7 +35,7 @@ test_that("importing some data that is not zipped H1 example data works", {
 
 test_that("importing subset H1 example data works", {
   zipFiles <- c(
-    "HSL_2022_10_05.zip",
+    "HSL_2023_10_16.zip",
     "VesselDetails.csv"
   )
 
@@ -48,7 +48,7 @@ test_that("importing subset H1 example data works", {
 
 test_that("Overwriting a table from a csv file produces a warning", {
   zipFiles <- c(
-    "HVD_2022_10_05.zip",
+    "HVD_2023_10_16.zip",
     "VesselDetails.csv"
   )
 
@@ -62,8 +62,8 @@ test_that("Overwriting a table from a csv file produces a warning", {
 
 test_that("Overwriting a table from a zip file produces a warning", {
   zipFiles <- c(
-    "HVD_2022_10_05.zip",
-    "H1_2022_10_05.zip"
+    "HVD_2023_10_16.zip",
+    "H1_2023_10_16.zip"
   )
 
   expect_warning(
