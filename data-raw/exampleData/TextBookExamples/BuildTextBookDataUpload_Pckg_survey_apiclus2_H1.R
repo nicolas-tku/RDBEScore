@@ -10,7 +10,7 @@
 		target_var<-"enroll"
 
 	# name your project (will be used in filenames for CS, SL and VD)
-		project_name_outputs <- "Pckg_Survey_apiclust2_H1"
+		project_name_outputs <- "Pckg_Survey_apiclus2_H1"
 
 	# select a year for upload
 		DEyear<-1969
@@ -605,7 +605,7 @@ RDBESlist <- list(DE = DE_df,
                   SS = SS_df,
                   SA = SA_df)
 
-Pckg_Survey_apiclust2_asH1 <- RDBEScore:::importRDBESDataDFS(RDBESlist, F)
+Pckg_Survey_apiclus2_asH1 <- RDBEScore:::importRDBESDataDFS(RDBESlist, F)
 
 #id table
 a<-merge(DE_df["DEid"],SD_df[c("DEid","SDid")])
@@ -699,8 +699,8 @@ write.table(VD_base, file=paste0(dir_outputs,filename_output_VD), col.names=FALS
 
 #-------- Export as project example data---------
 #check the data
-validateRDBESDataObject(Pckg_Survey_apiclust2_asH1)
+validateRDBESDataObject(Pckg_Survey_apiclus2_asH1)
 
 
-usethis::use_data(Pckg_Survey_apiclust2_asH1, overwrite = TRUE)
+usethis::use_data(Pckg_Survey_apiclus2_asH1, overwrite = TRUE)
 
