@@ -605,7 +605,7 @@ RDBESlist <- list(DE = DE_df,
                   SS = SS_df,
                   SA = SA_df)
 
-Pckg_Survey_apiclust2_asH1 <- RDBEScore:::dfs2RDBESDataObject(RDBESlist, F)
+Pckg_Survey_apiclust2_asH1 <- RDBEScore:::importRDBESDataDFS(RDBESlist, F)
 
 #id table
 a<-merge(DE_df["DEid"],SD_df[c("DEid","SDid")])

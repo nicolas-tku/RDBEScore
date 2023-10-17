@@ -20,7 +20,7 @@
 #' Finally, it validates the RDBESDataObject using `RDBEScore::validateRDBESDataObject` and returns it.
 #'
 #'
-dfs2RDBESDataObject <- function(myList, castToCorrectDataTypes = TRUE){
+importRDBESDataDFS <- function(myList, castToCorrectDataTypes = TRUE){
 
   makeDT <- function(x){
     if(is.null(x)) return(NULL)
