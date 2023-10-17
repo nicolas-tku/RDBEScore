@@ -28,18 +28,21 @@
 #'
 #' ***List of data frames inputs***
 #' This `input` should be a `list` object containing data frames (or
-#' data.tables) for each table in your hierarchy. They should be named with the appropriate 2-letter code
-#' (`DE`, `SD`, etc.). Note
-#'
+#' data.tables) for each table in your hierarchy. They should be named with the
+#' appropriate 2-letter code (`DE`, `SD`, etc.), and the columns should have the
+#' correct "R Names" as specified in the data model (i.e. at this stage no
+#' renaming or checking of column names is performed). Note if you choose to
+#' create an `RDBESDAtaObject` from local data frames these may have not passed
+#' the data integrity checks performed when you upload to RDBES!
 #'
 #' ***NULL inputs***
+#' This `input` produces an empty `RDBESDataObject`, i.e. all tables with
+#' correct data types but the tables will be empty.
 #'
-#'
-#'
-#' @param input Strings or `list` object. The path to the zip file extracted
+#' @param input Strings or `list` object. The path to the zip file downloaded
 #'   from RDBES (or multiple zip files - see details), or path to a folder of
-#'   `csv` files, or a list object in the current environment containing data
-#'   frames of each table. If `NULL` an emoty `RDBESDataObject` is created.
+#'   `csv` files, or a `list` object in the current environment containing data
+#'   frames of each table. If `NULL` an empty `RDBESDataObject` is created.
 #' @param listOfFileNames `list` of Strings, Optional. For use with `csv` inputs
 #'   only, and only required if the csv file names are *not* the default file
 #'   names used by RDBES when downloading data (for instance if you created them
@@ -85,7 +88,7 @@ createRDBESDataObject <- function(input = NULL,
   if(import.type == "zip") output <- importRDBESDataZIP(filenames = input,
                                                         castToCorrectDataTypes = castToCorrectDataTypes)
 
-  if(import.type == "folder") output <- importRDBESDataCSV(filenames = input,
+  if(import.type == "csv") output <- importRDBESDataCSV(rdbesExtractPath = input,
                                                            listOfFileNames = listOfFileNames,
                                                            castToCorrectDataTypes = castToCorrectDataTypes)
 

@@ -4,10 +4,13 @@
 \alias{generateZerosUsingSL}
 \title{Generate zeros in samples using Species List information}
 \usage{
-generateZerosUsingSL(x)
+generateZerosUsingSL(x, strict = TRUE)
 }
 \arguments{
 \item{x}{RDBES data frame}
+
+\item{strict}{(Optional) This function validates its input data - should
+the validation be strict? The default is TRUE.}
 }
 \value{
 RDBES data frame where SA was complemented with species looked for
