@@ -28,20 +28,33 @@
 
 createRDBESDataObject <- function(x = NULL) {
 
+  # x <- c("zip1", "zip2")
+  # x <- c("csv1", "csv2")
+  # x <- c("csv1", "zip2")
+  #
+  # if(!is.list(x))
+  #   if(!(all(grepl("zip", x))) || !(all(grepl("csv", x)))) stop("Do not mix csv and zip inputs")
+  #
   # #listOfFileNames = NA,
   # #castToCorrectDataTypes = TRUE)
   #
   # #  x <- "tests/testthat/h1_v_1_19_18/2023_10_16_104555.zip"
   #
   # # if input is string and zip file
-  # if(is.character(x) && grepl(".zip", x)) import.type <- "zip" else
-  #   # if input is string and folder assume it contains only csv files
-  #   if(is.character(x) && file_test("-d", x)) import.type <- "folder" else
-  #     # if input is string and folder assume it contains only csv files
-  #     if(is.list(x)) import.type <- "list" else
-  #       stop("x input type not recognised. Should be a RDBES zip file, folder of csv files, or list of data frames.")
-  #
-  #
+  # if(is.character(x) && any(grepl(".zip", x))) {
+  #   if((!(all(grepl("zip", x)))) stop("Cannot mix csv and zip inputs")
+  #      import.type <- "zip"
+  #      # if input is string and folder assume it contains only csv files
+  #      } else if(is.character(x) && file_test("-d", x)) {
+  #        import.type <- "folder"
+  #        # if input is string and folder assume it contains only csv files
+  #      } else if(is.list(x)) {
+  #        import.type <- "list"
+  #      } else {
+  #        stop("x input type not recognised. Should be a RDBES zip file, folder of csv files, or list of data frames.")
+  #      }
+  # }
+
   #     # -------------------------------------------------------------------------
   #
   #     if(import.type == "zip") importRDBESDataZIP()
@@ -56,4 +69,4 @@ createRDBESDataObject <- function(x = NULL) {
   #     }
   #
   #     # check for duplicate tables
-}
+  }
