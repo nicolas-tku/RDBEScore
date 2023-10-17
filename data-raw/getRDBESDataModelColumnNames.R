@@ -129,6 +129,31 @@ if(nrow(mapColNamesFieldR[mapColNamesFieldR$Table.Prefix == "FT" & mapColNamesFi
                              mapColNamesFieldR[(ind+1):nrow(mapColNamesFieldR),])
 
 }
+
+# Similar fix to above for LEid in the SA table
+if(nrow(mapColNamesFieldR[mapColNamesFieldR$Table.Prefix == "SA" & mapColNamesFieldR$Field.Name == "LEid",]) == 0) {
+  # this is the row after which the new row needs to be added
+  ind <- intersect(which(mapColNamesFieldR$Table.Prefix == "SA"),
+                   which(mapColNamesFieldR$Field.Name == "SSid"))
+
+  mapColNamesFieldR <- rbind(mapColNamesFieldR[1:ind,],
+                             c("SA", "LEid", "LEid", "Integer", "integer"),
+                             mapColNamesFieldR[(ind+1):nrow(mapColNamesFieldR),])
+
+}
+
+# Another similar fix to above for FOid in the LE table
+if(nrow(mapColNamesFieldR[mapColNamesFieldR$Table.Prefix == "LE" & mapColNamesFieldR$Field.Name == "FOid",]) == 0) {
+  # this is the row after which the new row needs to be added
+  ind <- intersect(which(mapColNamesFieldR$Table.Prefix == "LE"),
+                   which(mapColNamesFieldR$Field.Name == "VDid"))
+
+  mapColNamesFieldR <- rbind(mapColNamesFieldR[1:ind,],
+                             c("LE", "FOid", "FOid", "Integer", "integer"),
+                             mapColNamesFieldR[(ind+1):nrow(mapColNamesFieldR),])
+
+}
+
 row.names(mapColNamesFieldR) <- NULL # reset row numbers
 
 
