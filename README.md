@@ -101,4 +101,13 @@ In order to run lintr and styler (etc) before committing code, follow the instru
    ```
 5. Running git commit should run the various checks automatically. See [the config file](.pre-commit-config.yaml) for all the checks.
 
+## Building binary packages
 
+Building binary packages can be achieved by running the following commands.
+```bash
+Rscript.exe -e "roxygen2::roxygenize('.', roclets = c('rd', 'collate', 'namespace'))"
+Rcmd.exe INSTALL --build --preclean .
+```
+Note to replace `.` with the relative path of the project if necessary. Also on some operating systems, `Rcmd.exe` is called `Rcmd` and `Rscript.exe` is `Rcmd` respectively.
+
+In R-studio there is also a button on the `build` - tab: `More -> Build Binary Package` that builds the binary package.
