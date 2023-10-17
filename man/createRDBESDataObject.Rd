@@ -4,11 +4,7 @@
 \alias{createRDBESDataObject}
 \title{Create an RDBES Raw Object}
 \usage{
-createRDBESDataObject(
-  rdbesExtractPath = NA,
-  listOfFileNames = NA,
-  castToCorrectDataTypes = TRUE
-)
+createRDBESDataObject(x = NULL)
 }
 \arguments{
 \item{rdbesExtractPath}{(Optional) The path to the csv files produced as an
