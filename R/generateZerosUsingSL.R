@@ -20,7 +20,7 @@ generateZerosUsingSL <- function(x,
   validateRDBESDataObject(x, verbose = FALSE, strict = strict)
 
   if (!(nrow(x[["SA"]]) >= 1 && nrow(x[["SL"]]) >= 1)) stop("no SA and/or SL")
-
+  
   # Take a copy of SA since we'll change some column data types and
   # we don't want to update the original version
   tmpSA <- data.table::copy(x[["SA"]])
@@ -33,7 +33,7 @@ generateZerosUsingSL <- function(x,
 # create aux id_table
 	aux<-createTableOfRDBESIds(x = x, addSAseqNums=FALSE)
 
-	tmpSA$SDctry<-x$SD$SDctry[match(aux$SDid[match(tmpSA$SAid,aux$SAid)], x$SD$SDid)]
+	tmpSA$SDctry <- x$SD$SDctry[match(aux$SDid[match(tmpSA$SAid,aux$SAid)], x$SD$SDid)]
 	tmpSA$SDinst <- x$SD$SDinst[match(aux$SDid[match(tmpSA$SAid,aux$SAid)], x$SD$SDid)]
 	tmpSA$SSspecListName <- x$SS$SSspecListName[match(aux$SSid[match(tmpSA$SAid,aux$SAid)], x$SS$SSid)]
 	tmpSA$DEyear <- x$DE$DEyear[match(aux$DEid[match(tmpSA$SAid,aux$SAid)], x$DE$DEid)]
@@ -49,8 +49,13 @@ colsToDelete<-c("SDctry", "SDinst","SSspecListName","DEyear","SScatchFra")
 	# creates tmpKey in SL
 	tmpSL[, tmpKey := paste(SLyear, SLcou, SLinst, SLspeclistName, SLcatchFrac, SLcommTaxon)]
 
+  # stop: (rare?) situation still to be considered [multiple SAcatchCat, SAsex, SAlandCat per id]
+  if (any(tmpSA[, .N, .(SSid,SAstratumName, SAcatchCat, SAsex, SAlandCat)][
+			,.N, .(SSid,SAstratumName)]$N>1)) stop("cannot generateZerosUsingSL because >1 SAcatchCat
+								OR SAsex OR SAlandCat in same SSid*SAstratumName: situation 
+										still to be analyzed - likely you should have them ")
 
-  ls1 <- split(tmpSA, tmpSA$SSid)
+  ls1 <- split(tmpSA, paste(tmpSA$SSid, tmpSA$SAstratumName))
   ls2 <- lapply(ls1, function(x) {
     for (w in tmpSL$tmpKey) {
          if (!w %in% tmpSA$tmpKey) {
@@ -58,16 +63,24 @@ colsToDelete<-c("SDctry", "SDinst","SSspecListName","DEyear","SScatchFra")
           y <- x[1, ]
   		  # handles the key
 		  y$SAspeCode <- as.integer(unlist(strsplit(w," "))[6])
-		  y$SAcatchCat <- unlist(strsplit(w," "))[5]
-       	  # handles the remainder
+		  # handles the remainder
+		  y$SAspeCodeFAO <- NA
+		  y$SAstateOfProc <- 'UNK'
+		  y$SApres <- 'Unknown'
+		  y$SAstateOfProc <- 'Unknown'
+		  y$SAspecState <- 'Unknown'
 		  y$SAtotalWtLive <- 0
           y$SAsampWtLive <- 0
           y$SAtotalWtMes <- 0
           y$SAsampWtMes <- 0
+          y$SAnumTotal <- ifelse(y$SAunitType=="Individuals", 0, y$SAnumTotal)  
+          y$SAnumSamp <- ifelse(y$SAunitType=="Individuals", 0, y$SAnumSamp)
+          y$SAselProb <- 1
+          y$SAincProb <- 1
 		  y$SAid <- min(x$SAid) - 0.1 # maintain a count
           y$SAseqNum <- min(x$SAseqNum) - 0.001 # maintain a count
           y$SAunitName <- min(x$SAid) - 0.001 # maintain a count
-          y$SAsex <- NA
+          y$SAsex <- 'U'
           y$SAlowHierarchy <- "D"
           y$SAsamp <- "N"
           x <- rbind(y, x)
