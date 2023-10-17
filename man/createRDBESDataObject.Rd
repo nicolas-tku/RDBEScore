@@ -42,7 +42,7 @@ The \code{input} should be either:
 \item A \code{zip} file downloaded from RDBES (or multiple zip files if you want to include or overwrite tables, for example CL and CE data)
 \item A folder containing \code{csv} files downloaded from RDBES (e.g. the unzipped file), or any set of csv files of the RDBES tables.
 \item A \code{list} of data frames in the current environment representing different tables in the hierarchy.
-\item A \code{NULL} input will return and emopty RDBES data object
+\item A \code{NULL} input will return and empty RDBES data object
 }
 
 \emph{\strong{ZIP file inputs}}
