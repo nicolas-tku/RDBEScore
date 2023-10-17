@@ -13,7 +13,7 @@
 #' \dontrun{
 #'
 #' myH1RawObject <-
-#'   createRDBESDataObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
+#'   importRDBESDataCSV(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
 #'
 #' # Update our test data with some random sample measurements
 #' myH1RawObject[["SA"]]$SAsampWtLive <-

@@ -11,7 +11,7 @@
 #' @examples
 #' \dontrun{
 #' myH1RawObject <-
-#' createRDBESDataObject(rdbesExtractPath = "tests/testthat/h1_v_1_19")
+#' importRDBESDataCSV(rdbesExtractPath = "tests/testthat/h1_v_1_19")
 #' myEStObj <- createRDBESEstObject(myH1RawObject,1)
 #' validateRDBESEstObject(myEStObj)}
 validateRDBESEstObject <- function(objectToCheck, verbose = FALSE){

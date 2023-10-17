@@ -2,25 +2,35 @@
 #'
 #' This function converts a list of data frames into an RDBESDataObject.
 #'
-#' @param myList A list of data tables. Each element of the list should be a data frame or NULL.
-#' @param castToCorrectDataTypes A logical value indicating whether to cast the columns to the correct data types. Default is TRUE.
+#' @param myList A list of data tables. Each element of the list should be a
+#'   data frame or NULL.
+#' @param castToCorrectDataTypes A logical value indicating whether to cast the
+#'   columns to the correct data types. Default is TRUE.
 #'
-#' @return An RDBESDataObject with each element being a data table from the input list.
+#' @return An RDBESDataObject with each element being a data table from the
+#'   input list.
 #'
-#' @details
-#' The function first defines a helper function, `makeDT`, which converts its input into a data table using `data.table::as.data.table`.
-#' If the input is NULL, it returns NULL.
+#' @details The function first defines a helper function, `makeDT`, which
+#' converts its input into a data table using `data.table::as.data.table`. If
+#' the input is NULL, it returns NULL.
 #'
-#' It then uses the `RDBEScore::newRDBESDataObject` function to create a new RDBESDataObject, with each element being the result of applying `makeDT` to the corresponding element of `myList`.
+#' It then uses the `RDBEScore::newRDBESDataObject` function to create a new
+#' RDBESDataObject, with each element being the result of applying `makeDT` to
+#' the corresponding element of `myList`.
 #'
-#' The function then iterates over each element of `dt`. If an element is a data table, it sets a key on it using the 'XXid' column as the key, where 'XX' is the name of the data table. It also renames the columns according to `RDBEScore::mapColNamesFieldR$R.Name`, and replaces all empty strings with NA.
+#' The function then iterates over each element of `dt`. If an element is a data
+#' table, it sets a key on it using the 'XXid' column as the key, where 'XX' is
+#' the name of the data table. It also renames the columns according to
+#' `RDBEScore::mapColNamesFieldR$R.Name`, and replaces all empty strings with
+#' NA.
 #'
-#' If `castToCorrectDataTypes` is TRUE, it then ensures all columns are of the correct data type using `RDBEScore:::setRDBESDataObjectDataTypes`.
+#' If `castToCorrectDataTypes` is TRUE, it then ensures all columns are of the
+#' correct data type using `RDBEScore:::setRDBESDataObjectDataTypes`.
 #'
-#' Finally, it validates the RDBESDataObject using `RDBEScore::validateRDBESDataObject` and returns it.
-#'
-#'
-dfs2RDBESDataObject <- function(myList, castToCorrectDataTypes = TRUE){
+#' Finally, it validates the RDBESDataObject using
+#' `RDBEScore::validateRDBESDataObject` and returns it.
+
+importRDBESDataDFS <- function(myList, castToCorrectDataTypes = TRUE){
 
   makeDT <- function(x){
     if(is.null(x)) return(NULL)

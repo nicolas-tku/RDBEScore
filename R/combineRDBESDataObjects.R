@@ -13,9 +13,9 @@
 #' \dontrun{
 #'
 #' myH1RawObject <-
-#'     createRDBESDataObject(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
+#'     importRDBESDataCSV(rdbesExtractPath = "tests\\testthat\\h1_v_1_19")
 #' myH5RawObject <-
-#'     createRDBESDataObject(rdbesExtractPath = "tests\\testthat\\h5_v_1_19")
+#'     importRDBESDataCSV(rdbesExtractPath = "tests\\testthat\\h5_v_1_19")
 #'
 #' myCombinedRawObject <- combineRDBESDataObjects(RDBESDataObject1=myH1RawObject,
 #'                                              RDBESDataObject2=myH5RawObject)
@@ -24,7 +24,7 @@ combineRDBESDataObjects <- function(RDBESDataObject1, RDBESDataObject2) {
   validateRDBESDataObject(RDBESDataObject1, verbose = FALSE)
   validateRDBESDataObject(RDBESDataObject2, verbose = FALSE)
   # Create an empty RDBESDataObject as the basis of what we will return
-  myRDBESDataObject <- createRDBESDataObject()
+  myRDBESDataObject <- importRDBESDataCSV()
 
   # For each entry, bind the data tables together
   for (myTable in names(myRDBESDataObject)) {
