@@ -104,8 +104,8 @@ mapColNamesFieldR[
 # Change SAid and SAseqNum to be numeric rather than integer -
 # this is required when we generate true zeros
 mapColNamesFieldR[
-mapColNamesFieldR$Table.Prefix == "SA" &
-  mapColNamesFieldR$Field.Name == "SAid","RDataType"] <- "numeric"
+  mapColNamesFieldR$Table.Prefix == "SA" &
+    mapColNamesFieldR$Field.Name == "SAid","RDataType"] <- "numeric"
 mapColNamesFieldR[
   mapColNamesFieldR$Table.Prefix == "SA" &
     mapColNamesFieldR$Field.Name == "SAsequenceNumber","RDataType"] <- "numeric"
@@ -115,6 +115,22 @@ mapColNamesFieldR[
 
 # Remove any spaces from the R names
 mapColNamesFieldR$R.Name <- gsub(" ", "", mapColNamesFieldR$R.Name)
+
+# Fix for missing LEid column in FT table (remove when Excel model doc is updated from v 1.19.18)
+# If no match on this then this column is still missing, so needs added
+# So at least if model doc is updated and this is not removed then it shouldn't break anything
+if(nrow(mapColNamesFieldR[mapColNamesFieldR$Table.Prefix == "FT" & mapColNamesFieldR$Field.Name == "LEid",]) == 0) {
+  # this is the row after which the new row needs to be added
+  ind <- intersect(which(mapColNamesFieldR$Table.Prefix == "FT"),
+                   which(mapColNamesFieldR$Field.Name == "TEid"))
+
+  mapColNamesFieldR <- rbind(mapColNamesFieldR[1:ind,],
+                             c("FT", "LEid", "LEid", "Integer", "integer"),
+                             mapColNamesFieldR[(ind+1):nrow(mapColNamesFieldR),])
+
+}
+row.names(mapColNamesFieldR) <- NULL # reset row numbers
+
 
 # Save the data
 usethis::use_data(mapColNamesFieldR, overwrite = TRUE)
