@@ -29,7 +29,7 @@ library(RDBEScore)
 First we'll load some example data from the RDBES and check it's valid.  It's a good idea to check your RDBESDataObjects are valid after any manipulations you perform.
 
 ```{r load}
-h1d <- createRDBESDataObject(rdbesExtractPath = "../tests/testthat/h1_v_1_19_13")
+h1d <- importRDBESDataCSV(rdbesExtractPath = "../tests/testthat/h1_v_1_19_13")
 validateRDBESDataObject(h1d, verbose = FALSE)
 
 ```
