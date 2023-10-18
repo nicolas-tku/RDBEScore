@@ -35,16 +35,8 @@ doEstimationForAllStrata <- function(RDBESEstObjectForEstim,
   # Check we have a valid RDBESEstObject before doing anything else
   RDBEScore::validateRDBESEstObject(RDBESEstObjectForEstim, verbose = verbose)
 
-  # Stop if we have any clustering - not developed yet
-  clustFields <-
-    names(RDBESEstObjectForEstim)[grep(
-      "^su.clustering$",
-      names(RDBESEstObjectForEstim)
-    )]
-  if (any(!is.na(RDBESEstObjectForEstim[, ..clustFields]) &
-    RDBESEstObjectForEstim[, ..clustFields] != "N")) {
-    stop("Clustering is present in the data - this cannot be handled yet.")
-  }
+  #do clustering
+  handle_clustering(RDBESEstObjectForEstim)
 
   # Clear out the variable that will hold our results
   myStrataResults <- NULL
@@ -72,68 +64,10 @@ doEstimationForAllStrata <- function(RDBESEstObjectForEstim,
   # Loop through our tables, starting at the right and working to left
   for (i in length(tablesToCheck):1) {
     currentTable <- tablesToCheck[i]
-    parentTable <- NA
-    if (i > 1) {
-      parentTable <- tablesToCheck[i - 1]
-    }
-    if (verbose) {
-      print(paste0("Processing ", currentTable))
-    }
-
-    # Work out what fields we need
-    varsNeeded <- get_vars_needed(currentTable, parentTable, suLevels, i, targetValue)
-
-    # Get our data
-    myTable <- RDBESEstObjectForEstim[, ..varsNeeded]
-    # De-duplicate (because columns to the right might be different
-    # but have disappeared)
-    myTable <- unique(myTable)
-
-    # Get the parent table ID
-    names(myTable)[names(myTable) == paste0(parentTable, "id")] <-
-      paste0(currentTable, "parentTableID")
-    # Remove the two letter prefix from column names so they will
-    # be consistent between tables
-    names(myTable) <-
-      gsub(currentTable, "", names(myTable), ignore.case = FALSE)
-    # change suxStratumName to stratumName
-    if (i - 2 > 0) {
-      names(myTable) <-
-        gsub(suLevels[i - 2], "", names(myTable), ignore.case = FALSE)
-    }
-
-    myTable$parentTable <- parentTable
-
-    # We'll fill in the values for parent stratum as we go through the tables
-    myTable$parentTableStratum <- NA
-
-    # Rename the variable we want to estimate
-    # TODO - check this works for estimating SA variables when there is
-    # sub-sampling
-    if (!foundTargetValue){
-      if (substring(targetValue, 3) %in% names(myTable)) {
-        names(myTable)[names(myTable) == substring(targetValue, 3)] <-
-          "studyVariable"
-        foundTargetValue <- TRUE
-      }
-    }
-
-    # Make some changes for specific tables
-    if (currentTable == "DE") {
-      # Combine the year with the stratum name
-      myTable$stratumName <- paste0(myTable$year, "-", myTable$stratumName)
-    }
-    if (currentTable == "SD") {
-      # Create a pseudo-stratum name with the country and institute code
-      myTable$stratumName <- paste0(myTable$ctry, "-", myTable$inst)
-    }
-
-    # Create a new field combining parent ID and stratum names - this ensures
-    # that records with the same stratum name but different parent records
-    # are easily distinguished
-    myTable$parentIDandStratum <-
-      paste0(myTable$parentTableID, ":", myTable$stratumName)
-
+    results <- process_table(i, tablesToCheck, suLevels, targetValue, RDBESEstObjectForEstim, myStrataResults, foundTargetValue, verbose)
+    myStrataResults <- results$myStrataResults
+    myTable <- results$myTable
+    foundTargetValue <- results$foundTargetValue
 
     # See we if already have some results - if we don't have any results yet we
     # can't join to previous values
@@ -180,6 +114,7 @@ doEstimationForAllStrata <- function(RDBESEstObjectForEstim,
     # Combine the results from this loop with all the previous results
     myStrataResults <- data.table::rbindlist(list(myStrataResults, myResultsTemp), fill=T)
   }
+
 
   as.data.frame(myStrataResults)
 }
@@ -322,3 +257,92 @@ getEstimForStratum <- function(x) {
   rownames(myReturnValues) <- NULL
   myReturnValues
 }
+
+handle_clustering <- function(RDBESEstObjectForEstim){
+  # Stop if we have any clustering - not developed yet
+  clustFields <-
+    names(RDBESEstObjectForEstim)[grep(
+      "^su.clustering$",
+      names(RDBESEstObjectForEstim)
+    )]
+  if (any(!is.na(RDBESEstObjectForEstim[, ..clustFields]) &
+          RDBESEstObjectForEstim[, ..clustFields] != "N")) {
+    stop("Clustering is present in the data - this cannot be handled yet.")
+  }
+}
+
+add_extra_columns <- function(myTable, currentTable) {
+  # Make some changes for specific tables
+  if (currentTable == "DE") {
+    # Combine the year with the stratum name
+    myTable$stratumName <- paste0(myTable$year, "-", myTable$stratumName)
+  }
+  if (currentTable == "SD") {
+    # Create a pseudo-stratum name with the country and institute code
+    myTable$stratumName <- paste0(myTable$ctry, "-", myTable$inst)
+  }
+
+  # Create a new field combining parent ID and stratum names - this ensures
+  # that records with the same stratum name but different parent records
+  # are easily distinguished
+  myTable$parentIDandStratum <- paste0(myTable$parentTableID, ":", myTable$stratumName)
+
+  return(myTable)
+}
+
+process_table <- function(i, tablesToCheck, suLevels, targetValue, RDBESEstObjectForEstim, myStrataResults, foundTargetValue, verbose=FALSE) {
+  currentTable <- tablesToCheck[i]
+  parentTable <- NA
+  if (i > 1) {
+    parentTable <- tablesToCheck[i - 1]
+  }
+  if (verbose) {
+    print(paste0("Processing ", currentTable))
+  }
+
+  # Work out what fields we need
+  varsNeeded <- get_vars_needed(currentTable, parentTable, suLevels, i, targetValue)
+
+  # Get our data
+  myTable <- RDBESEstObjectForEstim[, ..varsNeeded]
+  # De-duplicate (because columns to the right might be different
+  # but have disappeared)
+  myTable <- unique(myTable)
+
+  # Get the parent table ID
+  names(myTable)[names(myTable) == paste0(parentTable, "id")] <-
+    paste0(currentTable, "parentTableID")
+
+  # Remove the two letter prefix from column names so they will
+  # be consistent between tables
+  names(myTable) <-
+    gsub(currentTable, "", names(myTable), ignore.case = FALSE)
+
+  # change suxStratumName to stratumName
+  if (i - 2 > 0) {
+    names(myTable) <-
+      gsub(suLevels[i - 2], "", names(myTable), ignore.case = FALSE)
+  }
+
+  myTable$parentTable <- parentTable
+
+  # We'll fill in the values for parent stratum as we go through the tables
+  myTable$parentTableStratum <- NA
+
+  # Rename the variable we want to estimate
+  # TODO - check this works for estimating SA variables when there is
+  # sub-sampling
+  if (!foundTargetValue){
+    if (substring(targetValue, 3) %in% names(myTable)) {
+      names(myTable)[names(myTable) == substring(targetValue, 3)] <-
+        "studyVariable"
+      foundTargetValue <- TRUE
+    }
+  }
+
+  myTable <- add_extra_columns(myTable, currentTable)
+
+  return(list(myStrataResults=myStrataResults, myTable=myTable, foundTargetValue=foundTargetValue))
+}
+
+
