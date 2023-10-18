@@ -25,12 +25,6 @@ capture.output({  ## suppresses printing of console output when running test()
 
   })
 
-  test_that("createRDBESDataObject can create an empty object without errors",  {
-
-          expect_warning(createRDBESDataObject(), "NOTE: 'NULL' input specified. Creating an EMPTY RDBES Data Object")
-
-        })
-
 
   test_that("Expect warning when the input is not csv, list of dfs, zip files, NULL - Test Integer input", {
 
@@ -309,15 +303,24 @@ capture.output({  ## suppresses printing of console output when running test()
 
   # Test list of dfs ---------------------------------------------------------
 
-# test_that("Importing list of dfs works",{
-#   list_of_dfs <- createRDBESDataObject("tests/testthat/h1_v_1_19_18/H1_2023_10_16.zip")
-#   list_of_dfs <- list_of_dfs[!(sapply(list_of_dfs, is.null))]
-#   list_of_dfs <- lapply(list_of_dfs, as.data.frame)
-# })
-#
-#   test_that("Importing list of dfs works",{
-#
-#   })
+  # Create list of dfs for comparison
+  list_of_dfs <- createRDBESDataObject(paste0(dirH1, "H1_2023_10_16.zip"))
+  list_of_dfs <- list_of_dfs[!(sapply(list_of_dfs, is.null))]
+  list_of_dfs <- lapply(list_of_dfs, as.data.frame)
+
+
+
+
+  test_that("Importing list of dfs works",{
+    genObj <- suppressWarnings(createRDBESDataObject(list_of_dfs, castToCorrectDataTypes = FALSE))
+
+    expect_equal(genObj, expObjH1)
+
+  })
+
+  # test_that("Importing list of dfs works",{
+  #
+  # })
 
 }) ## end capture.output
 

@@ -99,7 +99,6 @@ createRDBESDataObject <- function(input = NULL,
   }
 
   if(import.type == "null") {
-    warning("NOTE: 'NULL' input specified. Creating an EMPTY RDBES Data Object")
     output <- newRDBESDataObject()
   }
 

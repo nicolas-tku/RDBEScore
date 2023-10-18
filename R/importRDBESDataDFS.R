@@ -71,11 +71,11 @@ importRDBESDataDFS <- function(myList,
       # SET KEY
       data.table::setkeyv(dt[[aTable]], paste0(aTable,"id")) # essentially orders rows by id column?
       # SET NAMES
-      oldNames <- colnames(dt[[aTable]])
-      rNames <- mapColNamesFieldR$R.Name[mapColNamesFieldR$Table.Prefix == aTable]
-      data.table::setnames(dt[[aTable]], old = oldNames, new = rNames, skip_absent = TRUE)
-      # SET all empty strings to NA
-      dt[[aTable]][dt[[aTable]]==""] <- NA
+      # oldNames <- colnames(dt[[aTable]])
+      # rNames <- mapColNamesFieldR$R.Name[mapColNamesFieldR$Table.Prefix == aTable]
+      # data.table::setnames(dt[[aTable]], old = oldNames, new = rNames, skip_absent = TRUE)
+      # # SET all empty strings to NA
+      # dt[[aTable]][dt[[aTable]]==""] <- NA
     }
   }
 
