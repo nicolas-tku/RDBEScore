@@ -22,6 +22,7 @@ jobs:
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
     strategy:
+      fail-fast: false
       matrix:
         config:
           - {r: '4.2.3', os: 'ubuntu-latest'}
