@@ -74,7 +74,7 @@ createRDBESDataObject <- function(input = NULL,
   } else if(length(input) == 1 && is.character(input) && file_test("-d", input)) {
     import.type <- "csv"
     # if input is a list assume it is s list of tables
-  } else if(is.list(input)) {
+  } else if(is.list(input) & !is.data.frame(input)) {
     import.type <- "list.of.dfs"
     # if input is NULL...
   } else if(is.null(input)) {
