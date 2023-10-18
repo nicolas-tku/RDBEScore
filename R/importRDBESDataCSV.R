@@ -84,7 +84,7 @@ importRDBESDataCSV <- function(rdbesExtractPath = NULL,
 
     # If we don't find relevent files in the dir give a warning
     if (length(filesWhichExist) == 0) {
-      warning(paste0("No relevent files found in given directory",
+      warning(paste0("No relevant files found in given directory",
       " - an empty object will be created"))
     } else {
 

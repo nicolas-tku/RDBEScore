@@ -20,7 +20,7 @@ capture.output({  ## suppresses printing of console output when running test()
   test_that("createRDBESDataObject will give a warning if given a dir with no relevant  files in it",  {
 
     myPath <- "."
-    expect_warning(createRDBESDataObject(input = myPath),"No relevent files found in given directory - an empty object will be created")
+    expect_warning(createRDBESDataObject(input = myPath),"No relevant files found in given directory - an empty object will be created")
 
 
   })
@@ -49,8 +49,6 @@ capture.output({  ## suppresses printing of console output when running test()
   })
 
 
-
-
   test_that("createRDBESDataObject will throw an error when given multiple inputs", {
     zipFiles <- c(
       "H1_2023_10_16.zip"
@@ -61,10 +59,6 @@ capture.output({  ## suppresses printing of console output when running test()
     expect_error(createRDBESDataObject(input = c(H1, df, dirH1)), "Input type not recognised. Should be a RDBES zip file, folder of csv files, or list of data frames.")
 
   })
-
-
-
-
 
 
   # Test ZIP inputs ---------------------------------------------------------
@@ -315,9 +309,15 @@ capture.output({  ## suppresses printing of console output when running test()
 
   # Test list of dfs ---------------------------------------------------------
 
-
-
-
+# test_that("Importing list of dfs works",{
+#   list_of_dfs <- createRDBESDataObject("tests/testthat/h1_v_1_19_18/H1_2023_10_16.zip")
+#   list_of_dfs <- list_of_dfs[!(sapply(list_of_dfs, is.null))]
+#   list_of_dfs <- lapply(list_of_dfs, as.data.frame)
+# })
+#
+#   test_that("Importing list of dfs works",{
+#
+#   })
 
 }) ## end capture.output
 
