@@ -599,7 +599,7 @@ SA_df<-data.frame(
 		SAcommSizeCat = "",
 		SAsex = "U", #M
 		SAexclusiveEconomicZoneIndicator = "",
-		SAarea = ifelse(dataset$farmcat=='large','27.4.a','27.3.a.20') # this is the domain
+		SAarea = ifelse(dataset$farmcat=='large','27.4.a','27.3.a.20'), # this is the domain
 		SArectangle = "",
 		SAfisheriesManagementUnit = "",
 		SAgsaSubarea = "NotApplicable", #M
