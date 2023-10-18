@@ -63,9 +63,10 @@ specify the file names e.g. \code{list("DE" = "DE.csv", "SD" = "SD.csv", etc.)}.
 \emph{\strong{List of data frames inputs}}
 This \code{input} should be a \code{list} object containing data frames (or
 data.tables) for each table in your hierarchy. They should be named with the
-appropriate 2-letter code (\code{DE}, \code{SD}, etc.). Note if you choose to create an
-\code{RDBESDAtaObject} from local data frames these may have not passed the data
-integrity checks performed when you upload to RDBES!
+appropriate 2-letter code (\code{DE}, \code{SD}, etc.). Columsn within these tables
+will be renamed to the RDBES model documentation 'R name'. Note if you choose
+to create an \code{RDBESDAtaObject} from local data frames these may have not
+passed the data integrity checks performed when you upload to RDBES!
 
 \emph{\strong{NULL inputs}}
 This \code{input} produces an empty \code{RDBESDataObject}, i.e. all tables with
