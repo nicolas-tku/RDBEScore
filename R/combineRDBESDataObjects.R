@@ -28,7 +28,7 @@ combineRDBESDataObjects <- function(RDBESDataObject1,
   validateRDBESDataObject(RDBESDataObject1, verbose = FALSE, strict = strict)
   validateRDBESDataObject(RDBESDataObject2, verbose = FALSE, strict = strict)
   # Create an empty RDBESDataObject as the basis of what we will return
-  myRDBESDataObject <- importRDBESDataCSV()
+  myRDBESDataObject <- createRDBESDataObject()
 
   # For each entry, bind the data tables together
   for (myTable in names(myRDBESDataObject)) {

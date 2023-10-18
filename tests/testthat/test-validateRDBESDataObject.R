@@ -2,7 +2,7 @@ capture.output({  ## suppresses printing of console output when running test()
 
 test_that("validateRDBESobject does not produce errors or warnings",  {
 
-  myEmptyObject <- importRDBESDataCSV()
+  myEmptyObject <- createRDBESDataObject()
 
   expect_warning(validateRDBESDataObject(objectToCheck = myEmptyObject,
                                         verbose = FALSE),NA)
@@ -12,7 +12,7 @@ test_that("validateRDBESobject does not produce errors or warnings",  {
 test_that(
   "validateRDBESDataObject returns empty object for valid empty object",  {
 
-  myEmptyObject <- importRDBESDataCSV()
+  myEmptyObject <- createRDBESDataObject()
   myReturn <- validateRDBESDataObject(objectToCheck = myEmptyObject,
                                      verbose = FALSE)
   expect_equal(myEmptyObject, myReturn)

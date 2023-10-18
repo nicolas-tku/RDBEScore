@@ -2,7 +2,7 @@ capture.output({  ## suppresses printing of console output when running test()
 
 test_that("findAndKillOrphans runs without errors on an empty RDBESDataObject",  {
 
-  myEmptyObject <- importRDBESDataCSV()
+  myEmptyObject <- createRDBESDataObject()
 
   expect_error(findAndKillOrphans(objectToCheck = myEmptyObject,
                                   verbose = FALSE),NA)

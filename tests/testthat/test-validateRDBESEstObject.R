@@ -2,7 +2,7 @@ capture.output({  ## suppresses printing of console output when running test()
 
 test_that("validateRDBESEstObject does not produce errors or warnings",  {
 
-  myEmptyObject <- importRDBESDataCSV()
+  myEmptyObject <- createRDBESDataObject()
   myEStObj <- createRDBESEstObject(myEmptyObject,1)
 
   expect_warning(validateRDBESEstObject(myEStObj),NA)
@@ -10,7 +10,7 @@ test_that("validateRDBESEstObject does not produce errors or warnings",  {
 })
 test_that("validateRDBESEstObject does not error for valid empty object",  {
 
-  myEmptyObject <- importRDBESDataCSV()
+  myEmptyObject <- createRDBESDataObject()
   myEStObj <- createRDBESEstObject(myEmptyObject,1)
   expect_error(validateRDBESEstObject(myEStObj),NA)
 
@@ -54,7 +54,7 @@ test_that("validateRDBESEstObject errors for an incorrectly defined class",  {
 })
 test_that("validateRDBESEstObject errors for an RDBESDataObject",  {
 
-  myEmptyObject <- importRDBESDataCSV()
+  myEmptyObject <- createRDBESDataObject()
   expect_error(validateRDBESEstObject(myEmptyObject, verbose = TRUE),
                regexp = "objectToCheck is not of the class RDBESEstObject")
 

@@ -47,7 +47,7 @@ test_that("createRDBESEstObject can create an object from an H5 data extract
 test_that("createRDBESEstObject can create an object from an empty H1 data extract
           with no warnings or errors",  {
 
-  myRawObject <- importRDBESDataCSV()
+  myRawObject <- createRDBESDataObject()
 
   myEstObject <- expect_warning(createRDBESEstObject(myRawObject,1),NA)
   myEstObject <- expect_error(createRDBESEstObject(myRawObject,1),NA)
