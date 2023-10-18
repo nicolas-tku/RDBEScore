@@ -1,7 +1,6 @@
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/ices-tools-dev/RDBEScore/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ices-tools-dev/RDBEScore/actions/workflows/R-CMD-check.yaml)
-
 [![License](https://img.shields.io/badge/license-GPL%20(%3E%3D%202)-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 <!--
 [![GitHub release](https://img.shields.io/github/release/ices-tools-prod/RDBEScore.svg?maxAge=2592001)]()

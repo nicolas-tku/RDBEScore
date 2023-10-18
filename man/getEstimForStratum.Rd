@@ -13,9 +13,9 @@ getEstimForStratum(x)
 \item{x}{The input}
 }
 \value{
-Whoever revises this function please specify what it returns here
+Data frame with estimation results
 
-Whoever revises this function please specify what it returns here
+Data frame with estimated values
 }
 \description{
 Private function used by doEstimationForAllStrata to get the estimates

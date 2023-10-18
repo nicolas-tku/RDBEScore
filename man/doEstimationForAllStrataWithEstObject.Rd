@@ -8,16 +8,16 @@ strata in an RDBESEstObject}
 doEstimationForAllStrataWithEstObject(
   RDBESEstObjectForEstim,
   targetValue,
-  verbose = TRUE
+  verbose = FALSE
 )
 }
 \arguments{
 \item{RDBESEstObjectForEstim}{The RDBESEstObject to generate estimates for}
 
-\item{targetValue}{Target value, for example "SAsampWtLive"}
+\item{targetValue}{The field to estimate for, for example "SAsampWtLive"}
 
 \item{verbose}{(Optional) If set to TRUE more detailed text will be printed
-out by the function.  Default is TRUE.}
+out by the function.  Default is FALSE}
 }
 \value{
 A data frame containing estimates for all strata

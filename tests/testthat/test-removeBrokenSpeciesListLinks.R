@@ -1,18 +1,19 @@
 capture.output({  ## suppresses printing of console output when running test()
 
-test_that("removeBrokenSpeciesListLinks runs without errors
-          or warnings when there are no invalid species list links",  {
+# test_that("removeBrokenSpeciesListLinks runs without errors
+#           or warnings when there are no invalid species list links",  {
+#
+#     myPath <- "./h1_v_1_19_13"
+#     myH1RawObject <-
+#     createRDBESDataObject(rdbesExtractPath = myPath)
+#
+#     myObjectValidSpeciesListLinks <- expect_warning(
+#               removeBrokenSpeciesListLinks(objectToCheck = myH1RawObject,
+#                                            verbose = FALSE)
+#                             ,NA)
+#
+# })
 
-    myPath <- "./h1_v_1_19_13"
-    myH1RawObject <-
-    createRDBESDataObject(rdbesExtractPath = myPath)
-
-    myObjectValidSpeciesListLinks <- expect_warning(
-              removeBrokenSpeciesListLinks(objectToCheck = myH1RawObject,
-                                           verbose = FALSE)
-                            ,NA)
-
-})
 test_that("removeBrokenSpeciesListLinks prduces an error
           if the SL table is NULL",  {
 

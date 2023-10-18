@@ -8,7 +8,7 @@ strata in an RDBESDataObject}
 doEstimationForAllStrata(
   RDBESDataObjectForEstim,
   hierarchyToUse,
-  verbose = TRUE
+  verbose = FALSE
 )
 }
 \arguments{
@@ -17,7 +17,7 @@ doEstimationForAllStrata(
 \item{hierarchyToUse}{The number of the RDBES hierarchy to estimate for}
 
 \item{verbose}{(Optional) If set to TRUE more detailed text will be printed
-out by the function.  Default is TRUE.}
+out by the function.  Default is FALSE}
 }
 \value{
 A data frame containing estimates for all strata
