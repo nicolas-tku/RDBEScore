@@ -101,7 +101,7 @@ validateRDBESDataObjectFieldNames <- function(objectToCheck,
         "include unnecessary columns ")
       if (!verbose){
         warningTextPrefix <- paste0(warningTextPrefix,
-                            ". (run with verbose = TRUE to see more details) " )
+                            " (run with verbose = TRUE to see more details) " )
       }
     } else {
       warningTextPrefix <- paste0("objectToCheck contains the following ",

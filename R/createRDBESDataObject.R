@@ -29,15 +29,14 @@
 #' ***List of data frames inputs***
 #' This `input` should be a `list` object containing data frames (or
 #' data.tables) for each table in your hierarchy. They should be named with the
-#' appropriate 2-letter code (`DE`, `SD`, etc.), and the columns should have the
-#' correct "R Names" as specified in the data model (i.e. at this stage no
-#' renaming or checking of column names is performed). Note if you choose to
-#' create an `RDBESDAtaObject` from local data frames these may have not passed
-#' the data integrity checks performed when you upload to RDBES!
+#' appropriate 2-letter code (`DE`, `SD`, etc.). Columsn within these tables
+#' will be renamed to the RDBES model documentation 'R name'. Note if you choose
+#' to create an `RDBESDAtaObject` from local data frames these may have not
+#' passed the data integrity checks performed when you upload to RDBES!
 #'
 #' ***NULL inputs***
 #' This `input` produces an empty `RDBESDataObject`, i.e. all tables with
-#' correct data types but the tables will be empty.
+#' correct data classes but the tables will be empty.
 #'
 #' @param input Strings or `list` object. The path to the zip file downloaded
 #'   from RDBES (or multiple zip files - see details), or path to a folder of
@@ -45,43 +44,44 @@
 #'   frames of each table. If `NULL` an empty `RDBESDataObject` is created.
 #' @param listOfFileNames `list` of Strings, Optional. For use with `csv` inputs
 #'   only, and only required if the csv file names are *not* the default file
-#'   names used by RDBES when downloading data (for instance if you created them
-#'   yourself). The names should be a `list` of the two-letter code for the
-#'   relevant table e.g. `list("DE" = "DE.csv", "SD" = "SD.csv", etc.)`.  If not
-#'   supplied then it is assumed the files have the default file names used by
-#'   the RDBES data download ("Design.csv" etc).
+#'   names used by RDBES when downloading data (for instance if you created the
+#'   files yourself). The actual file names should be a `list` of the two-letter
+#'   code for the relevant table e.g. `list("DE" = "DE.csv", "SD" = "SD.csv",
+#'   etc.)`.  If not used then it is assumed the files have the default file
+#'   names used by the RDBES data download ("Design.csv" etc).
 #' @param castToCorrectDataTypes Logical. If `TRUE` then the function will
 #'   attempt to cast the required columns to the correct data type.  If `FALSE`
 #'   then the column data types will be determined by how the csv files are read
-#'   in. Default is `TRUE`
+#'   in. Default is `TRUE`.
 #'
 #' @return A RDBESDataObject
 #' @export
 #' @md
 #'
 #' @examples
-#' myEmptyRDBESObject <- importRDBESDataCSV(input = NULL)
+#' myEmptyRDBESObject <- createRDBESDataObject(input = NULL)
 
 createRDBESDataObject <- function(input = NULL,
-                                  listOfFileNames = NA,
-                                  castToCorrectDataTypes = TRUE) {
+                                  listOfFileNames = NULL,
+                                  castToCorrectDataTypes = TRUE,
+                                  ...) {
 
-  # if input is string and zip file
+  # Classify input type
   if(any(is.character(input)) && any(grepl(".zip", input))) {
     if(!(all(grepl(".zip", input)))) stop("You cannot import a mix of 'csv' and 'zip' inputs. To import multiple tables unzip all files and import as a folder of 'csv' files.")
     import.type <- "zip"
-    # if input is string and folder assume it contains only csv files
+    # if input is string and folder/directory assume it contains csv files
   } else if(length(input) == 1 && is.character(input) && file_test("-d", input)) {
     import.type <- "csv"
-    # if input is string and folder assume it contains only csv files
-  } else if(is.list(input)) {
+    # if input is a list assume it is s list of tables
+  } else if(is.list(input) & !is.data.frame(input)) {
     import.type <- "list.of.dfs"
+    # if input is NULL...
   } else if(is.null(input)) {
     import.type <- "null"
   } else {
     stop("Input type not recognised. Should be a RDBES zip file, folder of csv files, or list of data frames.")
   }
-
 
   # -------------------------------------------------------------------------
 
@@ -94,16 +94,14 @@ createRDBESDataObject <- function(input = NULL,
 
 
   if(import.type == "list.of.dfs") {
-    warning("NOTE: Creating RDBES data objects from a list of data frames bypasses the ICES data integrity checks.")
-    output <- importRDBESDataDFS(myList = input, castToCorrectDataTypes = castToCorrectDataTypes)
+    warning("NOTE: Creating RDBES data objects from a list of local data frames bypasses the RDBES upload data integrity checks.")
+    output <- importRDBESDataDFS(myList = input, castToCorrectDataTypes = castToCorrectDataTypes, ...)
   }
 
   if(import.type == "null") {
     warning("NOTE: 'NULL' input specified. Creating an EMPTY RDBES Data Object")
     output <- newRDBESDataObject()
   }
-
-  # check for duplicate tables?
 
   return(output)
 }

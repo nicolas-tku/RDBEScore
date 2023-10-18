@@ -95,6 +95,18 @@ if(nrow(mapColNamesFieldR[mapColNamesFieldR$Table.Prefix == "LE" & mapColNamesFi
                              c("LE", "FOid", "FOid", "Integer", "integer"),
                              mapColNamesFieldR[(ind+1):nrow(mapColNamesFieldR),])
 
+  # Need to also change the order to match order in download SA table (which is different than in the Excel doc)
+  # DOWNLOAD:                  LEid > OSid > FTid > VSid > TEid > SAid > VDid > FOid > SSid
+  # EXCEL (also missing LEid): LEid > OSid > FTid > VSid > VDid > TEid > SAid > SSid
+  rownames(mapColNamesFieldR) <- NULL
+  mapColNamesFieldR <- rbind(mapColNamesFieldR[1:254,],
+                             mapColNamesFieldR[257,], # TEid
+                             mapColNamesFieldR[258,], # SAid
+                             mapColNamesFieldR[255,], # VDid
+                             mapColNamesFieldR[256,], # FOid
+                             mapColNamesFieldR[259,], # SSid
+                             mapColNamesFieldR[260:nrow(mapColNamesFieldR),])
+
 }
 
 

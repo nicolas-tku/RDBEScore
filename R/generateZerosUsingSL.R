@@ -4,6 +4,8 @@
 #' https://github.com/ices-eg/WK_RDBES/tree/master/WKRDB-EST2/chairs/Nuno
 #'
 #' @param x RDBES data frame
+#' @param verbose (Optional) Set to TRUE if you want informative text printed
+#' out, or FALSE if you don't.  The default is FALSE.
 #' @param strict (Optional) This function validates its input data - should
 #' the validation be strict? The default is TRUE.
 #'
@@ -14,17 +16,18 @@
 
 
 generateZerosUsingSL <- function(x,
+                                 verbose = FALSE,
                                  strict = TRUE) {
 
   # Check we have a valid RDBESDataObject before doing anything else
-  validateRDBESDataObject(x, verbose = FALSE, strict = strict)
+  validateRDBESDataObject(x, verbose = verbose, strict = strict)
 
   if (!(nrow(x[["SA"]]) >= 1 && nrow(x[["SL"]]) >= 1)) stop("no SA and/or SL")
-  
-  # Take a copy of SA since we'll change some column data types and
+
+  # Take a copy of SA and SL since we'll change some column data types and
   # we don't want to update the original version
   tmpSA <- data.table::copy(x[["SA"]])
-  tmpSL <- x[["SL"]]
+  tmpSL <- data.table::copy(x[["SL"]])
   # Now convert some columns from int to numeric
   colsToConvertToNumeric <- c("SAid", "SAseqNum")
   tmpSA[, (colsToConvertToNumeric) := lapply(.SD, as.double),
@@ -52,7 +55,7 @@ colsToDelete<-c("SDctry", "SDinst","SSspecListName","DEyear","SScatchFra")
   # stop: (rare?) situation still to be considered [multiple SAcatchCat, SAsex, SAlandCat per id]
   if (any(tmpSA[, .N, .(SSid,SAstratumName, SAcatchCat, SAsex, SAlandCat)][
 			,.N, .(SSid,SAstratumName)]$N>1)) stop("cannot generateZerosUsingSL because >1 SAcatchCat
-								OR SAsex OR SAlandCat in same SSid*SAstratumName: situation 
+								OR SAsex OR SAlandCat in same SSid*SAstratumName: situation
 										still to be analyzed - likely you should have them ")
 
   ls1 <- split(tmpSA, paste(tmpSA$SSid, tmpSA$SAstratumName))
@@ -73,7 +76,7 @@ colsToDelete<-c("SDctry", "SDinst","SSspecListName","DEyear","SScatchFra")
           y$SAsampWtLive <- 0
           y$SAtotalWtMes <- 0
           y$SAsampWtMes <- 0
-          y$SAnumTotal <- ifelse(y$SAunitType=="Individuals", 0, y$SAnumTotal)  
+          y$SAnumTotal <- ifelse(y$SAunitType=="Individuals", 0, y$SAnumTotal)
           y$SAnumSamp <- ifelse(y$SAunitType=="Individuals", 0, y$SAnumSamp)
           y$SAselProb <- 1
           y$SAincProb <- 1

@@ -48,15 +48,18 @@ SDcountry = "ZW"
 Notes: 2-stage clustering (2C) in table VS; 4 non-responses in table SA
 # =============
 
-
 # =============
 Type: simple random sampling
 Script: BuildTextBookDataUpload_Pckg_SDAResources_agsrs_H1.R
 Package: SDAResources
 Dataset: agsrs
 As RDBES hierarchy: H1
-Reference: Lu, Y., & Lohr, S.L. (2021). R Companion for Sampling: Design and Analysis, Third Edition (1st ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9781003228196
-Where: Page 18 Section 2.2
+Reference: 
+	[1] Lu, Y., & Lohr, S.L. (2021). R Companion for Sampling: Design and Analysis, Third Edition (1st ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9781003228196
+	[2] Lohr (2021), Sampling: Design and Analysis, 2nd Edition. Boca Raton, FL: CRC Press. 	
+Where: 
+	[1] Page 18 Section 2.2 
+	[2] examples 2.6, 2.7, 2.11 and 4.8
 DEyear = 1965
 DEsamplingScheme = "WGRDBES-EST TEST 1"
 DEstratumName = "WGRDBES-EST_TEST1_Pckg_SDAResources_agsrs_H1"

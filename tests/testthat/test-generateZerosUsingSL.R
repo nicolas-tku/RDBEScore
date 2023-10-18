@@ -9,7 +9,7 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 	# Only use a subset of the test data
 	myH1DataObject <- filterRDBESDataObject(myH1DataObject,c("DEstratumName"),c("Pckg_survey_apistrat_H1"))
 	myH1DataObject <- filterRDBESDataObject(myH1DataObject,c("SLspeclistName"),c("WGRDBES-EST_TEST_1_Pckg_survey_apistrat_H1"))
-	myH1DataObject <- findAndKillOrphans(myH1DataObject, verbose = FALSE)
+	myH1DataObject <- findAndKillOrphans(myH1DataObject)
 
 	validateRDBESDataObject(myH1DataObject, checkDataTypes = TRUE)
 
@@ -58,7 +58,7 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 
 	myH1DataObject2<-myH1DataObject1
 	myH1DataObject2[["SS"]]<-myH1DataObject2[["SS"]][1,]
-	myH1DataObject2<-filterRDBESDataObject(myH1DataObject2, c("SLid"), myH1DataObject2[["SS"]]$SLid, killOrphans = TRUE)
+	myH1DataObject2<-filterRDBESDataObject(myH1DataObject2, c("SLid"), myH1DataObject2[["SS"]]$SLid, killOrphans = TRUE, verbose = TRUE)
 
 	validateRDBESDataObject(myH1DataObject2, checkDataTypes = TRUE)
 

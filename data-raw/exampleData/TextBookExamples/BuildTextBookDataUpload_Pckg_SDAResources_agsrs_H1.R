@@ -1,10 +1,12 @@
 #======Prepares textbook SDAResources::agsrs as H1 upload file===========
 
 # Info:
-# Table VS and SA contain the core information of \code{data(agsrs)} used in Lohr examples 3.2 and 3.6.
+# Table VS and SA contain the core information of \code{data(agsrs)} used in Lohr examples 2.6, 2.7 and 2.11 of SDA book
+# information required for example 4.8 (domain estimation) is also added to SA [farmcat <=> SAarea]
 # VSnumberSampled and VSnumberTotal set according to \code{agsrs} and book pop values
 # VSunitName is set to a combination of original \code{agsrs$county}, \code{agsrs$state}, \code{agsrs$region} and row numbers
 # Table SA contains the variable measured agsrs$acres92 in \code{SAtotalWeightMeasured}, \code{SAsampleWeightMeasured} and \code{SAconversionFactorMeasLive} set to 1.
+# Table SA also contains the domain information, coded in SAarea
 # Table DE, SD, FT and FO are for the most dummy tables inserted to meet RDBES model requirements to be aggregated
 # during estimation tests.
 # Values of mandatory fields have dummy values with exception of Design-Variables in VS that match the book
@@ -18,7 +20,10 @@
 		library(SDAResources)
 		data(agsrs)
 		dataset<-agsrs
-		target_var<-"acres92"
+			# adds domain info - pg 46 example 4.8
+				dataset$farmcat<-"large"
+				dataset$farmcat[dataset$farms92 < 600] <- "small"
+		target_var <- "acres92"
 
 	# name your project (will be used in filenames for CS, SL and VD)
 		project_name_outputs <- "WGRDBES-EST_TEST_1_Pckg_SDAResources_agsrs_H1"
@@ -594,7 +599,7 @@ SA_df<-data.frame(
 		SAcommSizeCat = "",
 		SAsex = "U", #M
 		SAexclusiveEconomicZoneIndicator = "",
-		SAarea = "",
+		SAarea = ifelse(dataset$farmcat=='large','27.4.a','27.3.a.20'), # this is the domain
 		SArectangle = "",
 		SAfisheriesManagementUnit = "",
 		SAgsaSubarea = "NotApplicable", #M

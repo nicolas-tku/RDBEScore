@@ -4,10 +4,13 @@
 \alias{generateZerosUsingSL}
 \title{Generate zeros in samples using Species List information}
 \usage{
-generateZerosUsingSL(x, strict = TRUE)
+generateZerosUsingSL(x, verbose = FALSE, strict = TRUE)
 }
 \arguments{
 \item{x}{RDBES data frame}
+
+\item{verbose}{(Optional) Set to TRUE if you want informative text printed
+out, or FALSE if you don't.  The default is FALSE.}
 
 \item{strict}{(Optional) This function validates its input data - should
 the validation be strict? The default is TRUE.}

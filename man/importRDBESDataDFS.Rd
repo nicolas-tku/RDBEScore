@@ -2,45 +2,46 @@
 % Please edit documentation in R/importRDBESDataDFS.R
 \name{importRDBESDataDFS}
 \alias{importRDBESDataDFS}
-\title{Convert List of Data Frames to a  RDBES Data Object}
+\title{Convert List of Data Frames to a RDBES Data Object}
 \usage{
-importRDBESDataDFS(myList, castToCorrectDataTypes = TRUE, strict = TRUE)
+importRDBESDataDFS(myList, castToCorrectDataTypes = TRUE, strict = TRUE, ...)
 }
 \arguments{
-\item{myList}{A list of data tables. Each element of the list should be a
-data frame or NULL.}
+\item{myList}{A \code{list} of data tables. Each element of the list should be a
+data frame with an RDBES two-letter name (e.g. "DE").}
 
-\item{castToCorrectDataTypes}{A logical value indicating whether to cast the
-columns to the correct data types. Default is TRUE.}
+\item{castToCorrectDataTypes}{logical. Indicates whether to cast the columns
+to the correct data types. Default is \code{TRUE}.}
 
-\item{strict}{(Optional) This function validates the RDBESDataObject it
-creates - should the validation be strict? The default is TRUE.}
+\item{strict}{logical. Indicates level of validation of the \code{RDBESDataObject}
+it creates - should the validation be strict? Default is \code{TRUE}.}
 }
 \value{
-An RDBESDataObject with each element being a data table from the
-  input list.
+An \code{RDBESDataObject} with each element being a data table.
 }
 \description{
-This function converts a list of data frames into an RDBESDataObject.
+This function converts a list of data frames into an object of class
+\code{RDBESDataObject}.
 }
 \details{
-The function first defines a helper function, `makeDT`, which
-converts its input into a data table using `data.table::as.data.table`. If
-the input is NULL, it returns NULL.
+Tables in the input list should have the correct 2-letter RDBES name
+(e.g. "DE", "LE", etc.). The function converts all data frames to
+\code{data.table}. \code{NULL} tables are left as \code{NULL}.
 
-It then uses the `RDBEScore::newRDBESDataObject` function to create a new
-RDBESDataObject, with each element being the result of applying `makeDT` to
-the corresponding element of `myList`.
+If \code{castToCorrectDataTypes = TRUE}, it ensures all columns are of the
+correct data type using \code{setRDBESDataObjectDataTypes}.
 
-The function then iterates over each element of `dt`. If an element is a data
-table, it sets a key on it using the 'XXid' column as the key, where 'XX' is
-the name of the data table. It also renames the columns according to
-`RDBEScore::mapColNamesFieldR$R.Name`, and replaces all empty strings with
-NA.
+Column names are replaced with the RDBES 'R names' from the model
+documentation.
 
-If `castToCorrectDataTypes` is TRUE, it then ensures all columns are of the
-correct data type using `RDBEScore:::setRDBESDataObjectDataTypes`.
+The function then sets a key on each table using the 'XXid' column as the
+key, where 'XX' is the name of that table. It alos replaces all empty
+strings with \code{NA}.
+
+It then uses the \code{newRDBESDataObject} function to create a new
+\code{RDBESDataObject} from the input.
 
 Finally, it validates the RDBESDataObject using
-`RDBEScore::validateRDBESDataObject` and returns it.
+\code{RDBEScore::validateRDBESDataObject} and returns it.
 }
+\keyword{internal}

@@ -4,17 +4,18 @@ capture.output({  ## suppresses printing of console output when running test()
 
 
   # common parameters
-  dirH1 <- "tests/testthat/h1_v_1_19_18/"
-  dirH5 <- "tests/testthat/h5_v_1_19_18/"
+  # H1 directory
+  dirH1 <- "./h1_v_1_19_18/"
+  # H5 directory
+  dirH5 <- "./h5_v_1_19_18/"
+  # H7 directory
+  dirH7 <- "./h7_v_1_19_18/"
 
+  # H1 object for comparison
   expObjH1 <- readRDS(paste0(dirH1, "H1_2023_10_16.rds"))
 
-  # LEid is present in H1 due to the export
-  class(expObjH1$FT$LEid) <- "integer"
-  class(expObjH1$SA$LEid) <- "integer"
-  zipH1 <- "tests/testthat/h1_v_1_19_18/H1_2023_10_16.zip"
 
-  # TEST GENERAL BEHAVIOUR --------------------------------------------------
+  # Test general behaviour  --------------------------------------------------
 
   test_that("createRDBESDataObject will give a warning if given a dir with no relevant  files in it",  {
 
@@ -24,6 +25,43 @@ capture.output({  ## suppresses printing of console output when running test()
 
   })
 
+  test_that("createRDBESDataObject can create an empty object without errors",  {
+
+          expect_warning(createRDBESDataObject(), "NOTE: 'NULL' input specified. Creating an EMPTY RDBES Data Object")
+
+        })
+
+
+  test_that("Expect warning when the input is not csv, list of dfs, zip files, NULL - Test Integer input", {
+
+    myPath <- as.integer(1)
+
+    expect_error(createRDBESDataObject(myPath), "Input type not recognised. Should be a RDBES zip file, folder of csv files, or list of data frames.")
+
+  })
+
+  test_that("Expect warning when the input is not csv, list of dfs, zip files, NULL - Test dataframe input", {
+
+    myPath <- as.data.frame(1)
+
+    expect_error(createRDBESDataObject(myPath), "Input type not recognised. Should be a RDBES zip file, folder of csv files, or list of data frames.")
+
+  })
+
+
+  # Give all possible inputs - For now do not include dfs
+#
+#   test_that("createRDBESDataObject will throw an error when given multiple inputs", {
+#
+#     expect_warning()
+#
+#   })
+
+
+
+
+
+
   # Test ZIP inputs ---------------------------------------------------------
 
   test_that("importing zipped H1 example data works", {
@@ -31,7 +69,7 @@ capture.output({  ## suppresses printing of console output when running test()
       "H1_2023_10_16.zip"
     )
 
-    genObj <- createRDBESDataObject(zipH1,
+    genObj <- createRDBESDataObject(paste0(dirH1, zipFiles),
                                     castToCorrectDataTypes = TRUE)
 
     expect_equal(genObj, expObjH1)
@@ -47,7 +85,7 @@ capture.output({  ## suppresses printing of console output when running test()
 
     genObj <- expect_error(
       createRDBESDataObject(paste0(dirH1, zipFiles),
-                                     castToCorrectDataTypes = TRUE),
+                            castToCorrectDataTypes = TRUE),
       "You cannot import a mix of 'csv' and 'zip' inputs. To import multiple tables unzip all files and import as a folder of 'csv' files."
     )
 
@@ -60,7 +98,7 @@ capture.output({  ## suppresses printing of console output when running test()
     )
 
     genObj <- createRDBESDataObject(paste0(dirH1, zipFiles),
-                                             castToCorrectDataTypes = TRUE)
+                                    castToCorrectDataTypes = TRUE)
     expect_equal(genObj$VD, expObjH1$VD)
     expect_equal(genObj$SS, NULL)
     expect_equal(genObj$SL, expObjH1$SL)
@@ -74,7 +112,7 @@ capture.output({  ## suppresses printing of console output when running test()
 
     expect_warning(
       createRDBESDataObject(paste0(dirH1, zipFiles),
-                                     castToCorrectDataTypes = FALSE),
+                            castToCorrectDataTypes = FALSE),
       "Duplicate unzipped files detected:\n")
 
 
@@ -86,15 +124,15 @@ capture.output({  ## suppresses printing of console output when running test()
       "HVD_2023_10_16.zip")
 
     genObj1 <- suppressWarnings(
-    createRDBESDataObject(paste0(dirH1, zipFiles1),
-                                    castToCorrectDataTypes = TRUE))
+      createRDBESDataObject(paste0(dirH1, zipFiles1),
+                            castToCorrectDataTypes = TRUE))
 
     zipFiles2 <- c("HVD_2023_10_16.zip",
                    "H1_2023_10_16.zip")
 
     genObj2 <- suppressWarnings(
       createRDBESDataObject(paste0(dirH1, zipFiles2),
-                                     castToCorrectDataTypes = TRUE))
+                            castToCorrectDataTypes = TRUE))
 
     expect_equal(genObj1$VD, genObj2$VD)
     expect_equal(genObj1$SS, genObj2$SS)
@@ -104,20 +142,23 @@ capture.output({  ## suppresses printing of console output when running test()
   })
 
 
+  test_that("createRDBESDataObject creates an object with the correct data types",  {
+
+    zipFiles <- c(
+      "H1_2023_10_16.zip",
+      "HVD_2023_10_16.zip")
+
+    genObj <- suppressWarnings(createRDBESDataObject(input =  paste0(dirH1, zipFiles),
+                                                     castToCorrectDataTypes = TRUE))
+
+    myDiffs <- RDBEScore:::validateRDBESDataObjectDataTypes(genObj)
+
+    numberOfDifferences <- nrow(myDiffs)
+    expect_equal(numberOfDifferences,0)
+  })
 
 
-# Test CSV inputs ---------------------------------------------------------
-
-
-
-  # NULL tests ?
-  # test_that("createRDBESDataObject can create an empty object without errors
-  #         or warnings",  {
-  #
-  #           myObject <- expect_warning(createRDBESDataObject(),NA)
-  #           myObject <-expect_error(createRDBESDataObject(),NA)
-  #         })
-  #
+  # Test CSV inputs ---------------------------------------------------------
 
 
   test_that("createRDBESDataObject can create an object from a H1 data extract
@@ -138,10 +179,10 @@ capture.output({  ## suppresses printing of console output when running test()
 
             expect_warning(
               createRDBESDataObject(input = csvFilesH1,
-                                 castToCorrectDataTypes = FALSE), NA)
+                                    castToCorrectDataTypes = FALSE), NA)
             expect_error(
               createRDBESDataObject(input = csvFilesH1,
-                                 castToCorrectDataTypes = FALSE), NA)
+                                    castToCorrectDataTypes = FALSE), NA)
           })
 
 
@@ -150,8 +191,8 @@ capture.output({  ## suppresses printing of console output when running test()
 
             csvFilesH5 <- dirH5
 
-          expect_warning(createRDBESDataObject(input = csvFilesH5), NA)
-          expect_error(createRDBESDataObject(input = csvFilesH5), NA)
+            expect_warning(createRDBESDataObject(input = csvFilesH5), NA)
+            expect_error(createRDBESDataObject(input = csvFilesH5), NA)
           })
 
 
@@ -160,12 +201,12 @@ capture.output({  ## suppresses printing of console output when running test()
 
             csvFilesH5 <- dirH5
 
-           expect_warning(
+            expect_warning(
               createRDBESDataObject(input = csvFilesH5,
-                                 castToCorrectDataTypes = FALSE), NA)
+                                    castToCorrectDataTypes = FALSE), NA)
             expect_error(
               createRDBESDataObject(input = csvFilesH5,
-                                 castToCorrectDataTypes = FALSE), NA)
+                                    castToCorrectDataTypes = FALSE), NA)
           })
 
 
@@ -181,24 +222,14 @@ capture.output({  ## suppresses printing of console output when running test()
 
 
 
-  test_that("createRDBESDataObject will give a warning if given a dir with no relevent files in it",  {
-
-    myPath <- "."
-    expect_warning(createRDBESDataObject(input = myPath),"No relevent files found in given directory - an empty object will be created")
-
-
-  })
-
-
-
   test_that("createRDBESDataObject creates an object with the correct data types",  {
 
-    myPath <- "./h1_v_1_19_18"
+    csvFilesH1 <- dirH1
 
-    myRDBESDataObject <- createRDBESDataObject(rdbesExtractPath = myPath,
-                                            castToCorrectDataTypes = TRUE)
+    myRDBESDataObject <- createRDBESDataObject(input = csvFilesH1,
+                                               castToCorrectDataTypes = TRUE)
 
-    myDiffs <- validateRDBESDataObjectDataTypes(myRDBESDataObject)
+    myDiffs <- RDBEScore:::validateRDBESDataObjectDataTypes(myRDBESDataObject)
 
     numberOfDifferences <- nrow(myDiffs)
     expect_equal(numberOfDifferences,0)
@@ -209,9 +240,9 @@ capture.output({  ## suppresses printing of console output when running test()
 
   test_that("createRDBESDataObject creates an H1 object with keys on the data tables",  {
 
-    myPath <- "./h1_v_1_19_18"
+    csvFilesH1 <- dirH1
 
-    myRDBESDataObject <- createRDBESDataObject(rdbesExtractPath = myPath)
+    myRDBESDataObject <- createRDBESDataObject(input = csvFilesH1)
 
     # Not all of the RDBES table types are in the sample data
     expectedNumberOfTablesWithKeys <- 13
@@ -219,7 +250,7 @@ capture.output({  ## suppresses printing of console output when running test()
 
     for(aTable in names(myRDBESDataObject)){
       if ('data.table' %in% class(myRDBESDataObject[[aTable]])){
-        if (!is.null(key(myRDBESDataObject[[aTable]]))){
+        if (!is.null(data.table::key(myRDBESDataObject[[aTable]]))){
           actualNumberOfTablesWithKeys <- actualNumberOfTablesWithKeys + 1
         }
       }
@@ -228,11 +259,14 @@ capture.output({  ## suppresses printing of console output when running test()
     expect_equal(expectedNumberOfTablesWithKeys,actualNumberOfTablesWithKeys)
 
   })
+
+
+
   test_that("createRDBESDataObject creates an H5 object with keys on the data tables",  {
 
-    myPath <- "./h5_v_1_19_18"
+    csvFilesH5 <- dirH5
 
-    myRDBESDataObject <- createRDBESDataObject(rdbesExtractPath = myPath)
+    myRDBESDataObject <- createRDBESDataObject(input = csvFilesH5)
 
     # Not all of the RDBES table types are in the sample data
     expectedNumberOfTablesWithKeys <- 13
@@ -240,7 +274,7 @@ capture.output({  ## suppresses printing of console output when running test()
 
     for(aTable in names(myRDBESDataObject)){
       if ('data.table' %in% class(myRDBESDataObject[[aTable]])){
-        if (!is.null(key(myRDBESDataObject[[aTable]]))){
+        if (!is.null(data.table::key(myRDBESDataObject[[aTable]]))){
           actualNumberOfTablesWithKeys <- actualNumberOfTablesWithKeys + 1
         }
       }
@@ -249,11 +283,13 @@ capture.output({  ## suppresses printing of console output when running test()
     expect_equal(expectedNumberOfTablesWithKeys,actualNumberOfTablesWithKeys)
 
   })
+
+
   test_that("createRDBESDataObject creates an H7 object with keys on the data tables",  {
 
-    myPath <- "./h7_v_1_19_18"
+    csvFilesH7 <- dirH7
 
-    myRDBESDataObject <- createRDBESDataObject(rdbesExtractPath = myPath)
+    myRDBESDataObject <- createRDBESDataObject(input = csvFilesH7)
 
     # Not all of the RDBES table types are in the sample data
     expectedNumberOfTablesWithKeys <- 13
@@ -261,7 +297,7 @@ capture.output({  ## suppresses printing of console output when running test()
 
     for(aTable in names(myRDBESDataObject)){
       if ('data.table' %in% class(myRDBESDataObject[[aTable]])){
-        if (!is.null(key(myRDBESDataObject[[aTable]]))){
+        if (!is.null(data.table::key(myRDBESDataObject[[aTable]]))){
           actualNumberOfTablesWithKeys <- actualNumberOfTablesWithKeys + 1
         }
       }
@@ -272,6 +308,7 @@ capture.output({  ## suppresses printing of console output when running test()
   })
 
 
+  # Test list of dfs ---------------------------------------------------------
 
 
 
