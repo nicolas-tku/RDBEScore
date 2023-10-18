@@ -33,7 +33,7 @@ doEstimationForAllStrata <- function(RDBESEstObjectForEstim,
 
 
   # Check we have a valid RDBESEstObject before doing anything else
-  validateRDBESEstObject(RDBESEstObjectForEstim, verbose = verbose)
+  RDBEScore::validateRDBESEstObject(RDBESEstObjectForEstim, verbose = verbose)
 
   # Stop if we have any clustering - not developed yet
   clustFields <-
@@ -145,39 +145,43 @@ doEstimationForAllStrata <- function(RDBESEstObjectForEstim,
 
       # Get the results from the previous table - we'll use these as inputs
       # for the estimation
-      myPrevEstimates <-
-        myStrataResults[myStrataResults$parentTable == currentTable, ] |>
-        dplyr::group_by(parentTableID) |>
-        dplyr::summarise(studyVariable = sum(est.total, na.rm = TRUE))
+      myPrevEstimates <- myStrataResults[parentTable == currentTable,
+                                         .(studyVariable = sum(est.total, na.rm = TRUE)),
+                                         by = parentTableID]
 
 
 
-      # Join our current table with the previous resuults
-      myTableWithValues <-
-        dplyr::left_join(myTable,
-          myPrevEstimates,
-          by = c("id" = "parentTableID")
-        )
+      # Join our current table with the previous results
+      myTableWithValues <- myTable[myPrevEstimates, on = .(id = parentTableID)]
 
-      # Append the parent table stratum to our previous results (so we can
-      # easily join the parent and child records of our final results)
-      myStrataResults[myStrataResults$parentTable == currentTable, ]$
-        parentTableStratum <-
-        dplyr::left_join(
-          myStrataResults[myStrataResults$parentTable == currentTable, ],
-          myTable[, c("id", "parentIDandStratum")],
-          by = c("parentTableID" = "id")
-        )$"parentIDandStratum.y"
+      # Join myStrataResults with myTable
+      myStrataResults <- myTable[,
+                                 .(id, parentIDandStratum)][myStrataResults,
+                                                            on = .(id = parentTableID)]
+      if("i.id" %in% colnames(myStrataResults)){
+        myStrataResults <- myStrataResults[parentTable == currentTable,
+                                           id := i.id]
+        myStrataResults <-  myStrataResults[, i.id := NULL]
+
+      }
+
+      # Update the parentTableStratum column of myStrataResults only for the rows where parentTable equals currentTable
+      myStrataResults$parentTableStratum <- as.character(myStrataResults$parentTableStratum)
+      myStrataResults <- myStrataResults[parentTable == currentTable,
+                                         parentTableStratum := i.parentIDandStratum]
+      nullCols <- c("i.parentIDandStratum", "parentIDandStratum","id")
+      myStrataResults <-  myStrataResults[, (nullCols) := NULL]
+
     }
 
     myResultsTemp <- handle_table(myTableWithValues, currentTable, myTable)
 
 
     # Combine the results from this loop with all the previous results
-    myStrataResults <- rbind(myStrataResults, myResultsTemp)
+    myStrataResults <- data.table::rbindlist(list(myStrataResults, myResultsTemp), fill=T)
   }
 
-  myStrataResults
+  as.data.frame(myStrataResults)
 }
 
 
@@ -225,29 +229,20 @@ handle_table <- function(myTableWithValues, currentTable, myTable) {
     myTableWithValues <- add_column_if_not_exists(myTableWithValues, "stratumName")
 
     # Can't estimate with these tables - just sum up the values
-    myResultsTemp <- myTableWithValues |>
-      dplyr::group_by(
-        recType,
-        parentTable,
-        parentTableID,
-        parentTableStratum,
-        stratumName,
-        parentIDandStratum
-      ) |>
-      dplyr::summarise(
-        est.results.available = FALSE,
-        est.total = sum(studyVariable, na.rm = TRUE),
-        est.mean = NA,
-        var.total = NA,
-        var.mean = NA,
-        se.total = NA,
-        se.mean = NA
-      )
+    myResultsTemp <- myTableWithValues[, .(
+      est.results.available = FALSE,
+      est.total = sum(studyVariable, na.rm = TRUE),
+      est.mean = NA_real_,
+      var.total = NA_real_,
+      var.mean = NA_real_,
+      se.total = NA_real_,
+      se.mean = NA_real_
+    ), by = .(recType, parentTable, parentTableID, parentTableStratum, stratumName, parentIDandStratum)]
 
   } else {
 
     # For the other tables we'll run the estimation function
-
+    myTableWithValues <- as.data.frame(myTableWithValues)
     # Split by parent ID and stratum name
     myTableList <- split(myTableWithValues, f = myTable$parentIDandStratum)
     # apply estimate function to each unique parent ID and stratum name
@@ -255,9 +250,10 @@ handle_table <- function(myTableWithValues, currentTable, myTable) {
     myResults <- lapply(myTableList, getEstimForStratum)
     # Combine our results into a data frame
     myResultsTemp <- do.call(rbind, myResults)
+
   }
 
-  myResultsTemp
+  data.table::setDT(myResultsTemp)
 }
 
 
@@ -278,7 +274,7 @@ getEstimForStratum <- function(x) {
   )
   myEstim <- NA
   try(
-    myEstim <- estimMC(
+    myEstim <- RDBEScore::estimMC(
       x$studyVariable,
       x$numSamp,
       x$numTotal,
