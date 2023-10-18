@@ -29,11 +29,9 @@
 #' ***List of data frames inputs***
 #' This `input` should be a `list` object containing data frames (or
 #' data.tables) for each table in your hierarchy. They should be named with the
-#' appropriate 2-letter code (`DE`, `SD`, etc.), and the columns should have the
-#' correct "R Names" as specified in the data model (i.e. at this stage no
-#' renaming or checking of column names is performed). Note if you choose to
-#' create an `RDBESDAtaObject` from local data frames these may have not passed
-#' the data integrity checks performed when you upload to RDBES!
+#' appropriate 2-letter code (`DE`, `SD`, etc.). Note if you choose to create an
+#' `RDBESDAtaObject` from local data frames these may have not passed the data
+#' integrity checks performed when you upload to RDBES!
 #'
 #' ***NULL inputs***
 #' This `input` produces an empty `RDBESDataObject`, i.e. all tables with

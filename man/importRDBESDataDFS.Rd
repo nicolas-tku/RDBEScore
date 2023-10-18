@@ -7,39 +7,39 @@
 importRDBESDataDFS(myList, castToCorrectDataTypes = TRUE, strict = TRUE, ...)
 }
 \arguments{
-\item{myList}{A list of data tables. Each element of the list should be a
-data frame or NULL.}
+\item{myList}{A \code{list} of data tables. Each element of the list should be a
+data frame with an RDBES two-letter name (e.g. "DE").}
 
-\item{castToCorrectDataTypes}{A logical value indicating whether to cast the
-columns to the correct data types. Default is TRUE.}
+\item{castToCorrectDataTypes}{logical. Indicates whether to cast the columns
+to the correct data types. Default is \code{TRUE}.}
 
-\item{strict}{(Optional) This function validates the RDBESDataObject it
-creates - should the validation be strict? The default is TRUE.}
+\item{strict}{logical. Indicates level of validation of the \code{RDBESDataObject}
+it creates - should the validation be strict? Default is \code{TRUE}.}
 }
 \value{
-An RDBESDataObject with each element being a data table from the
-input list.
+An \code{RDBESDataObject} with each element being a data table.
 }
 \description{
 This function converts a list of data frames into an object of class
 \code{RDBESDataObject}.
 }
 \details{
-The function converts all tables to \code{data.table}. \code{NULL} tables are
-left as \code{NULL}.
+Tables in the input list should have the correct 2-letter RDBES name
+(e.g. "DE", "LE", etc.). The function converts all data frames to
+\code{data.table}. \code{NULL} tables are left as \code{NULL}.
 
 If \code{castToCorrectDataTypes = TRUE}, it ensures all columns are of the
 correct data type using \code{setRDBESDataObjectDataTypes}.
 
-Column names are not (at present) checked, so they should be the offical
-RDBES 'R names' from the model documentation.
+Column names are replaced with the RDBES 'R names' from the model
+documentation.
 
 The function then sets a key on each table using the 'XXid' column as the
-key, where 'XX' is the name of that table, and replaces all empty strings
-with \code{NA}.
+key, where 'XX' is the name of that table. It alos replaces all empty
+strings with \code{NA}.
 
 It then uses the \code{newRDBESDataObject} function to create a new
-\code{RDBESDataObject}.
+\code{RDBESDataObject} from the input.
 
 Finally, it validates the RDBESDataObject using
 \code{RDBEScore::validateRDBESDataObject} and returns it.
