@@ -6,7 +6,7 @@ zipFname <- "./data-raw/exampleData/madeUpExamples/downloadsFromRDBES/ZW_1965_WG
 data <- RDBEScore:::importRDBESDataZIP(zipFname)
 
 #keep only the selected sampling scheme
-samp_scheme <-"WGRDBES-EST TEST 1"
+samp_scheme <-"WGRDBES-EST TEST 3"
 data <- RDBEScore::filterRDBESDataObject(data,
                                          fieldsToFilter = "DEsampScheme",
                                          valuesToFilter = samp_scheme,
