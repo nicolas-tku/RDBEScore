@@ -57,7 +57,7 @@ filterAndTidyRDBESDataObject <- function(RDBESDataObjectToFilterAndTidy,
 
   # Remove orphans after filtering and removing VD-invalid data
   if (killOrphans == TRUE)
-    RDBESDataObjectToFilterAndTidy <- findAndKillOrphans(RDBESDataObjectToFilterAndTidy, verbose = verboseOrphans) else
+    RDBESDataObjectToFilterAndTidy <- findAndKillOrphans(RDBESDataObjectToFilterAndTidy, verbose = verboseOrphans)
 
   # note to myself
   if (any(grepl("VD", fieldsToFilter)))
