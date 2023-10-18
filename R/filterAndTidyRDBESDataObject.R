@@ -28,10 +28,10 @@
 #' myFields <- c("VSencrVessCode", "VDlenCat")
 #' myValues <- c("VDcode_1","VL1518","VL2440")
 #'
-#' myFilteredObject <- filterRDBESDataObject(myH1RawObject,
+#' myFilteredObject <- filterAndTidyRDBESDataObject(myH1RawObject,
 #'   fieldsToFilter = myFields,
 #'   valuesToFilter = myValues,
-#'    killOrphans = TRUE
+#'    killOrphans = TRUE, verboseBrokenVesselLinks = TRUE
 #' )
 #' }
 #'
