@@ -24,10 +24,10 @@ generateZerosUsingSL <- function(x,
 
   if (!(nrow(x[["SA"]]) >= 1 && nrow(x[["SL"]]) >= 1)) stop("no SA and/or SL")
 
-  # Take a copy of SA since we'll change some column data types and
+  # Take a copy of SA and SL since we'll change some column data types and
   # we don't want to update the original version
   tmpSA <- data.table::copy(x[["SA"]])
-  tmpSL <- x[["SL"]]
+  tmpSL <- data.table::copy(x[["SL"]])
   # Now convert some columns from int to numeric
   colsToConvertToNumeric <- c("SAid", "SAseqNum")
   tmpSA[, (colsToConvertToNumeric) := lapply(.SD, as.double),
