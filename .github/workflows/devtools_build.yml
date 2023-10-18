@@ -39,13 +39,13 @@ jobs:
           install.packages(c("remotes", "devtools"))
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
+      - name: Create build directory
+        run: mkdir build
       - name: Build package
-        run: devtools::build(binary=TRUE)
+        run: devtools::build(binary=TRUE, path="build/")
         shell: Rscript {0}
       - name: Archive code coverage results
         uses: actions/upload-artifact@v3
         with:
           name: package-${{matrix.config.os}}-${{matrix.config.r}}
-          path: |
-            *.zip
-            *.tar.gz
+          path: build/*
