@@ -5,7 +5,7 @@ capture.output({  ## suppresses printing of console output when running test()
 
   # common parameters
   # H1 directory
-  dirH1 <- ".tests/testthat/h1_v_1_19_18/"
+  dirH1 <- "./h1_v_1_19_18/"
   # H5 directory
   dirH5 <- "./h5_v_1_19_18/"
   # H7 directory
