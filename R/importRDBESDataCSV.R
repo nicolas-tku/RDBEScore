@@ -16,7 +16,8 @@
 #' FALSE then the column data types will be determined by how the csv files
 #' are read in.  The default is TRUE
 #'
-#' @export
+#' @keywords internal
+#' @md
 #'
 #' @return A RDBESDataObject.  If a path to RDBES extract files is provided then
 #' it will contain the data from those files.  If no path is supplied then
@@ -27,10 +28,8 @@
 #' rdbesExtractPath <- "./tests/testthat/h7_v_1_19_18/"
 #' obj <- importRDBESDataCSV(rdbesExtractPath)
 
-
-
-importRDBESDataCSV <- function(rdbesExtractPath = NA,
-                                 listOfFileNames = NA,
+importRDBESDataCSV <- function(rdbesExtractPath = NULL,
+                                 listOfFileNames = NULL,
                                  castToCorrectDataTypes = TRUE) {
 
 

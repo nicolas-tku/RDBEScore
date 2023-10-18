@@ -1,44 +1,44 @@
-#' Convert List of Data Frames to a  RDBES Data Object
+#' Convert List of Data Frames to a RDBES Data Object
 #'
-#' This function converts a list of data frames into an RDBESDataObject.
+#' This function converts a list of data frames into an object of class
+#' `RDBESDataObject`.
 #'
 #' @param myList A list of data tables. Each element of the list should be a
 #'   data frame or NULL.
 #' @param castToCorrectDataTypes A logical value indicating whether to cast the
 #'   columns to the correct data types. Default is TRUE.
 #' @param strict (Optional) This function validates the RDBESDataObject it
-#' creates - should the validation be strict? The default is TRUE.
+#'   creates - should the validation be strict? The default is TRUE.
 #'
 #' @return An RDBESDataObject with each element being a data table from the
 #'   input list.
 #'
-#' @details The function first defines a helper function, `makeDT`, which
-#' converts its input into a data table using `data.table::as.data.table`. If
-#' the input is NULL, it returns NULL.
+#' @keywords internal
+#' @md
 #'
-#' It then uses the `RDBEScore::newRDBESDataObject` function to create a new
-#' RDBESDataObject, with each element being the result of applying `makeDT` to
-#' the corresponding element of `myList`.
+#' @details The function converts all tables to `data.table`. `NULL` tables are
+#'   left as `NULL`.
 #'
-#' The function then iterates over each element of `dt`. If an element is a data
-#' table, it sets a key on it using the 'XXid' column as the key, where 'XX' is
-#' the name of the data table. It also renames the columns according to
-#' `RDBEScore::mapColNamesFieldR$R.Name`, and replaces all empty strings with
-#' NA.
+#'   If `castToCorrectDataTypes = TRUE`, it ensures all columns are of the
+#'   correct data type using `setRDBESDataObjectDataTypes`.
 #'
-#' If `castToCorrectDataTypes` is TRUE, it then ensures all columns are of the
-#' correct data type using `RDBEScore:::setRDBESDataObjectDataTypes`.
+#'   Column names are not (at present) checked, so they should be the offical
+#'   RDBES 'R names' from the model documentation.
 #'
-#' Finally, it validates the RDBESDataObject using
-#' `RDBEScore::validateRDBESDataObject` and returns it.
-
-# myList = H5list
-# castToCorrectDataTypes = TRUE
+#'   The function then sets a key on each table using the 'XXid' column as the
+#'   key, where 'XX' is the name of that table, and replaces all empty strings
+#'   with `NA`.
+#'
+#'   It then uses the `newRDBESDataObject` function to create a new
+#'   `RDBESDataObject`.
+#'
+#'   Finally, it validates the RDBESDataObject using
+#'   `RDBEScore::validateRDBESDataObject` and returns it.
 
 importRDBESDataDFS <- function(myList,
                                castToCorrectDataTypes = TRUE,
-                               strict = TRUE
-                               ){
+                               strict = TRUE,
+                               ...){
 
   dt <- RDBEScore::newRDBESDataObject(DE = makeDT(myList[["DE"]]),
                                       SD = makeDT(myList[["SD"]]),
@@ -58,7 +58,7 @@ importRDBESDataDFS <- function(myList,
                                       CL = makeDT(myList[["CL"]]),
                                       CE = makeDT(myList[["CE"]]))
 
-    # Ensure all the columns are the correct data type
+  # Ensure all the columns are the correct data type
   if(castToCorrectDataTypes) dt <- RDBEScore:::setRDBESDataObjectDataTypes(dt)
 
   # Set a key on any data tables in myList - use the XXid column as the key
@@ -71,20 +71,23 @@ importRDBESDataDFS <- function(myList,
       # SET KEY
       data.table::setkeyv(dt[[aTable]], paste0(aTable,"id")) # essentially orders rows by id column?
       # SET NAMES - skipped for now
-      #oldNames <- colnames(dt[[aTable]])
-      #rNames <- convert.col.names(table = aTable, new.names = "R.name")
-      #names(rNames) <- RDBEScore::mapColNamesFieldR$Field.Name[RDBEScore::mapColNamesFieldR$Table.Prefix == aTable]
-      #data.table::setnames(dt[[aTable]], rNames, skip_absent = T)
+      oldNames <- colnames(dt[[aTable]])
+      # oldNames <- oldNames[c(2:64,1)]
 
+      rNames <- RDBEScore:::convert.col.names(table = aTable, new.names = "R.name")
+      #names(rNames) <- mapColNamesFieldR$Field.Name[mapColNamesFieldR$Table.Prefix == aTable]
+      data.table::setnames(dt[[aTable]], old = oldNames, new = rNames, skip_absent = TRUE)
+      names(dt[[aTable]])
       # SET all empty strings to NA
       dt[[aTable]][dt[[aTable]]==""] <- NA
     }
   }
 
   #check the data
-  RDBEScore::validateRDBESDataObject(dt,
-                                     checkDataTypes = castToCorrectDataTypes,
-                                     strict = strict)
+  validateRDBESDataObject(dt,
+                          checkDataTypes = castToCorrectDataTypes,
+                          strict = strict,
+                          ...)
 
   return(dt)
 }

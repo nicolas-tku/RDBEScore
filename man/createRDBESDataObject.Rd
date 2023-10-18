@@ -6,8 +6,9 @@
 \usage{
 createRDBESDataObject(
   input = NULL,
-  listOfFileNames = NA,
-  castToCorrectDataTypes = TRUE
+  listOfFileNames = NULL,
+  castToCorrectDataTypes = TRUE,
+  ...
 )
 }
 \arguments{
@@ -18,16 +19,15 @@ frames of each table. If \code{NULL} an empty \code{RDBESDataObject} is created.
 
 \item{listOfFileNames}{\code{list} of Strings, Optional. For use with \code{csv} inputs
 only, and only required if the csv file names are \emph{not} the default file
-names used by RDBES when downloading data (for instance if you created them
-yourself). The names should be a \code{list} of the two-letter code for the
-relevant table e.g. \code{list("DE" = "DE.csv", "SD" = "SD.csv", etc.)}.  If not
-supplied then it is assumed the files have the default file names used by
-the RDBES data download ("Design.csv" etc).}
+names used by RDBES when downloading data (for instance if you created the
+files yourself). The actual file names should be a \code{list} of the two-letter
+code for the relevant table e.g. \code{list("DE" = "DE.csv", "SD" = "SD.csv", etc.)}.  If not used then it is assumed the files have the default file
+names used by the RDBES data download ("Design.csv" etc).}
 
 \item{castToCorrectDataTypes}{Logical. If \code{TRUE} then the function will
 attempt to cast the required columns to the correct data type.  If \code{FALSE}
 then the column data types will be determined by how the csv files are read
-in. Default is \code{TRUE}}
+in. Default is \code{TRUE}.}
 }
 \value{
 A RDBESDataObject
@@ -71,8 +71,8 @@ the data integrity checks performed when you upload to RDBES!
 
 \emph{\strong{NULL inputs}}
 This \code{input} produces an empty \code{RDBESDataObject}, i.e. all tables with
-correct data types but the tables will be empty.
+correct data classes but the tables will be empty.
 }
 \examples{
-myEmptyRDBESObject <- importRDBESDataCSV(input = NULL)
+myEmptyRDBESObject <- createRDBESDataObject(input = NULL)
 }

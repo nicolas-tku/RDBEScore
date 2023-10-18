@@ -5,8 +5,8 @@
 \title{Create an RDBES Raw Object}
 \usage{
 importRDBESDataCSV(
-  rdbesExtractPath = NA,
-  listOfFileNames = NA,
+  rdbesExtractPath = NULL,
+  listOfFileNames = NULL,
   castToCorrectDataTypes = TRUE
 )
 }
@@ -40,3 +40,4 @@ myEmptyRDBESObject <- importRDBESDataCSV()
 rdbesExtractPath <- "./tests/testthat/h7_v_1_19_18/"
 obj <- importRDBESDataCSV(rdbesExtractPath)
 }
+\keyword{internal}
