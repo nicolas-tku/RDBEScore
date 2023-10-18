@@ -34,7 +34,7 @@ importRDBESDataCSV <- function(rdbesExtractPath = NULL,
 
 
   # If we have not been passed a list of file names use a default
-  if (length(listOfFileNames) == 1 && is.na(listOfFileNames)){
+  if (is.null(listOfFileNames)){
 
     # A named list with the file names that are produced by the RDBES download
     fileNames <- list(

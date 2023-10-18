@@ -3,34 +3,34 @@
 #' This function converts a list of data frames into an object of class
 #' `RDBESDataObject`.
 #'
-#' @param myList A list of data tables. Each element of the list should be a
-#'   data frame or NULL.
-#' @param castToCorrectDataTypes A logical value indicating whether to cast the
-#'   columns to the correct data types. Default is TRUE.
-#' @param strict (Optional) This function validates the RDBESDataObject it
-#'   creates - should the validation be strict? The default is TRUE.
+#' @param myList A `list` of data tables. Each element of the list should be a
+#'   data frame with an RDBES two-letter name (e.g. "DE").
+#' @param castToCorrectDataTypes logical. Indicates whether to cast the columns
+#'   to the correct data types. Default is `TRUE`.
+#' @param strict logical. Indicates level of validation of the `RDBESDataObject`
+#'   it creates - should the validation be strict? Default is `TRUE`.
 #'
-#' @return An RDBESDataObject with each element being a data table from the
-#'   input list.
+#' @return An `RDBESDataObject` with each element being a data table.
 #'
 #' @keywords internal
 #' @md
 #'
-#' @details The function converts all tables to `data.table`. `NULL` tables are
-#'   left as `NULL`.
+#' @details Tables in the input list should have the correct 2-letter RDBES name
+#'   (e.g. "DE", "LE", etc.). The function converts all data frames to
+#'   `data.table`. `NULL` tables are left as `NULL`.
 #'
 #'   If `castToCorrectDataTypes = TRUE`, it ensures all columns are of the
 #'   correct data type using `setRDBESDataObjectDataTypes`.
 #'
-#'   Column names are not (at present) checked, so they should be the offical
-#'   RDBES 'R names' from the model documentation.
+#'   Column names are replaced with the RDBES 'R names' from the model
+#'   documentation.
 #'
 #'   The function then sets a key on each table using the 'XXid' column as the
-#'   key, where 'XX' is the name of that table, and replaces all empty strings
-#'   with `NA`.
+#'   key, where 'XX' is the name of that table. It alos replaces all empty
+#'   strings with `NA`.
 #'
 #'   It then uses the `newRDBESDataObject` function to create a new
-#'   `RDBESDataObject`.
+#'   `RDBESDataObject` from the input.
 #'
 #'   Finally, it validates the RDBESDataObject using
 #'   `RDBEScore::validateRDBESDataObject` and returns it.
@@ -70,14 +70,10 @@ importRDBESDataDFS <- function(myList,
     } else {
       # SET KEY
       data.table::setkeyv(dt[[aTable]], paste0(aTable,"id")) # essentially orders rows by id column?
-      # SET NAMES - skipped for now
+      # SET NAMES
       oldNames <- colnames(dt[[aTable]])
-      # oldNames <- oldNames[c(2:64,1)]
-
-      rNames <- RDBEScore:::convert.col.names(table = aTable, new.names = "R.name")
-      #names(rNames) <- mapColNamesFieldR$Field.Name[mapColNamesFieldR$Table.Prefix == aTable]
+      rNames <- mapColNamesFieldR$R.Name[mapColNamesFieldR$Table.Prefix == aTable]
       data.table::setnames(dt[[aTable]], old = oldNames, new = rNames, skip_absent = TRUE)
-      names(dt[[aTable]])
       # SET all empty strings to NA
       dt[[aTable]][dt[[aTable]]==""] <- NA
     }
