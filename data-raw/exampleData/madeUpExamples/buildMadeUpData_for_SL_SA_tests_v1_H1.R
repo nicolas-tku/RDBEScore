@@ -1,69 +1,54 @@
-#======Prepares textbook data SDAResources::schools as H1 upload file===========
+# buildMadeUpData_for_SL_SA_tests_v1_H1
 
-# Info:
-# ?schools
-	# from help:
-		# Math and reading test results from a two-stage cluster sample of tenth-grade students.
-		# An SRS of 10 schools was selected from the 75 schools in the population, and then 20 students were sampled
-		# from each school. These data are fictional but the summary statistics are consistent with those seen
-		# in educational studies.
-	# interpretation
-		# design is 2-stage cluster sampling with clusters of unequal sizes and Npsu not known
-		# clusters are schools (schoolid) with at least 2 eggs.
-		# clusters (psu) are unequal sized (Mi). In each cluster, 20 students are selected (ssus) and measured (nrows).
-	# total number of psus is known (75)
-	# target variable is mathlevel [others are available]
+# This script creates made up data for testing manipulations of SA based on SL
 
-# how this example is placed in RDBES
-	# 1 DE row with DEstratumName == "Pckg_SDAResources_schools_H1"
-	# 1 child SD row
-	# 200 child rows in VS (the 200 students observed)
-		# each associated to its cluster (schoolid)
-		# VSnumberTotalClusters is 100 (see ?schools)
-		# VSnumberTotal is Mi
-	# tables FT, FO, SS are just 1:1 links to the final data (in SA)
-	# in SA each volume is a SAsampleWeightMeasured
+# v1 - the simplest case for testing the idea
+## Two species in SL for same SLcountry, SLinstitute, SLspeciesListName,
+## SLyear, SLcatchFraction, SLcommercialTaxon, SLspeciesCode & SLcommercialTaxon == SLspeciesCode
+## One species in SA - one row in SS with equals the SL keys
 
+# Setting up ----
+library(data.table)
+getwd()
 
-	rm(list=ls())
-	library(data.table)
+base_dir_outputs <-
+  "./RDBEScore/data-raw/exampleData/madeUpExamples"
 
-	# load textbook data
-		library(SDAResources)
-		data(schools)
-		dataset<-schools
-		target_var<-"mathlevel"
+## Get aux data from Nuno ----
 
-	# name your project (will be used in filenames for CS, SL and VD)
-		project_name_outputs <- "WGRDBES-EST_TEST_1_Pckg_SDAResources_schools_H1"
+auxDir <- "./data-raw/exampleData/TextBookExamples/"
+VD_base <-
+  readRDS(paste0(auxDir, "aux_TextBookExamples/VD_base.rds"))
+SL_base <-
+  readRDS(paste0(auxDir, "aux_TextBookExamples/SL_base.rds"))
+
+## Hardcodning of global fields ----
+
+DEyear <- 1965
+SDinstitution <- 4484
+DEsamplingScheme <- "WGRDBES-EST TEST 3"
+DEstratumName <- "MadeUpData_for_SL_SA_tests_v1"
+project_name_outputs <-
+  gsub(" ", "_", paste0(DEsamplingScheme, "_", DEstratumName))
 
 
-	# select a year for upload
-		DEyear<-1965
-		SDinstitution <- 4484
-		DEsamplingScheme<-"WGRDBES-EST TEST 1"
-		DEstratumName <- "Pckg_SDAResources_schools_H1"
-		project_name_outputs <- gsub(" ","_", paste0(DEsamplingScheme,"_", DEstratumName))
-		baseDir <- "../data-raw/exampleData/TextBookExamples/"
-		baseDir <- ""
-		VD_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/VD_base.rds"))
-		SL_base <- readRDS(paste0(baseDir,"aux_TextBookExamples/SL_base.rds"))
-
-		#nameof the directory where the outputs are saved currently
-		base_dir_outputs <- paste0(baseDir,"BuiltUploads")
-		if(!file.exists(base_dir_outputs)) dir.create(base_dir_outputs, recursive=T, showWarnings=FALSE)
-
+#nameof the directory where the outputs are saved currently
+base_dir_outputs <- paste0(baseDir, "BuiltUploads")
+if (!file.exists(base_dir_outputs))
+  dir.create(base_dir_outputs,
+             recursive = T,
+             showWarnings = FALSE)
 
 #========Outline of Hierarchy 1================
-	# Design
-	# Sampling details
-	# Vessel Selection
-	# Fishing Trip
-	# Fishing Operation
-	# Species Selection
-	# Sample
-	# Length
-		# Biological variables
+# Design
+# Sampling details
+# Vessel Selection
+# Fishing Trip
+# Fishing Operation
+# Species Selection
+# Sample
+# Length
+# Biological variables
 
 
 
@@ -87,51 +72,57 @@
 # 14 DEauxiliaryVariableName [DV,O] - AuxiliaryVariableName
 # 15 DEauxiliaryVariableUnit[DV,O]-MUNIT
 
-DE_df_base<-expand.grid(DEyear=DEyear,
-						DEstratumName="U",stringsAsFactors=F)
+DE_df_base <- expand.grid(
+  DEyear = DEyear,
+  DEstratumName = "U",
+  stringsAsFactors = F
+)
 
-DE_df<-data.frame(
-		  DEid = 1:nrow(DE_df_base),
-		  DErecordType = "DE",
-		  DEsamplingScheme = DEsamplingScheme,
-		  DEsamplingSchemeType = "NatRouCF",
-		  DEyear = as.integer(DEyear),
-		  DEstratumName = DEstratumName,
-		  DEhierarchyCorrect = "Y",
-		  DEhierarchy = 1,
-		  DEsampled = "Y",
-		  DEreasonNotSampled = "",
-		  DEnonResponseCollected = "Y",
-		  DEauxiliaryVariableTotal = "",
-		  DEauxiliaryVariableValue = "",
-		  DEauxiliaryVariableName = "",
-		  DEauxiliaryVariableUnit = "",
-		  stringsAsFactors=FALSE
-			)
+DE_df <- data.frame(
+  DEid = 1:nrow(DE_df_base),
+  DErecordType = "DE",
+  DEsamplingScheme = DEsamplingScheme,
+  DEsamplingSchemeType = "NatRouCF",
+  DEyear = as.integer(DEyear),
+  DEstratumName = DEstratumName,
+  DEhierarchyCorrect = "Y",
+  DEhierarchy = 1,
+  DEsampled = "Y",
+  DEreasonNotSampled = "",
+  DEnonResponseCollected = "Y",
+  DEauxiliaryVariableTotal = "",
+  DEauxiliaryVariableValue = "",
+  DEauxiliaryVariableName = "",
+  DEauxiliaryVariableUnit = "",
+  stringsAsFactors = FALSE
+)
+
+rm(DE_df_base)
 
 #===SD============
 
 
-                          # x
+# x
 # 1            SDid [M] - int
 # 2            DEid [M] - int
 # 3 SDrecordType [M] - string
 # 4  SDcountry [M] - ISO_3166
 # 5  SDinstitution [M] - EDMO
 
-SD_df<-data.frame(
-  SDid=DE_df$DEid,
-  DEid=DE_df$DEid,
-  SDrecordType="SD",
-  SDcountry="ZW",
-  SDinstitution=as.integer(SDinstitution),
-  stringsAsFactors=FALSE
+
+SD_df <- data.frame(
+  SDid = DE_df$DEid,
+  DEid = DE_df$DEid,
+  SDrecordType = "SD",
+  SDcountry = "ZW",
+  SDinstitution = as.integer(SDinstitution),
+  stringsAsFactors = FALSE
 )
 
 #===VS============
 
 
-                                                             # x
+# x
 # 1                                               VSid [M] - int
 # 2                                               SDid [M] - int
 # 3                                               VDid [M] - int
@@ -163,71 +154,58 @@ SD_df<-data.frame(
 # 29      VSauxiliaryVariableName [DV,O] - AuxiliaryVariableName
 # 30                      VSauxiliaryVariableUnit [DV,O] - MUNIT
 
-#check_All_fields("VS")
+VS_base <- SD_df
 
-# adds VSid to dataset
-	dataset$VSid <- 1:nrow(dataset)
-
-	VS_base<-as.data.table(dataset)[,list(N=Mi,n=.N),schoolid]
-
-# creates a dummyVD and adds dataset
-	# restricts VD_base to what is needed
-	VD_base <- VD_base[1:nrow(VS_base),]
-
-	VS_base$VSencryptedVesselCode<-VD_base$VDencryptedVesselCode
-	# should be 0
-	test<-sum(duplicated(VS_base$VSencryptedVesselCode))==0
-	if(!test) stop( "duplicated VSencryptedVesselCode")
-
-
+VS_base$VSid <- 1:nrow(VS_base)
+VS_base$VSencryptedVesselCode <- VD_base$VDencryptedVesselCode[1]
+# should be 0
+test <- sum(duplicated(VS_base$VSencryptedVesselCode)) == 0
+if (!test)
+  stop("duplicated VSencryptedVesselCode")
 
 VS_df <- data.frame(
-  VSid = dataset$VSid,
-  SDid = as.integer(1),
+  VSid = VS_base$VSid,
+  SDid = VS_base$SDid,
   VDid = "",
   TEid = "",
   VSrecordType = 'VS',
-  VSsequenceNumber = rep(1:20,10),# M
-  VSencryptedVesselCode = VS_base$VSencryptedVesselCode, #M
+  VSsequenceNumber = 1,
+  VSencryptedVesselCode = VS_base$VSencryptedVesselCode,
+  #M
   VSstratification = "N",
-  VSstratumName = "U", #M
-  VSclustering = "2C", #M
-  VSclusterName = dataset$schoolid, #M
-  VSsampler = "Observer", #M
+  VSstratumName = "U",
+  #M
+  VSclustering = "",
+  #M
+  VSclusterName = "",
+  #M
+  VSsampler = "Observer",
+  #M
   VSnumberTotal = "",
   VSnumberSampled = "",
   VSselectionProb = "",
   VSinclusionProb = "",
-  VSselectionMethod = "SRSWOR", #M
-  VSunitName = 1:nrow(VS_base),#M
+  VSselectionMethod = "SRSWOR",
+  #M
+  VSunitName = "A vessel",
+  #M
   VSselectionMethodCluster = "SRSWOR",
   VSnumberTotalClusters = "",
   VSnumberSampledClusters = "",
   VSselectionProbCluster = "",
   VSinclusionProbCluster = "",
-  VSsampled = "Y",#M
+  VSsampled = "Y",
+  #M
   VSreasonNotSampled = "",
   VSnonResponseCollected = "Y",
   VSauxiliaryVariableTotal = "",
   VSauxiliaryVariableValue = "",
   VSauxiliaryVariableName = "",
   VSauxiliaryVariableUnit = "",
-  stringsAsFactors=FALSE
-  )
+  stringsAsFactors = FALSE
+)
 
-# units within cluster
-VS_df$VSnumberSampled<-VS_base$n
-VS_df$VSnumberTotal<-VS_base$N
-VS_df$VSselectionProb<-""
-VS_df$VSinclusionProb<-""
-VS_df$VSselectionMethod<-"SRSWOR"
-
-# clusters
-VS_df$VSnumberTotalClusters<-100
-VS_df$VSnumberSampledClusters<-10
-VS_df$VSselectionMethodCluster<-"SRSWOR"
-VS_df$VSselectionProbCluster<-""
-VS_df$VSinclusionProbCluster<-""
+rm(VS_base)
 
 #====FT===========
 
@@ -663,37 +641,37 @@ SA_df<-data.frame(
 #====Builds final format===========
 
 
-RDBESlist = list(DE = DE_df,SD = SD_df, VS = VS_df, FT = FT_df, FO = FO_df, SS = SS_df, SA = SA_df)
+RDBESlist = list(DE = DE_df,SD = SD_df, VS = VS_df) #, FT = FT_df, FO = FO_df, SS = SS_df, SA = SA_df)
 
 #id table
 a<-merge(DE_df["DEid"],SD_df[c("DEid","SDid")])
 a<-merge(a, VS_df[c("SDid","VSid")], all.x=T)
-a<-merge(a, FT_df[c("VSid","FTid")], all.x=T)
-a<-merge(a, FO_df[c("FTid","FOid")], all.x=T)
-a<-merge(a, SS_df[c("FOid","SSid")], all.x=T)
-a<-merge(a, SA_df[c("SSid","SAid")], all.x=T)
+# a<-merge(a, FT_df[c("VSid","FTid")], all.x=T)
+# a<-merge(a, FO_df[c("FTid","FOid")], all.x=T)
+# a<-merge(a, SS_df[c("FOid","SSid")], all.x=T)
+# a<-merge(a, SA_df[c("SSid","SAid")], all.x=T)
 
 # reorder columns
-a<-a[c("DEid","SDid","VSid","FTid","FOid","SSid","SAid")]
+a<-a[c("DEid","SDid","VSid")] #,"FTid","FOid","SSid","SAid")]
 # reorder rows
 a<-data.table(a)
-a<-a[order(DEid,SDid,VSid,FTid,FOid,SSid,SAid),]
+a<-a[order(DEid,SDid,VSid),] #,FTid,FOid,SSid,SAid),]
 
 a$DEindex=apply(a[,1:which(colnames(a)=="DEid")],1,paste, collapse="_")
 a$SDindex=apply(a[,1:which(colnames(a)=="SDid")],1,paste, collapse="_")
 a$VSindex=apply(a[,1:which(colnames(a)=="VSid")],1,paste, collapse="_")
-a$FTindex=apply(a[,1:which(colnames(a)=="FTid")],1,paste, collapse="_")
-a$FOindex=apply(a[,1:which(colnames(a)=="FOid")],1,paste, collapse="_")
-a$SSindex=apply(a[,1:which(colnames(a)=="SSid")],1,paste, collapse="_")
-a$SAindex=apply(a[,1:which(colnames(a)=="SAid")],1,paste, collapse="_")
+# a$FTindex=apply(a[,1:which(colnames(a)=="FTid")],1,paste, collapse="_")
+# a$FOindex=apply(a[,1:which(colnames(a)=="FOid")],1,paste, collapse="_")
+# a$SSindex=apply(a[,1:which(colnames(a)=="SSid")],1,paste, collapse="_")
+# a$SAindex=apply(a[,1:which(colnames(a)=="SAid")],1,paste, collapse="_")
 
 key<-c(a$DEindex[match(DE_df$DEid,a$DEid)],
 a$SDindex[match(SD_df$SDid,a$SDid)],
-a$VSindex[match(VS_df$VSid,a$VSid)],
-a$FTindex[match(FT_df$FTid,a$FTid)],
-a$FOindex[match(FO_df$FOid,a$FOid)],
-a$SSindex[match(SS_df$SSid,a$SSid)],
-a$SAindex[match(SA_df$SAid,a$SAid)]
+a$VSindex[match(VS_df$VSid,a$VSid)] #,
+# a$FTindex[match(FT_df$FTid,a$FTid)],
+# a$FOindex[match(FO_df$FOid,a$FOid)],
+# a$SSindex[match(SS_df$SSid,a$SSid)],
+# a$SAindex[match(SA_df$SAid,a$SAid)]
 )
 
 # file production
