@@ -9,7 +9,7 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 	# Only use a subset of the test data
 	myH1DataObject <- filterRDBESDataObject(myH1DataObject,c("DEstratumName"),c("Pckg_survey_apistrat_H1"))
 	myH1DataObject <- filterRDBESDataObject(myH1DataObject,c("SLspeclistName"),c("WGRDBES-EST_TEST_1_Pckg_survey_apistrat_H1"))
-	myH1DataObject <- findAndKillOrphans(myH1DataObject, verbose = FALSE)
+	myH1DataObject <- findAndKillOrphans(myH1DataObject)
 
 	validateRDBESDataObject(myH1DataObject, checkDataTypes = TRUE)
 
@@ -58,11 +58,11 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 
 	myH1DataObject2<-myH1DataObject1
 	myH1DataObject2[["SS"]]<-myH1DataObject2[["SS"]][1,]
-	myH1DataObject2<-filterRDBESDataObject(myH1DataObject2, c("SLid"), myH1DataObject2[["SS"]]$SLid, killOrphans = TRUE)
+	myH1DataObject2<-filterRDBESDataObject(myH1DataObject2, c("SLid"), myH1DataObject2[["SS"]]$SLid, killOrphans = TRUE, verbose = TRUE, strict = FALSE)
 
-	validateRDBESDataObject(myH1DataObject2, checkDataTypes = TRUE)
+	validateRDBESDataObject(myH1DataObject2, checkDataTypes = TRUE, strict = FALSE)
 
-	result <- generateZerosUsingSL(myH1DataObject2)
+	result <- generateZerosUsingSL(myH1DataObject2, strict = FALSE)
 
 	expect_equal(result, myH1DataObject2)
 
@@ -70,7 +70,7 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 
 	myH1DataObject2<-myH1DataObject1
 		myH1DataObject2[["SS"]]<-myH1DataObject2[["SS"]][1,]
-		myH1DataObject2<-filterRDBESDataObject(myH1DataObject2, c("SLid"), myH1DataObject2[["SS"]]$SLid, killOrphans = TRUE)
+		myH1DataObject2<-filterRDBESDataObject(myH1DataObject2, c("SLid"), myH1DataObject2[["SS"]]$SLid, killOrphans = TRUE, strict = FALSE)
 		myH1DataObject2[["SS"]]$SScatchFra<-"Catch"
 		myH1DataObject2[["SL"]]$SLcatchFrac<-"Catch"
 		# creates stratification in SA
@@ -81,9 +81,9 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 		myH1DataObject2[["SA"]]$SAcatchCat<-c("Lan","Dis")	# this is just cosmetics
 		setkey(myH1DataObject2[["SA"]], "SAid")
 
-	validateRDBESDataObject(myH1DataObject2, checkDataTypes = TRUE)
+	validateRDBESDataObject(myH1DataObject2, checkDataTypes = TRUE, strict = FALSE)
 
-	result <- generateZerosUsingSL(myH1DataObject2)
+	result <- generateZerosUsingSL(myH1DataObject2, strict = FALSE)
 
 	expect_equal(result, myH1DataObject2)
 
@@ -91,7 +91,7 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 
 	myH1DataObject2<-myH1DataObject1
 		myH1DataObject2[["SS"]]<-myH1DataObject2[["SS"]][1,]
-		myH1DataObject2<-filterRDBESDataObject(myH1DataObject2, c("SLid"), myH1DataObject2[["SS"]]$SLid, killOrphans = TRUE)
+		myH1DataObject2<-filterRDBESDataObject(myH1DataObject2, c("SLid"), myH1DataObject2[["SS"]]$SLid, killOrphans = TRUE, strict = FALSE)
 		myH1DataObject2[["SS"]]$SScatchFra<-"Catch"
 		myH1DataObject2[["SL"]]$SLcatchFrac<-"Catch"
 
@@ -108,9 +108,9 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 		# creates a spp not existing in SA
 		myH1DataObject2[["SL"]]$SLcommTaxon<-as.integer(127007)
 
-	validateRDBESDataObject(myH1DataObject2, checkDataTypes = TRUE)
+	validateRDBESDataObject(myH1DataObject2, checkDataTypes = TRUE, strict = FALSE)
 
-	result <- generateZerosUsingSL(myH1DataObject2)
+	result <- generateZerosUsingSL(myH1DataObject2, strict = FALSE)
 
 	expect_equal(nrow(result$SA),4)
 
