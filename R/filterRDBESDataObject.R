@@ -11,6 +11,8 @@
 #' @param fieldsToFilter A vector of the field names you wish to check
 #' @param valuesToFilter A vector of the field values you wish to filter for
 #' @param killOrphans Controls if orphan rows are removed. Default is `FALSE`.
+#' @param verbose (Optional) Set to TRUE if you want informative text printed
+#' out, or FALSE if you don't.  The default is FALSE.
 #' @param strict (Optional) This function validates its input data - should
 #' the validation be strict? The default is TRUE.
 #'
@@ -38,11 +40,12 @@ filterRDBESDataObject <- function(RDBESDataObjectToFilter,
                                  fieldsToFilter,
                                  valuesToFilter,
                                  killOrphans = FALSE,
+                                 verbose = FALSE,
                                  strict = TRUE) {
 
   # Check we have a valid RDBESDataObject before doing anything else
   validateRDBESDataObject(RDBESDataObjectToFilter,
-                          verbose = FALSE,
+                          verbose = verbose,
                           strict = strict)
 
   # Check if the requested columns actually exist in the object
@@ -73,7 +76,7 @@ filterRDBESDataObject <- function(RDBESDataObjectToFilter,
   }
 
   # remove orphans
-  if (killOrphans == TRUE) RDBESDataObjectToFilter <- findAndKillOrphans(RDBESDataObjectToFilter, verbose = FALSE)
+  if (killOrphans == TRUE) RDBESDataObjectToFilter <- findAndKillOrphans(RDBESDataObjectToFilter, verbose = verbose, strict = strict)
 
   #
   return(RDBESDataObjectToFilter)
