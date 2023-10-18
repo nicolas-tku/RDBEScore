@@ -1,33 +1,29 @@
 #' Import RDBES Downloaded Data
 #'
-#' Read the .zip files and/or .csv files downloadable from the ICES RDBES
-#' web page. The function accepts a list of paths to csv and zip files. Unzips
-#' an then uses \code{\link{importRDBESDataCSV}}
+#' An internal function used by `createRDBESDataObject`. Reads the .zip files
+#' downloadable from the ICES RDBES web page. The function accepts a filepaths
+#' to zip files, unzips and import tables as an object of class
+#' `RDBESDataObject`.
 #'
-#' @param filenames - vector of paths pointing to files that should be imported
-#' @param castToCorrectDataTypes (Optional) If TRUE then the function
-#' will attempt to cast the required columns to the correct data type.  If
-#' FALSE then the column data types will be determined by how the csv files
-#' are read in.  The default is TRUE.
+#' @param filenames - path to zipfile. Multiple paths can be entered if, for
+#'   instance, you want to add CL and CE tables to the same object.
+#' @param castToCorrectDataTypes Logical. If `TRUE` then the function will
+#'   attempt to cast the required columns to the correct data type.  If `FALSE`
+#'   then the column data types will be determined by how the csv files are read
+#'   in. Default is `TRUE`.
 #'
-#' @export
+#' @return a list of all the RDBES data tables The table that are not in input
+#'   data are NULL
 #'
-#' @return a list of all the RDBES data tables
-#' The table that are not in input data are NULL
-#'
-#' @seealso \code{\link{importRDBESDataCSV}}
+#' @keywords internal
+#' @md
 #'
 #' @examples
 #' rdbesExtractPath <- "./tests/testthat/h7_v_1_19_18/2022_FPN_FPE_H7.zip"
 #' obj <- importRDBESDataZIP(rdbesExtractPath)
 
-
-
-
 importRDBESDataZIP <- function(filenames,
                                castToCorrectDataTypes = TRUE) {
-
-
 
   # Generates random number for the temp import folder name
   randInt <- paste0(sample(1:100, 3), collapse = "")
@@ -54,12 +50,12 @@ importRDBESDataZIP <- function(filenames,
 
   }
 
-
   # the files are not used currently but can be if we want to
   files <- unique(unlist(sapply(filenames, unzipFile, tmp)))
   res <- importRDBESDataCSV(tmp,
                             castToCorrectDataTypes = castToCorrectDataTypes)
   unlink(tmp, recursive = T)
-  res
+
+  return(res)
 
 }

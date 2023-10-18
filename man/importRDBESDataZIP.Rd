@@ -7,26 +7,28 @@
 importRDBESDataZIP(filenames, castToCorrectDataTypes = TRUE)
 }
 \arguments{
-\item{filenames}{- vector of paths pointing to files that should be imported}
+\item{filenames}{\itemize{
+\item path to zipfile. Multiple paths can be entered if, for
+instance, you want to add CL and CE tables to the same object.
+}}
 
-\item{castToCorrectDataTypes}{(Optional) If TRUE then the function
-will attempt to cast the required columns to the correct data type.  If
-FALSE then the column data types will be determined by how the csv files
-are read in.  The default is TRUE.}
+\item{castToCorrectDataTypes}{Logical. If \code{TRUE} then the function will
+attempt to cast the required columns to the correct data type.  If \code{FALSE}
+then the column data types will be determined by how the csv files are read
+in. Default is \code{TRUE}.}
 }
 \value{
-a list of all the RDBES data tables
-The table that are not in input data are NULL
+a list of all the RDBES data tables The table that are not in input
+data are NULL
 }
 \description{
-Read the .zip files and/or .csv files downloadable from the ICES RDBES
-web page. The function accepts a list of paths to csv and zip files. Unzips
-an then uses \code{\link{importRDBESDataCSV}}
+An internal function used by \code{createRDBESDataObject}. Reads the .zip files
+downloadable from the ICES RDBES web page. The function accepts a filepaths
+to zip files, unzips and import tables as an object of class
+\code{RDBESDataObject}.
 }
 \examples{
 rdbesExtractPath <- "./tests/testthat/h7_v_1_19_18/2022_FPN_FPE_H7.zip"
 obj <- importRDBESDataZIP(rdbesExtractPath)
 }
-\seealso{
-\code{\link{importRDBESDataCSV}}
-}
+\keyword{internal}
