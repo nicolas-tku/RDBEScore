@@ -67,5 +67,3 @@ filterAndTidyRDBESDataObject <- function(RDBESDataObjectToFilterAndTidy,
   return(RDBESDataObjectToFilterAndTidy)
 
 }
-
-
