@@ -5,18 +5,14 @@ capture.output({  ## suppresses printing of console output when running test()
 
   # common parameters
   # H1 directory
-  dirH1 <- "./tests/testthat/h1_v_1_19_18/"
+  dirH1 <- "./h1_v_1_19_18/"
   # H5 directory
-  dirH5 <- "./tests/testthat/h5_v_1_19_18/"
+  dirH5 <- "./h5_v_1_19_18/"
   # H7 directory
-  dirH7 <- "./tests/testthat/h7_v_1_19_18/"
+  dirH7 <- "./h7_v_1_19_18/"
 
   # H1 object for comparison
   expObjH1 <- readRDS(paste0(dirH1, "H1_2023_10_16.rds"))
-
-  # LEid is present in H1 due to the export
-  class(expObjH1$FT$LEid) <- "integer"
-  class(expObjH1$SA$LEid) <- "integer"
 
 
   # Test general behaviour  --------------------------------------------------
