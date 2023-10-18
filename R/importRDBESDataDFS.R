@@ -40,6 +40,10 @@ importRDBESDataDFS <- function(myList,
                                strict = TRUE,
                                ...){
 
+
+  if(length(setdiff(names(myList), unique(mapColNamesFieldR$Table.Prefix))) > 0) stop("Woops")
+
+
   dt <- RDBEScore::newRDBESDataObject(DE = makeDT(myList[["DE"]]),
                                       SD = makeDT(myList[["SD"]]),
                                       VS = makeDT(myList[["VS"]]),

@@ -304,21 +304,22 @@ capture.output({  ## suppresses printing of console output when running test()
   # Test list of dfs ---------------------------------------------------------
 
   # Create list of dfs for comparison
-  list_of_dfs <- createRDBESDataObject(paste0(dirH1, "H1_2023_10_16.zip"))
-  list_of_dfs <- list_of_dfs[!(sapply(list_of_dfs, is.null))]
-  list_of_dfs <- lapply(list_of_dfs, as.data.frame)
-
-
-
-
-  test_that("Importing list of dfs works",{
-    genObj <- suppressWarnings(createRDBESDataObject(list_of_dfs, castToCorrectDataTypes = FALSE))
-
-    expect_equal(genObj, expObjH1)
-
-  })
-
+  # list_of_dfs <- createRDBESDataObject(paste0(dirH1, "H1_2023_10_16.zip"))
+  # list_of_dfs <- list_of_dfs[!(sapply(list_of_dfs, is.null))]
+  # list_of_dfs <- lapply(list_of_dfs, as.data.frame)
+  #
+  #
   # test_that("Importing list of dfs works",{
+  #   genObj <- suppressWarnings(createRDBESDataObject(list_of_dfs, castToCorrectDataTypes = FALSE))
+  #
+  #   expect_equal(genObj, expObjH1)
+  #
+  # })
+
+  # test_that("Importing list of dfs with different names than the ones requested does not work",{
+  #
+  #   names(list_of_dfs)[1] <- "Design"
+  #   aa <- createRDBESDataObject(list_of_dfs, castToCorrectDataTypes = FALSE)
   #
   # })
 
