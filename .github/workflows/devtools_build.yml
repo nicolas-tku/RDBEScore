@@ -19,17 +19,20 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
     strategy:
       matrix:
-        r-version: ['3.6.3', '4.1.1']
-
+        config:
+          - {r: 'release', os: 'ubuntu-latest'}
+          - {r: 'release', os: 'macos-latest'}
+          - {r: 'release', os: 'windows-latest'}          
     steps:
       - uses: actions/checkout@v3
-      - name: Set up R ${{ matrix.r-version }}
+      - name: Set up R ${{ matrix.config.r }}
         uses: r-lib/actions/setup-r@f57f1301a053485946083d7a45022b278929a78a
         with:
-          r-version: ${{ matrix.r-version }}
+          r-version: ${{ matrix.config.r }}
       - name: Install dependencies
         run: |
           install.packages(c("remotes", "devtools"))
