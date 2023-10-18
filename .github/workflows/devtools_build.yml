@@ -40,5 +40,5 @@ jobs:
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
       - name: Check
-        run: devtools(binary=TRUE)
+        run: devtools::build(binary=TRUE)
         shell: Rscript {0}
