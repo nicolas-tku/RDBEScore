@@ -49,13 +49,18 @@ capture.output({  ## suppresses printing of console output when running test()
   })
 
 
-  # Give all possible inputs - For now do not include dfs
-#
-#   test_that("createRDBESDataObject will throw an error when given multiple inputs", {
-#
-#     expect_warning()
-#
-#   })
+
+
+  test_that("createRDBESDataObject will throw an error when given multiple inputs", {
+    zipFiles <- c(
+      "H1_2023_10_16.zip"
+    )
+    H1 <- paste0(dirH1, zipFiles)
+    df <- as.data.frame(1)
+
+    expect_error(createRDBESDataObject(input = c(H1, df, dirH1)), "Input type not recognised. Should be a RDBES zip file, folder of csv files, or list of data frames.")
+
+  })
 
 
 
