@@ -65,6 +65,7 @@
 #'   \item{R.Name}{The equivalent R field name}
 #'   \item{RDataType}{The equivalent R data type (e.g. "integer", "character" etc)}
 #'   \item{Type}{The Data type in the RDBES documentation (e.g. "Decimal", etc)}
+#'   \item{EssentialForEst}{Is this column considered essential?}
 #'   ...
 #' }
 #' @source \url{https://sboxrdbes.ices.dk}
@@ -137,4 +138,19 @@
 #' @source \url{https://sboxrdbes.ices.dk}
 "designVariables"
 
-
+#' A dataset containing a copy of the icesSpecWoRMS code list. The latest
+#' code list data can be downloaded from https://vocab.ices.dk/
+#'
+#' @format A data frame
+#' \describe{
+#'   \item{GUID}{Globally unique identifier assigned by ICES}
+#'   \item{Key}{AphiaID}
+#'   \item{Description}{Scientific name}
+#'   \item{LongDescription}{Ignore}
+#'   \item{Modified}{Date when the code was last updated}
+#'   \item{Deprecated}{IS this still a valid code.  If FALSE the code is
+#'   no longer valid within ICES.}
+#'   ...
+#' }
+#' @source \url{https://sboxrdbes.ices.dk}
+"icesSpecWoRMS"
