@@ -37,8 +37,11 @@ jobs:
           use-public-rspm: true
       - name: Install dependencies
         run: |
-          install.packages(c("remotes", "devtools"))
+          install.packages(c("remotes", "devtools", "roxygen2"))
           remotes::install_deps(dependencies = TRUE)
+        shell: Rscript {0}
+      - name: Build documentation
+        run: roxygen2::roxygenize('.', roclets = c('rd', 'collate', 'namespace'))
         shell: Rscript {0}
       - name: Create build directory
         run: mkdir build
