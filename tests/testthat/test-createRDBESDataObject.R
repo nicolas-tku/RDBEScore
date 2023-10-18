@@ -4,15 +4,15 @@ capture.output({  ## suppresses printing of console output when running test()
 
 
   # common parameters
-  dirH1 <- "tests/testthat/h1_v_1_19_18/"
-  dirH5 <- "tests/testthat/h5_v_1_19_18/"
+  dirH1 <- "./h1_v_1_19_18/"
+  dirH5 <- "./h5_v_1_19_18/"
 
   expObjH1 <- readRDS(paste0(dirH1, "H1_2023_10_16.rds"))
 
   # LEid is present in H1 due to the export
   class(expObjH1$FT$LEid) <- "integer"
   class(expObjH1$SA$LEid) <- "integer"
-  zipH1 <- "tests/testthat/h1_v_1_19_18/H1_2023_10_16.zip"
+  zipH1 <- "./h1_v_1_19_18/H1_2023_10_16.zip"
 
   # TEST GENERAL BEHAVIOUR --------------------------------------------------
 
