@@ -42,10 +42,16 @@ generateZerosUsingSL <- function(x,
 	tmpSA$DEyear <- x$DE$DEyear[match(aux$DEid[match(tmpSA$SAid,aux$SAid)], x$DE$DEid)]
 	tmpSA$SScatchFra <- x$SS$SScatchFra[match(aux$SSid[match(tmpSA$SAid,aux$SAid)], x$SS$SSid)]
 	tmpSA$SLid<-x$SS$SLid[match(aux$SSid[match(tmpSA$SAid,aux$SAid)], x$SS$SSid)]
+	tmpSA$SSuseCalcZero<-x$SS$SSuseCalcZero[match(aux$SSid[match(tmpSA$SAid,aux$SAid)], x$SS$SSid)]
 	tmpSA$SLspeclistName<-x$SL$SLspeclistName[match(tmpSA$SLid, x$SL$SLid)]
 
 	tmpSA[ ,tmpKey := paste(DEyear, SDctry, SDinst, SSspecListName, SScatchFra, SAspeCode)]
+	
+	# restricts to SSuseCalcZero=='Y'
+	tmpSA<-tmpSA[SSuseCalcZero=='Y',]
 
+if(nrow(tmpSA)>0)
+{
 colsToDelete<-c("SDctry", "SDinst","SSspecListName","DEyear","SScatchFra")
 
 	tmpSA[, (colsToDelete) := lapply(.SD, function(x) x<-NULL),
@@ -100,10 +106,14 @@ colsToDelete<-c("SDctry", "SDinst","SSspecListName","DEyear","SScatchFra")
 	x
   })
   x[["SA"]] <- data.table::setDT(do.call("rbind", ls2))
+
+
   # delete aux var
+  x[["SA"]]$SSuseCalcZero<-NULL
   x[["SA"]]$SLspeclistName<-NULL
   x[["SA"]]$SLid<-NULL
   # Ensure key is set on SA
   setkey(x[["SA"]],SAid)
+}
   x
 }

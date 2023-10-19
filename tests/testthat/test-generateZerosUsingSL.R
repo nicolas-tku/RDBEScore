@@ -32,6 +32,7 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 	myH1DataObject0[["SS"]]$SScatchFra[2]<-"Dis"
 	myH1DataObject0[["SS"]]$SSid[2]<-myH1DataObject0[["SS"]]$SSid[1]+1
 	myH1DataObject0[["SS"]]$SSid<-as.integer(myH1DataObject0[["SS"]]$SSid)
+	myH1DataObject0[["SS"]]$SSuseCalcZero<-'Y'
 	# ensure key is set on SS
 	setkey(myH1DataObject0[["SS"]], SSid)
 
@@ -58,8 +59,11 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 		expect_equal(all(paste0(myTest3$SL$SLid, myTest3$SL$SLcommTaxon) %in% paste0(myTest3$SA$SLid, myTest3$SA$SAspeCode)),TRUE)
 	# right number of rows generated
 		expect_equal(nrow(myTest3$SA),2)
-
-
+	# no change if SSuseCalcZero<-'N'
+		myH1DataObject2<-myH1DataObject1
+		myH1DataObject2[["SS"]]$SSuseCalcZero<-'N'
+		expect_equal(generateZerosUsingSL(myH1DataObject2),myH1DataObject2)
+		
 # species*catchFrac in SL and in SA: expected behavior -> do not generate a 0 row in SA
 
 	myH1DataObject2<-myH1DataObject1
