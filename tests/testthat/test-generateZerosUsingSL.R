@@ -7,33 +7,36 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 	myH1DataObject <- RDBEScore:::importRDBESDataZIP("./h1_v_1_19_18/ZW_1965_WGRDBES-EST_TEST_1.zip")
 
 	# Only use a subset of the test data
-	myH1DataObject <- filterRDBESDataObject(myH1DataObject,c("DEstratumName"),c("Pckg_survey_apistrat_H1"))
-	myH1DataObject <- filterRDBESDataObject(myH1DataObject,c("SLspeclistName"),c("WGRDBES-EST_TEST_1_Pckg_survey_apistrat_H1"))
-	myH1DataObject <- findAndKillOrphans(myH1DataObject)
+	myH1DataObject0 <- filterRDBESDataObject(myH1DataObject,c("DEstratumName"),c("Pckg_survey_apistrat_H1"))
+	myH1DataObject0 <- filterRDBESDataObject(myH1DataObject0,c("SLspeclistName"),c("WGRDBES-EST_TEST_1_Pckg_survey_apistrat_H1"))
+	myH1DataObject0 <- findAndKillOrphans(myH1DataObject0)
 
-	validateRDBESDataObject(myH1DataObject, checkDataTypes = TRUE)
+	validateRDBESDataObject(myH1DataObject0, checkDataTypes = TRUE)
 
-	df1 <- data.frame('31831','SL','ZW','4484',myH1DataObject[["SL"]]$SLspeclistName,'1965','Dis','107254','107254')
+	df1 <- data.frame('31831','SL','ZW','4484',myH1DataObject0[["SL"]]$SLspeclistName,'1965','Dis','107254','107254')
 
 
-	colnames(df1) <- names(myH1DataObject[["SL"]])
-	myH1DataObject[["SL"]] <- rbind(myH1DataObject[["SL"]],df1)
-	myH1DataObject[["SL"]]$SLid <- as.integer(myH1DataObject[["SL"]]$SLid)
-	myH1DataObject[["SL"]]$SLyear <- as.integer(myH1DataObject[["SL"]]$SLyear)
-	myH1DataObject[["SL"]]$SLcommTaxon <- as.integer(myH1DataObject[["SL"]]$SLcommTaxon)
-	myH1DataObject[["SL"]]$SLsppCode <- as.integer(myH1DataObject[["SL"]]$SLsppCode)
+	colnames(df1) <- names(myH1DataObject0[["SL"]])
+	myH1DataObject0[["SL"]] <- rbind(myH1DataObject0[["SL"]],df1)
+	myH1DataObject0[["SL"]]$SLid <- as.integer(myH1DataObject0[["SL"]]$SLid)
+	myH1DataObject0[["SL"]]$SLyear <- as.integer(myH1DataObject0[["SL"]]$SLyear)
+	myH1DataObject0[["SL"]]$SLcommTaxon <- as.integer(myH1DataObject0[["SL"]]$SLcommTaxon)
+	myH1DataObject0[["SL"]]$SLsppCode <- as.integer(myH1DataObject0[["SL"]]$SLsppCode)
+	# add an additional species list - could be many in the SL download
+	myH1DataObject0[["SL"]]<-rbind(myH1DataObject0[["SL"]], myH1DataObject[["SL"]][1,])
+	
 	# ensure key is set on SL
-	setkey(myH1DataObject[["SL"]], SLid)
+	setkey(myH1DataObject0[["SL"]], SLid)
 
-	myH1DataObject[["SS"]]<-rbind(myH1DataObject[["SS"]][1,],myH1DataObject[["SS"]][1,])
-	myH1DataObject[["SS"]]$SScatchFra[2]<-"Dis"
-	myH1DataObject[["SS"]]$SSid[2]<-myH1DataObject[["SS"]]$SSid[1]+1
-	myH1DataObject[["SS"]]$SSid<-as.integer(myH1DataObject[["SS"]]$SSid)
+	myH1DataObject0[["SS"]]<-rbind(myH1DataObject0[["SS"]][1,],myH1DataObject0[["SS"]][1,])
+	myH1DataObject0[["SS"]]$SScatchFra[2]<-"Dis"
+	myH1DataObject0[["SS"]]$SSid[2]<-myH1DataObject0[["SS"]]$SSid[1]+1
+	myH1DataObject0[["SS"]]$SSid<-as.integer(myH1DataObject0[["SS"]]$SSid)
 	# ensure key is set on SS
-	setkey(myH1DataObject[["SS"]], SSid)
+	setkey(myH1DataObject0[["SS"]], SSid)
 
-	myH1DataObject1 <- filterRDBESDataObject(myH1DataObject, c("SAid"), c(572813), killOrphans = TRUE)
-	validateRDBESDataObject(myH1DataObject, checkDataTypes = TRUE)
+	myH1DataObject1 <- filterRDBESDataObject(myH1DataObject0, c("SAid"), c(572813), killOrphans = TRUE)
+	validateRDBESDataObject(myH1DataObject0, checkDataTypes = TRUE)
 	validateRDBESDataObject(myH1DataObject1, checkDataTypes = TRUE)
 
 # species*catchFrac in SL and not in SA: expected behavior -> generate a 0 row in SA
@@ -43,6 +46,9 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 
 	  # create aux id_table [Nuno's function] and tmpKey to use in test
 		aux<-createTableOfRDBESIds(x = myTest3, addSAseqNums=FALSE)
+	
+	# will be unequal is species lists not applicable to samples not correctly handled
+	expect_equal(nrow(myTest3$SA),length(myTest3$SS$SLid[match(aux$SSid[match(myTest3$SS$SSid,aux$SSid)], myTest3$SS$SSid)]))
 
 		myTest3$SA$SLid <- myTest3$SS$SLid[match(aux$SSid[match(myTest3$SS$SSid,aux$SSid)], myTest3$SS$SSid)]
 		myTest3$SL <- myTest3$SL[myTest3$SL$SLid %in% myTest3$SA$SLid, ]
@@ -118,17 +124,17 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 	# explanation:
 		# in a normal situation these variables are filled in the new from the 1st row of SSid*SAstratumName
 		# if it happens that there are >1 values in that SSid*SAstratumName this is not valid - an error is issued
-	myH1DataObject2<-myH1DataObject
+	myH1DataObject2<-myH1DataObject0
 	myH1DataObject2$SA$SSid[1]<-myH1DataObject2$SA$SSid[2]
 	myH1DataObject2$SA$SAcatchCat[1]<-"Dis"
 	expect_error(generateZerosUsingSL(myH1DataObject2))
 
-	myH1DataObject2<-myH1DataObject
+	myH1DataObject2<-myH1DataObject0
 	myH1DataObject2$SA$SSid[1]<-myH1DataObject2$SA$SSid[2]
 	myH1DataObject2$SA$SAsex[1]<-"F"
 	expect_error(generateZerosUsingSL(myH1DataObject2))
 
-	myH1DataObject2<-myH1DataObject
+	myH1DataObject2<-myH1DataObject0
 	myH1DataObject2$SA$SSid[1]<-myH1DataObject2$SA$SSid[2]
 	myH1DataObject2$SA$SAlandCat[1]<-"HuC"
 	expect_error(generateZerosUsingSL(myH1DataObject2))

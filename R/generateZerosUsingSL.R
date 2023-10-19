@@ -41,6 +41,8 @@ generateZerosUsingSL <- function(x,
 	tmpSA$SSspecListName <- x$SS$SSspecListName[match(aux$SSid[match(tmpSA$SAid,aux$SAid)], x$SS$SSid)]
 	tmpSA$DEyear <- x$DE$DEyear[match(aux$DEid[match(tmpSA$SAid,aux$SAid)], x$DE$DEid)]
 	tmpSA$SScatchFra <- x$SS$SScatchFra[match(aux$SSid[match(tmpSA$SAid,aux$SAid)], x$SS$SSid)]
+	tmpSA$SLid<-x$SS$SLid[match(aux$SSid[match(tmpSA$SAid,aux$SAid)], x$SS$SSid)]
+	tmpSA$SLspeclistName<-x$SL$SLspeclistName[match(tmpSA$SLid, x$SL$SLid)]
 
 	tmpSA[ ,tmpKey := paste(DEyear, SDctry, SDinst, SSspecListName, SScatchFra, SAspeCode)]
 
@@ -57,12 +59,12 @@ colsToDelete<-c("SDctry", "SDinst","SSspecListName","DEyear","SScatchFra")
 			,.N, .(SSid,SAstratumName)]$N>1)) stop("cannot generateZerosUsingSL because >1 SAcatchCat
 								OR SAsex OR SAlandCat in same SSid*SAstratumName: situation
 										still to be analyzed - likely you should have them ")
-
+          
   ls1 <- split(tmpSA, paste(tmpSA$SSid, tmpSA$SAstratumName))
   ls2 <- lapply(ls1, function(x) {
-    for (w in tmpSL$tmpKey) {
+    for (w in tmpSL$tmpKey[tmpSL$SLspeclistName==x$SLspeclistName]) {
          if (!w %in% tmpSA$tmpKey) {
-          # duplicates SA row
+		  # duplicates SA row
           y <- x[1, ]
   		  # handles the key
 		  y$SAspeCode <- as.integer(unlist(strsplit(w," "))[6])
@@ -98,6 +100,9 @@ colsToDelete<-c("SDctry", "SDinst","SSspecListName","DEyear","SScatchFra")
 	x
   })
   x[["SA"]] <- data.table::setDT(do.call("rbind", ls2))
+  # delete aux var
+  x[["SA"]]$SLspeclistName<-NULL
+  x[["SA"]]$SLid<-NULL
   # Ensure key is set on SA
   setkey(x[["SA"]],SAid)
   x
