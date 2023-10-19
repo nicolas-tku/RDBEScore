@@ -307,4 +307,18 @@ test_that("createRDBESEstObject creates the correct number of rows when there is
 
 })
 
+test_that("createRDBESEstObject does not create parentID columns",  {
+
+            myPath <- "./h1_v_1_19_18"
+            myRawObject <- importRDBESDataCSV(rdbesExtractPath = myPath)
+            myEstObject <- createRDBESEstObject(myRawObject,1)
+
+            if (sum(grepl(".*parentID", names(myEstObject)), na.rm = TRUE) >0){
+              SAParentIDExists <- TRUE
+            } else {
+              SAParentIDExists <- FALSE
+            }
+            expect_false(SAParentIDExists)
+})
+
 }) ## end capture.output

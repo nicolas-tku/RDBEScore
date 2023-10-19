@@ -300,6 +300,11 @@ createRDBESEstObject <- function(rdbesPrepObject,
     myRDBESEstObj[, (vdIDFieldsToRemove) := NULL]
   }
 
+  # If SAparentID exists - remove it to avoid confusion
+  # (the RDBES now uses parentSequenceNumber to link samples and sub-samples)
+  if ("SAparentID" %in% names(myRDBESEstObj)){
+    myRDBESEstObj$SAparentID <- NULL
+  }
 
   # If myRDBESEstObj is null let's create an empty data table to return
   if (length(is.null(myRDBESEstObj)) == 1 &&
