@@ -81,7 +81,7 @@ capture.output({ ## suppresses printing of console output when running test()
                  paste0(tableToRemove," data does not exist in the input data but it is required"))
   })
 
-  test_that("generateMissingSSRows produces an error if a species list names that does not exist is provided", {
+  test_that("generateMissingSSRows produces an error if a species list name that does not exist is provided", {
 
     myH1RawObject <- importRDBESDataCSV(rdbesExtractPath = "./h1_v_1_19_18")
     # Only use a subset of the test data
@@ -92,6 +92,22 @@ capture.output({ ## suppresses printing of console output when running test()
                                        "Stupid name",
                                        verbose = FALSE),
                  "The requested species list name does not exist in the input data")
+  })
+
+  test_that("generateMissingSSRows produces an error if a species list name is provided that is not compatible with the Year/Country", {
+
+    myH1RawObject <- importRDBESDataCSV(rdbesExtractPath = "./h1_v_1_19_18")
+    # Only use a subset of the test data
+    myH1RawObject <- filterRDBESDataObject(myH1RawObject, c("DEstratumName"), c("DE_stratum1_H1", "DE_stratum2_H1", "DE_stratum3_H1"))
+    myH1RawObject <- findAndKillOrphans(myH1RawObject, verbose = FALSE)
+
+    # Change the SL country - this shoudl cause a compatibility error
+    myH1RawObject[["SL"]]$SLcou <- "TT"
+
+    expect_error(generateMissingSSRows(myH1RawObject,
+                                       "ZW_1965_SpeciesList",
+                                       verbose = FALSE),
+                 "The requested species list is not compatible with the combination of SS country and year")
   })
 
   test_that("generateMissingSSRows runs correctly for FO Dis, when there are no missing SS Dis rows (H1)", {

@@ -49,7 +49,7 @@ generateMissingSSRows <- function(RDBESDataObject,
   }
 
   # TODO Check if speciesListName exists for this year and country
-  print("TODO: Need to use year, country when we check the species list name")
+  #print("TODO: Need to use year, country when we check the species list name")
   # For the time being just check if it exists at all
 
   if (!speciesListName %in% unique(RDBESDataObject[["SL"]]$SLspeclistName)) {
@@ -59,6 +59,37 @@ generateMissingSSRows <- function(RDBESDataObject,
   # take a copy of the data so we don't change the original
   myFO <- data.table::copy(RDBESDataObject[["FO"]])
   mySS <- data.table::copy(RDBESDataObject[["SS"]])
+  mySL <- data.table::copy(RDBESDataObject[["SL"]])
+
+
+  # New we can check the supplied species list name is valid for all SS records
+
+  # Append the year and country to our SS data
+  mySSUnique <- mySS
+  mySSUnique$SSyear <- extractHigherFields(RDBESDataObject, "SS", "DEyear")
+  mySSUnique$SSctry <- extractHigherFields(RDBESDataObject, "SS", "SDctry")
+  mySSUnique$SSspecListName <- speciesListName
+
+  # Get the unique combinations of SS country, year, and the request list name
+  mySSUnique <- unique(mySSUnique[,c("SSctry","SSyear","SSspecListName")])
+
+  # Get the unique combinations of SL country, year, and list names
+  mySLUnique <- unique(mySL[,c("SLcou","SLyear","SLspeclistName")])
+
+  mySSSLUnique <- dplyr::left_join(mySSUnique,
+                             mySLUnique,
+                             keep = TRUE,
+                             dplyr::join_by(
+                               "SSyear" == "SLyear",
+                               "SSctry" == "SLcou",
+                               "SSspecListName" == "SLspeclistName"
+                             ))
+  if (nrow(mySSSLUnique[is.na(mySSSLUnique$SLspeclistName),])){
+    stop(paste0("The requested species list is not compatible with the ",
+    "combination of SS country and year"))
+  }
+
+  # OK, if we made it here we can now get on with things
 
   # We only care about sampled FO records
   myFO <- myFO[myFO$FOsamp == "Y", ]
