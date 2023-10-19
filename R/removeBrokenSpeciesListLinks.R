@@ -76,13 +76,37 @@ removeBrokenSpeciesListLinks <- function(objectToCheck,
       # Default to link not existing
       myOrphanResults[, "slExists"] <- FALSE
 
+
+# Add year and country to SS ----------------------------------------------------
+
+myTable$SSyear <- extractHigherFields(objectToCheck, "SS", "DEyear")
+myTable$SSctry <- extractHigherFields(objectToCheck, "SS", "SDctry")
+
+# -------------------------------------------------------------------------
+
+
       # Inner join to the SL table
       joinedTables <- dplyr::inner_join(myTable,
                                     objectToCheck[["SL"]],
-                                    by = c("SSspecListName" = "SLspeclistName"),
+                                    by = c("SSspecListName" = "SLspeclistName",
+                                           "SScatchFra" = "SLcatchFrac",
+                                           "SSyear" = "SLyear",
+                                           "SSctry" = "SLcou"),
                                     multiple = "all",
                                     relationship="many-to-many"
       )
+
+
+# Remove year and ctry columns from SS ------------------------------------
+
+myTable <- myTable[, SSyear := NULL]
+myTable <- myTable[, SSctry := NULL]
+
+# -------------------------------------------------------------------------
+
+
+      # Remove year and ctry columns from SL
+
 
       # Update the results for any matches we found
       if (nrow(joinedTables) > 0) {
@@ -126,5 +150,6 @@ removeBrokenSpeciesListLinks <- function(objectToCheck,
     print(unlist(lapply(objectToCheck[tableToCheck], nrow)))
   }
 
-  objectToCheck
+  return(objectToCheck)
 }
+
