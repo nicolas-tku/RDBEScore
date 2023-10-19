@@ -29,8 +29,8 @@
 #' obj <- importRDBESDataCSV(rdbesExtractPath)
 
 importRDBESDataCSV <- function(rdbesExtractPath = NULL,
-                                 listOfFileNames = NULL,
-                                 castToCorrectDataTypes = TRUE) {
+                               listOfFileNames = NULL,
+                               castToCorrectDataTypes = TRUE) {
 
 
   # If we have not been passed a list of file names use a default
@@ -127,22 +127,22 @@ importRDBESDataCSV <- function(rdbesExtractPath = NULL,
 
   # Create an RDBESDataObject using the constructor
   myRDBESDataObject <- RDBEScore::newRDBESDataObject(DE = myList[["DE"]],
-                                        SD = myList[["SD"]],
-                                        VS = myList[["VS"]],
-                                        FT = myList[["FT"]],
-                                        FO = myList[["FO"]],
-                                        TE = myList[["TE"]],
-                                        LO = myList[["LO"]],
-                                        OS = myList[["OS"]],
-                                        LE = myList[["LE"]],
-                                        SS = myList[["SS"]],
-                                        SA = myList[["SA"]],
-                                        FM = myList[["FM"]],
-                                        BV = myList[["BV"]],
-                                        VD = myList[["VD"]],
-                                        SL = myList[["SL"]],
-                                        CL = myList[["CL"]],
-                                        CE = myList[["CE"]])
+                                                     SD = myList[["SD"]],
+                                                     VS = myList[["VS"]],
+                                                     FT = myList[["FT"]],
+                                                     FO = myList[["FO"]],
+                                                     TE = myList[["TE"]],
+                                                     LO = myList[["LO"]],
+                                                     OS = myList[["OS"]],
+                                                     LE = myList[["LE"]],
+                                                     SS = myList[["SS"]],
+                                                     SA = myList[["SA"]],
+                                                     FM = myList[["FM"]],
+                                                     BV = myList[["BV"]],
+                                                     VD = myList[["VD"]],
+                                                     SL = myList[["SL"]],
+                                                     CL = myList[["CL"]],
+                                                     CE = myList[["CE"]])
 
 
   if (castToCorrectDataTypes){

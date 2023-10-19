@@ -1,4 +1,28 @@
 #=======Prepares textbook data as H1 upload file==========
+# Info:
+# ?api
+# from help:
+# The Academic Performance Index is computed for all California schools based on standardised testing of
+# students. The data sets contain information for all schools with at least 100 students and for various
+# probability samples of the data.
+# interpretation
+# design is 2-stage cluster sampling with clusters of unequal sizes
+# An SRS of 40 districts is selected (psus) from the 757 districts in the population and then
+# up to 5 schools (min 1) were selected from each district (ssus)
+# target variable is enroll - note that it contains 4 NA values
+
+# how this example is placed in RDBES
+# 1 DE row with DEstratumName == "Pckg_SDAResources_apiclus2_H1"
+# 1 child SD row
+# 40 child rows in VS (the 40 districts)
+#  VSnumberTotal is 757
+#  VSnumberSampled is 40
+# 126 child rows in FT (the 126 schools finally observed)
+  # each associated to its cluster (dname)
+  # FTnumberTotal is the number of schools in district
+  # FTnumberSAmpled is 1...5 schools sampled
+# tables FO, SS are just 1:1 links to the final data (in SA)
+# in SA SAsampleWeightMeasured is enroll [note the 4 NAs]
 
 
 	library(data.table)
@@ -588,13 +612,13 @@ SA_df<-data.frame(
 		SAunitName = SS_df$SSid, #M
 		SAlowerHierarchy = "D",
 		SAsampler = "Observer",
-		SAsampled = ifelse(!is.na(dataset[[target_var]]),"Y","N"), #M
+		SAsampled = ifelse(!is.na(df[[target_var]]),"Y","N"), #M
 		SAreasonNotSampled = "",
 		SAnonResponseCollected = "Y",
 		SAreasonNotSampledFM = "",
 		SAreasonNotSampledBV = "",
-		SAtotalWeightMeasured = ifelse(!is.na(dataset[[target_var]]),dataset[[target_var]],""), #
-		SAsampleWeightMeasured = ifelse(!is.na(dataset[[target_var]]),dataset[[target_var]],""), #
+		SAtotalWeightMeasured = ifelse(!is.na(df[[target_var]]),df[[target_var]],""), #
+		SAsampleWeightMeasured = ifelse(!is.na(df[[target_var]]),df[[target_var]],""), #
 		SAconversionFactorMeasLive = 1,
 		SAauxiliaryVariableTotal = "",
 		SAauxiliaryVariableValue = "",

@@ -15,7 +15,7 @@ capture.output({  ## suppresses printing of console output when running test()
   expObjH1 <- readRDS(paste0(dirH1, "H1_2023_10_16.rds"))
 
 
-  # Test general behaviour  --------------------------------------------------
+  # Test general behavior  --------------------------------------------------
 
   test_that("createRDBESDataObject will give a warning if given a dir with no relevant  files in it",  {
 
@@ -213,6 +213,15 @@ capture.output({  ## suppresses printing of console output when running test()
 
   })
 
+
+  test_that("createRDBESDataObject returns warning when input = NULL & the listofFileNames is not",  {
+
+    csvFilesH1 <- NULL
+    myFileNames <- list("DE"="DE.csv","SD"="SD.csv")
+
+    expect_warning(createRDBESDataObject(input = csvFilesH1, listOfFileNames = myFileNames), NA)
+
+  })
 
   test_that("createRDBESDataObject creates an object with the correct data types",  {
 
