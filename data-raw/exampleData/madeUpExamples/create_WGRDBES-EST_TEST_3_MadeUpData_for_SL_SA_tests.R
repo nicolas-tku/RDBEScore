@@ -751,7 +751,10 @@ SA_base <-
     SSid,
     SAspeciesCode,
     SAspeciesCodeFAO,
-    SAcatchCategory
+    SAcatchCategory,
+    SAstratification,
+    SAstratumName
+
   )
 
 
@@ -763,9 +766,9 @@ SA_df <- data.frame(
   SAsequenceNumber = as.integer(1:nrow(SA_base)),
   #M
   SAparentSequenceNumber = "",
-  SAstratification = "N",
+  SAstratification = SA_base$SAstratification,
   #M
-  SAstratumName = "U",
+  SAstratumName = SA_base$SAstratumName,
   #M
   SAspeciesCode = SA_base$SAspeciesCode,
   #M
