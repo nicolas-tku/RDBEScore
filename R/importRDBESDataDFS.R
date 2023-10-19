@@ -40,8 +40,8 @@ importRDBESDataDFS <- function(myList,
                                strict = TRUE,
                                ...){
 
-
-  if(length(setdiff(names(myList), unique(mapColNamesFieldR$Table.Prefix))) > 0) stop("Woops")
+  # Checks for different names than the ones expected and duplicate table names in the list
+  if(length(setdiff(names(myList), unique(mapColNamesFieldR$Table.Prefix))) > 0 || any(duplicated(names(myList)))) stop("You have given list names that are not valid or you have duplicate table names.")
 
 
   dt <- RDBEScore::newRDBESDataObject(DE = makeDT(myList[["DE"]]),
