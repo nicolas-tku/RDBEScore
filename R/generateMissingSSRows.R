@@ -183,6 +183,19 @@ generateMissingSSRows <- function(RDBESDataObject,
   if (verbose) {
     print(paste0(nrow(SStoReturn), " rows of SS data will be returned"))
   }
+
+  # Create SSids for our any new rows with NA SSid values
+  currentMaxSSid <- max(SStoReturn$SSid, na.rm = TRUE)
+  numberOfNAs <- nrow(SStoReturn[is.na(SStoReturn$SSid),])
+  if (numberOfNAs > 0){
+    newIds <- seq(currentMaxSSid+1,currentMaxSSid+numberOfNAs)
+    SStoReturn[is.na(SStoReturn$SSid),"SSid"] <- newIds
+  }
+
+  # Ensure we return SS as a data table with keys set
+  data.table::setDT(SStoReturn)
+  data.table::setkeyv(SStoReturn,"SSid")
+
   SStoReturn
 }
 
