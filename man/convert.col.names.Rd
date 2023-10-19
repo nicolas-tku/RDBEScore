@@ -15,6 +15,7 @@ convert.col.names(table, new.names = "R.name")
 a vector of strings of new column names
 }
 \description{
-Converts table column names to field name or R name
+Converts table column names to field name or R name. For now, not actually
+being used anywhere, but will update in future to be more useful.
 }
 \keyword{internal}

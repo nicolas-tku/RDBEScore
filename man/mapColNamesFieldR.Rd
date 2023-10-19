@@ -14,6 +14,7 @@ R field name:
   \item{R.Name}{The equivalent R field name}
   \item{RDataType}{The equivalent R data type (e.g. "integer", "character" etc)}
   \item{Type}{The Data type in the RDBES documentation (e.g. "Decimal", etc)}
+  \item{EssentialForEst}{Is this column considered essential?}
   ...
 }
 }

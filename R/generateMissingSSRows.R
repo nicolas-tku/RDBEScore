@@ -16,6 +16,7 @@
 #' @export
 #'
 #' @examples
+#' # To follow
 generateMissingSSRows <- function(RDBESDataObject,
                                   speciesListName,
                                   verbose = FALSE,
@@ -201,9 +202,10 @@ generateMissingSSRows <- function(RDBESDataObject,
 
 #' Private function to find which FO rows are not matching SS
 #'
-#' @param FOdata
-#' @param SSdata
-#' @param catchFra
+#' @param FOdata The FOdata
+#' @param SSdata The SSdata
+#' @param catchFra The catchfra
+#' @param verbose verbose or not?
 #'
 #' @return Vector of FOids that aren't matching SS rows
 getMissingSSCatchFraction <- function(FOdata, SSdata, catchFra, verbose) {

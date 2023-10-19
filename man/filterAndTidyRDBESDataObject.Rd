@@ -15,17 +15,17 @@ filterAndTidyRDBESDataObject(
 )
 }
 \arguments{
+\item{RDBESDataObjectToFilterAndTidy}{The \code{RDBESDataObjectToFilterAndTidy} to filter}
+
 \item{fieldsToFilter}{A vector of the field names you wish to check}
 
 \item{valuesToFilter}{A vector of the field values you wish to filter for}
 
 \item{killOrphans}{Controls if orphan rows are removed. Default is \code{FALSE}.}
-
-\item{RDBESDataObjectToFilter}{The \code{RDBESDataObject} to filter}
 }
 \value{
 the filtered input object of the same class as
-\code{RDBESDataObjectToFilter}
+\code{RDBESDataObjectToFilterAndTidy}
 }
 \description{
 The returned object will include all rows which either: a) do not included
@@ -42,13 +42,16 @@ default is \code{FALSE}.
 myH1RawObject <-
   createRDBESDataObject(rdbesExtractPath = "tests\\\\testthat\\\\h1_v_1_19_13")
 
-myFields <- c("VSencrVessCode", "VDlenCat")
-myValues <- c("VDcode_1","VL1518","VL2440")
+  # to check how removeBrokenVesselLinks() works
+  myH1RawObject$VD$VDlenCat[which(myH1RawObject$VD$VDencrVessCode=="VDcode_10")] <- "VL40XX"
 
-myFilteredObject <- filterRDBESDataObject(myH1RawObject,
+myFields <- c("VSencrVessCode", "VDlenCat")
+myValues <- c("VDcode_1","VDcode_2", "VDcode_10","VL1518","VL2440")
+
+myFilteredObject <- filterAndTidyRDBESDataObject(myH1RawObject,
   fieldsToFilter = myFields,
   valuesToFilter = myValues,
-   killOrphans = TRUE
+   killOrphans = TRUE, verboseBrokenVesselLinks = TRUE
 )
 }
 
