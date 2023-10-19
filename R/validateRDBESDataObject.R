@@ -102,7 +102,7 @@ validateRDBESDataObject <- function(objectToCheck,
 
   if (length(badEntries) > 0) {
     stop(paste("objectToCheck is a list but contains some entries which are ",
-        "not NULL or data tables",
+        "not NULL or data tables ",
         paste(names(badEntries), collapse = ","),
         sep = ""
     ))
