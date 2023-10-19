@@ -80,6 +80,18 @@ The current development version can be installed using:
 library(remotes)
 install_github("ices-tools-dev/RDBEScore@dev")
 ```
+## On `data.table` usage
+
+Objects of type `data.table` passed as parameters should be copied before modification. As an example:
+```r
+function zeroIds(sl) {
+  sl <- data.table::copy(sl)
+  sl[,SLid:=0]
+  sl
+}
+```
+Now invocations of this function on SL tables will not alter the original copy.
+
 ## Precommit-hook framework
 
 For adhering to package styling guides it is advisable to use precommit checks while developing.

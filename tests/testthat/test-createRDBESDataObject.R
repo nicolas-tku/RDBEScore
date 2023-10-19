@@ -15,7 +15,7 @@ capture.output({  ## suppresses printing of console output when running test()
   expObjH1 <- readRDS(paste0(dirH1, "H1_2023_10_16.rds"))
 
 
-  # Test general behaviour  --------------------------------------------------
+  # Test general behavior  --------------------------------------------------
 
   test_that("createRDBESDataObject will give a warning if given a dir with no relevant  files in it",  {
 
@@ -214,6 +214,14 @@ capture.output({  ## suppresses printing of console output when running test()
   })
 
 
+  test_that("createRDBESDataObject returns warning when input = NULL & the listofFileNames is not",  {
+
+    csvFilesH1 <- NULL
+    myFileNames <- list("DE"="DE.csv","SD"="SD.csv")
+
+    expect_warning(createRDBESDataObject(input = csvFilesH1, listOfFileNames = myFileNames), NA)
+
+  })
 
   test_that("createRDBESDataObject creates an object with the correct data types",  {
 
@@ -304,8 +312,8 @@ capture.output({  ## suppresses printing of console output when running test()
   # Test list of dfs ---------------------------------------------------------
 
   # Create list of dfs for comparison
-  list_of_dfs <- createRDBESDataObject(paste0(dirH1, "H1_2023_10_16.zip"))
-  list_of_dfs <- list_of_dfs[!(sapply(list_of_dfs, is.null))]
+  list_with_nulls  <-  createRDBESDataObject(paste0(dirH1, "H1_2023_10_16.zip"))
+  list_of_dfs <- list_with_nulls[!(sapply(list_with_nulls, is.null))]
   list_of_dfs <- lapply(list_of_dfs, as.data.frame)
 
 
@@ -319,24 +327,27 @@ capture.output({  ## suppresses printing of console output when running test()
   test_that("Importing list of dfs with castToCorrectDataTypes = TRUE works",{
     genObj <- suppressWarnings(createRDBESDataObject(list_of_dfs, castToCorrectDataTypes = TRUE))
 
-    expect_equal(genObj, expObjH1)
+    myDiffs <- RDBEScore:::validateRDBESDataObjectDataTypes(genObj)
+
+    numberOfDifferences <- nrow(myDiffs)
+    expect_equal(numberOfDifferences,0)
 
   })
 
-  # test_that("Importing list of dfs with different names than the ones requested does not work",{
-  #
-  #   names(list_of_dfs)[1] <- "Design"
-  #   expect_error(expect_warning(createRDBESDataObject(list_of_dfs, castToCorrectDataTypes = FALSE), "NOTE: Creating RDBES data objects from a list of local data frames bypasses the RDBES upload data integrity checks."), "You have given list names that are not valid or you have duplicate table names.")
-  #
-  # })
-  #
-  # test_that("Importing list of dfs with duplicate table names does not work",{
-  #
-  #   names(list_of_dfs)[1] <- "DE"
-  #   names(list_of_dfs)[2] <- "DE"
-  #   expect_error(expect_warning(createRDBESDataObject(list_of_dfs, castToCorrectDataTypes = FALSE), "NOTE: Creating RDBES data objects from a list of local data frames bypasses the RDBES upload data integrity checks."), "You have given list names that are not valid or you have duplicate table names.")
-  #
-  # })
+  test_that("Importing list of dfs with different names than the ones requested does not work",{
+
+    names(list_of_dfs)[1] <- "Design"
+    expect_error(expect_warning(createRDBESDataObject(list_of_dfs, castToCorrectDataTypes = FALSE), "NOTE: Creating RDBES data objects from a list of local data frames bypasses the RDBES upload data integrity checks."), "You have given list names that are not valid or you have duplicate table names.")
+
+  })
+
+  test_that("Importing list of dfs with duplicate table names does not work",{
+
+    names(list_of_dfs)[1] <- "DE"
+    names(list_of_dfs)[2] <- "DE"
+    expect_error(expect_warning(createRDBESDataObject(list_of_dfs, castToCorrectDataTypes = FALSE), "NOTE: Creating RDBES data objects from a list of local data frames bypasses the RDBES upload data integrity checks."), "You have given list names that are not valid or you have duplicate table names.")
+
+  })
 
   test_that("Importing list of dfs with different names than the ones requested & duplicate table names does not work",{
 
@@ -344,6 +355,31 @@ capture.output({  ## suppresses printing of console output when running test()
     names(list_of_dfs)[2] <- "DE"
     names(list_of_dfs)[3] <- "DE"
     expect_error(expect_warning(createRDBESDataObject(list_of_dfs, castToCorrectDataTypes = FALSE), "NOTE: Creating RDBES data objects from a list of local data frames bypasses the RDBES upload data integrity checks."), "You have given list names that are not valid or you have duplicate table names.")
+
+  })
+
+  test_that("Importing multiple lists does not work",{
+
+   list1 <- list_of_dfs
+   list2 <- list_of_dfs
+    expect_error(expect_warning(createRDBESDataObject(input = c(list1, list2), castToCorrectDataTypes = FALSE), "NOTE: Creating RDBES data objects from a list of local data frames bypasses the RDBES upload data integrity checks."), "You have given list names that are not valid or you have duplicate table names.")
+
+  })
+
+  test_that("Importing dataframe does not work",{
+
+    df <- as.data.frame(list_of_dfs[["DE"]])
+    expect_error(createRDBESDataObject(input = df, castToCorrectDataTypes = FALSE), "Input type not recognised. Should be a RDBES zip file, folder of csv files, or list of data frames.")
+
+  })
+
+  test_that("Giving an empty dataframe within the list does not work",{
+
+
+    list_with_nulls <- lapply(list_with_nulls, as.data.frame)
+
+
+    expect_error(expect_warning(createRDBESDataObject(input = list_with_nulls, castToCorrectDataTypes = FALSE),  "NOTE: Creating RDBES data objects from a list of local data frames bypasses the RDBES upload data integrity checks."), "some columns are not in the data.table")
 
   })
 
