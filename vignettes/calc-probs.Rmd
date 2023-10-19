@@ -1,9 +1,9 @@
 ---
-title: "Calculating zeros and probabilities"
+title: "Calculating probabilities"
 date: "`r Sys.Date()`"
 output:  rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Calculating zeros and probabilities}
+  %\VignetteIndexEntry{Calculating probabilities}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
