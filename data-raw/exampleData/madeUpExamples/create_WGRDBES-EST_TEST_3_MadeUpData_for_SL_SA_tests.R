@@ -543,19 +543,23 @@ FO_df <- data.frame(
 ## Create ----
 
 SL_base <-
-  distinct(guide,
-           speciesListName,
-           SLcatchFraction,
-           SLcommercialTaxon,
-           SLspeciesCode)
+  distinct(left_join(left_join(guide, DE_df), SD_df),
+                     speciesListName,
+                     SLcatchFraction,
+                     SLcommercialTaxon,
+                     SLspeciesCode,
+           SDcountry,
+           SDinstitution,
+           DEyear
+           )
 
 SL_df <- data.frame(
   SLid = as.integer(1:nrow(SL_base)),
   SLrecordType = "SL",
-  SLcountry = SD_df$SDcountry,
-  SLinstitute = SD_df$SDinstitution,
+  SLcountry = SL_base$SDcountry,
+  SLinstitute = SL_base$SDinstitution,
   SLspeciesListName = SL_base$speciesListName,
-  SLyear = DE_df$DEyear,
+  SLyear = SL_base$DEyear,
   SLcatchFraction = SL_base$SLcatchFraction,
   SLcommercialTaxon = SL_base$SLcommercialTaxon,
   SLspeciesCode = SL_base$SLspeciesCode
@@ -616,6 +620,7 @@ SS_base <-
     FOid,
     SScatchFraction,
     SSsampled,
+    SSuseForCalculateZero,
     speciesListName
   )
 
@@ -650,7 +655,7 @@ SS_df <- data.frame(
   #M
   SSspeciesListName = SS_base$speciesListName,
   #M
-  SSuseForCalculateZero = "N",
+  SSuseForCalculateZero = SS_base$SSuseForCalculateZero,
   #M
   SStimeTotal = "",
   SStimeSampled = "",
