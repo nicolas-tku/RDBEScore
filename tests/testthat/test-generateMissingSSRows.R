@@ -1,4 +1,4 @@
-#capture.output({ ## suppresses printing of console output when running test()
+capture.output({ ## suppresses printing of console output when running test()
 
 
   test_that("generateMissingSSRows does not add any SS rows if none are missing (H1)", {
@@ -280,4 +280,4 @@
   })
 
 
-#}) ## end capture.output
+}) ## end capture.output
