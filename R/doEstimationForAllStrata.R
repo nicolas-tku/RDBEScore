@@ -86,7 +86,10 @@ doEstimationForAllStrata <- function(RDBESEstObjectForEstim,
 
 
       # Join our current table with the previous results
-      myTableWithValues <- myTable[myPrevEstimates, on = .(id = parentTableID)]
+      data.table::setkey(myTable, id)
+      data.table::setkey(myPrevEstimates, parentTableID)
+
+      myTableWithValues <- myTable[myPrevEstimates]
 
       # Join myStrataResults with myTable
       myStrataResults <- myTable[,
