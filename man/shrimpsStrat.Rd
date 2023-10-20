@@ -30,7 +30,7 @@ Nuno Prista @ SLU Aqua, 2022
 shrimpsStrat
 }
 \description{
-A dataset of rdbesEstimObj type containing simplified haul-level
+A dataset of `rdbesEstimObj` type containing simplified haul-level
 samples (rows) of shrimp catches (targetValue, in kg) observed onboard using
 H1 of RDBES with UPWOR on vessels. Catches are divided into three strata (91, 92, 93_94)
 that correspond to sorting sieves used onboard. Data is provided for developing/testing

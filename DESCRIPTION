@@ -2,7 +2,15 @@ Package: RDBEScore
 Type: Package
 Title: Functions for the ICES Regional Database and Estimation System (RDBES)
 Version: 0.2.1
-Author: Who wrote it
+Author: c(
+    person(given = "Nicholas", 
+           family = "Carey", 
+           role = c("ctb"),
+           email = "nicholascarey@gmail.com"),
+    person(given = "", 
+           family = "", 
+           role = c(""), 
+           email = "")) 
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.

@@ -71,6 +71,8 @@
 #' @source \url{https://sboxrdbes.ices.dk}
 "mapColNamesFieldR"
 
+#' Swedish shrimp sampling data
+#'
 #' One quarter of sample data from swedish shrimp landings of the
 #' SWE_OTB_CRU_32-69_0_0 fishery
 #'
@@ -82,17 +84,29 @@
 #' @format A data frame with 10 rows and 95 variables:
 #'
 #'   - DEsamplingScheme - Sampling Scheme
+#'
 #'   - DEyear - Year of data collection
+#'
 #'   - DEstratumName - Fishery code
+#'
 #'   - DEhierarchyCorrect - Design Variable of RDBES. More details in RDBES documentation
+#'
 #'   - DEhierarchy - Design Variable of RDBES. More details in RDBES documentation
+#'
 #'   - DEsampled - Design Variable of RDBES. More details in RDBES documentation
+#'
 #'   - DEreasonNotSampled - Design Variable of RDBES. More details in RDBES documentation
+#'
 #'   - SDcountry - Country that collected the data
+#'
 #'   - SDinstitution - Institution that collected the data
+#'
 #'   - su1, su2, su3, su4, su5 - sampling units of RDBES. More details in RDBES documentation
+#'
 #'   - XXXnumberSampled, ... - Design Variables of RDBES. More details in RDBES documentation
+#'
 #'   - targetValue - estimate of weight landed in each haul (in kg)
+#'
 #'   - plus XX other columns
 #'
 #' @source Nuno Prista @ SLU Aqua, 2022
@@ -101,7 +115,7 @@
 #' One quarter of sample data from swedish shrimp catches of the
 #' SWE_OTB_CRU_32-69_0_0 fishery
 #'
-#' A dataset of rdbesEstimObj type containing simplified haul-level
+#' A dataset of `rdbesEstimObj` type containing simplified haul-level
 #' samples (rows) of shrimp catches (targetValue, in kg) observed onboard using
 #' H1 of RDBES with UPWOR on vessels. Catches are divided into three strata (91, 92, 93_94)
 #' that correspond to sorting sieves used onboard. Data is provided for developing/testing
