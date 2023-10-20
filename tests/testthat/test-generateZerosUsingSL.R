@@ -2,6 +2,15 @@ capture.output({  ## suppresses printing of console output when running test()
 
 test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLyear*SLcatchFrac*SLcommTaxon", {
 
+
+# dev notes
+# tests should be partioned into several test_that sections
+
+
+		myH1DataObject1[c("SL","SS", "SA")]
+		generateZerosUsingSL(myH1DataObject1)[c("SL","SS", "SA")]
+
+
 # create test data from download [to be used in different tests]
 
 	myH1DataObject <- RDBEScore:::importRDBESDataZIP("./h1_v_1_19_18/ZW_1965_WGRDBES-EST_TEST_1.zip")
@@ -31,6 +40,7 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 	myH1DataObject0[["SS"]]<-rbind(myH1DataObject0[["SS"]][1,],myH1DataObject0[["SS"]][1,])
 	myH1DataObject0[["SS"]]$SScatchFra[2]<-"Dis"
 	myH1DataObject0[["SS"]]$SSid[2]<-myH1DataObject0[["SS"]]$SSid[1]+1
+	myH1DataObject0[["SS"]]$SLid[2]<-as.integer(31831)
 	myH1DataObject0[["SS"]]$SSid<-as.integer(myH1DataObject0[["SS"]]$SSid)
 	myH1DataObject0[["SS"]]$SSuseCalcZero<-'Y'
 	# ensure key is set on SS
@@ -41,6 +51,7 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 	validateRDBESDataObject(myH1DataObject1, checkDataTypes = TRUE)
 
 # species*catchFrac in SL and not in SA: expected behavior -> generate a 0 row in SA
+# also tests creation of species list when SS present and no SA (e.g., 0 discards)
 
 	  # check generateZerosUsingSL is creating missing row in SA
 		myTest3 <- generateZerosUsingSL(myH1DataObject1)
@@ -59,11 +70,23 @@ test_that("generateZerosUsingSL creates rows for SLcou*SLinst*SLspeclistName*SLy
 		expect_equal(all(paste0(myTest3$SL$SLid, myTest3$SL$SLcommTaxon) %in% paste0(myTest3$SA$SLid, myTest3$SA$SAspeCode)),TRUE)
 	# right number of rows generated
 		expect_equal(nrow(myTest3$SA),2)
+	# adds 1 more species to SL to test
+		myH1DataObject2<-myH1DataObject1
+		myH1DataObject2$SL<-rbind(myH1DataObject2$SL[1,],myH1DataObject2$SL[1,],myH1DataObject2$SL)
+		myH1DataObject2$SL$SLid[1]<-31830 # dummy
+		myH1DataObject2$SL$SLid[2]<-31829 # dummy
+		myH1DataObject2$SL$SLcommTaxon[1:2]<-126437 # dummy
+		myH1DataObject2$SL$SLcatchFrac[1]<-"Lan" # dummy
+		myH1DataObject2$SL$SLsppCode[1:2]<-126437 # dummy
+		setkey(myH1DataObject2[["SL"]], SLid)
+		expect_equal(nrow(generateZerosUsingSL(myH1DataObject2)$SA),4)
+	
 	# no change if SSuseCalcZero<-'N'
 		myH1DataObject2<-myH1DataObject1
 		myH1DataObject2[["SS"]]$SSuseCalcZero<-'N'
 		expect_equal(generateZerosUsingSL(myH1DataObject2),myH1DataObject2)
-		
+	# 	
+	
 # species*catchFrac in SL and in SA: expected behavior -> do not generate a 0 row in SA
 
 	myH1DataObject2<-myH1DataObject1
