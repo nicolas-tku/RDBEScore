@@ -44,33 +44,83 @@ generateZerosUsingSL <- function(x,
 	tmpSA$SLid<-x$SS$SLid[match(aux$SSid[match(tmpSA$SAid,aux$SAid)], x$SS$SSid)]
 	tmpSA$SSuseCalcZero<-x$SS$SSuseCalcZero[match(aux$SSid[match(tmpSA$SAid,aux$SAid)], x$SS$SSid)]
 	tmpSA$SLspeclistName<-x$SL$SLspeclistName[match(tmpSA$SLid, x$SL$SLid)]
-
-	tmpSA[ ,tmpKey := paste(DEyear, SDctry, SDinst, SSspecListName, SScatchFra, SAspeCode)]
+	tmpSA[ ,tmpKey0 := paste(DEyear, SDctry, SDinst, SSspecListName, SScatchFra)]
+	tmpSA[ ,tmpKey1 := paste(DEyear, SDctry, SDinst, SSspecListName, SScatchFra, SAspeCode)]
 	
 	# restricts to SSuseCalcZero=='Y'
 	tmpSA<-tmpSA[SSuseCalcZero=='Y',]
 
 if(nrow(tmpSA)>0)
 {
-colsToDelete<-c("SDctry", "SDinst","SSspecListName","DEyear","SScatchFra")
 
-	tmpSA[, (colsToDelete) := lapply(.SD, function(x) x<-NULL),
-        .SDcols = colsToDelete]
 
 	# creates tmpKey in SL
-	tmpSL[, tmpKey := paste(SLyear, SLcou, SLinst, SLspeclistName, SLcatchFrac, SLcommTaxon)]
+	tmpSL[, tmpKey0 := paste(SLyear, SLcou, SLinst, SLspeclistName, SLcatchFrac)]
+	tmpSL[, tmpKey1 := paste(SLyear, SLcou, SLinst, SLspeclistName, SLcatchFrac, SLcommTaxon)]
 
   # stop: (rare?) situation still to be considered [multiple SAcatchCat, SAsex, SAlandCat per id]
   if (any(tmpSA[, .N, .(SSid,SAstratumName, SAcatchCat, SAsex, SAlandCat)][
 			,.N, .(SSid,SAstratumName)]$N>1)) stop("cannot generateZerosUsingSL because >1 SAcatchCat
 								OR SAsex OR SAlandCat in same SSid*SAstratumName: situation
 										still to be analyzed - likely you should have them ")
-          
+    
+tmpSS <- data.table::copy(x[["SS"]])
+tmpSS$tmpKey0<-tmpSL$tmpKey0[match(tmpSS$SLid, tmpSL$SLid)]
+# case where SS exists and was sampled but there is no child record (all SL is added)
+ check <- !tmpSS$SSid %in% tmpSA$SSid
+ if(any(check))
+	for (targetSLid in tmpSS$SLid[check])
+	{
+	# in the following, the max SAid is determined. That SAid + a decimal will constitute the SAid of the new 0 rows  
+	# determine upper table (parentIdVar) and its value (parentIdValue)
+		# note, the use of which is an attempt to make this hierarchy independent - there may be better forms to achieve this.
+		parentIdVar<-c("FOid","TEid","LEid","FTid")[which(!is.na(tmpSS[tmpSS$SLid == targetSLid,c("FOid","TEid","LEid","FTid")]))]
+		parentIdValue<-tmpSS[[parentIdVar]][tmpSS$SLid == targetSLid]
+		# associates the parentIdVar to tmpSA
+		tmpSA$parentIdVar<-x[[gsub("id","",parentIdVar)]][[parentIdVar]][match(parentIdValue, x[[gsub("id","",parentIdVar)]][[parentIdVar]])]
+		# find the max SAid to be used
+		maxSAid<-max(tmpSA[tmpSA$parentIdVar==parentIdValue,]$SAid)
+	# adding the zeros
+		# vector of species to add
+		sppToAdd<-tmpSL$SLcommTaxon[tmpSL$SLid %in% tmpSS$SLid[!check]]
+		# picks up a row to be used as dummy
+		dummyRows<-do.call("rbind", replicate(n=length(sppToAdd), tmpSA[SAid == maxSAid,][1,], simplify = FALSE)) 
+		# fills in with NA (some vars will be specified below
+		dummyRows[,10:31]<-NA # an alternative here could be "NotAvailable" or "NotApplicable" or source from other tables with assumptions
+		# handling of a few specific variables (probably will need some tunning later on) 
+		dummyRows$SAid <- maxSAid+0.001*c(1:length(sppToAdd))
+		dummyRows$SSid <- tmpSS$SSid[tmpSS$SLid == targetSLid]
+		dummyRows$SAseqNum <- 1:length(sppToAdd)
+		dummyRows$SAunitName <- 1:length(sppToAdd)
+		dummyRows$SAstratification <- 'N'
+		dummyRows$SAstratumName <- 'U'
+		dummyRows$SAspeCode<-sppToAdd
+		dummyRows[,c("SAtotalWtLive","SAsampWtLive","SAtotalWtMes","SAsampWtMes","SAspecState")]<-0
+        dummyRows$SAnumTotal <- ifelse(dummyRows$SAunitType=="Individuals", 0, dummyRows$SAnumTotal)
+        dummyRows$SAnumSamp <- ifelse(dummyRows$SAunitType=="Individuals", 0, dummyRows$SAnumSamp)
+		dummyRows$SAselProb <- 1
+        dummyRows$SAincProb <- 1
+        dummyRows$SAlowHierarchy <- "D"
+		dummyRows$SAsamp <- "N"
+		dummyRows$SAcatchCat <- tmpSS$SScatchFra[tmpSS$SLid == targetSLid]
+        dummyRows$SAsex <- 'U'
+		dummyRows$SAstateOfProc <- 'UNK'
+		dummyRows$SApres <- 'Unknown'
+		dummyRows$SAstateOfProc <- 'Unknown'
+		dummyRows$SAspecState <- 'Unknown'
+	tmpSA<-rbind(dummyRows, tmpSA)
+	tmpSA[ ,tmpKey1 := paste(DEyear, SDctry, SDinst, SSspecListName, SAcatchCat, SAspeCode)]
+	# cleans up parentIdVar
+	tmpSA$parentIdVar<-NULL
+	}
+
+# handles remaining (more usual) cases
   ls1 <- split(tmpSA, paste(tmpSA$SSid, tmpSA$SAstratumName))
-  ls2 <- lapply(ls1, function(x) {
-    for (w in tmpSL$tmpKey[tmpSL$SLspeclistName==x$SLspeclistName]) {
-         if (!w %in% tmpSA$tmpKey) {
-		  # duplicates SA row
+  ls2 <- lapply(ls1, function(x, z=tmpSS) { 
+    for (w in tmpSL$tmpKey1[tmpSL$tmpKey0==z$tmpKey0[z$SSid==x$SSid]]) {
+		
+		if (!w %in% tmpSA$tmpKey1) {
+		   # duplicates SA row
           y <- x[1, ]
   		  # handles the key
 		  y$SAspeCode <- as.integer(unlist(strsplit(w," "))[6])
@@ -101,19 +151,23 @@ colsToDelete<-c("SDctry", "SDinst","SSspecListName","DEyear","SScatchFra")
         }
     }
     x <- x[order(x$SAid, decreasing = F), ]
-    # cleans tmpKey
-	x$tmpKey<-NULL
+    # cleans tmpKey1
+	x$tmpKey0<-NULL
+	x$tmpKey1<-NULL
 	x
   })
   x[["SA"]] <- data.table::setDT(do.call("rbind", ls2))
 
-
   # delete aux var
-  x[["SA"]]$SSuseCalcZero<-NULL
-  x[["SA"]]$SLspeclistName<-NULL
-  x[["SA"]]$SLid<-NULL
-  # Ensure key is set on SA
+colsToDelete<-c("SDctry", "SDinst","SSspecListName","DEyear","SScatchFra","SSuseCalcZero","SLspeclistName","SLid")
+
+	 x[["SA"]][, (colsToDelete) := lapply(.SD, function(x) x<-NULL),
+        .SDcols = colsToDelete]
+ # Ensure key is set on SA
   setkey(x[["SA"]],SAid)
+  # orders
+  x[["SA"]] <-  x[["SA"]][order(x[["SA"]]$SSid, x[["SA"]]$SAid, decreasing = F), ]
+  
 }
   x
 }
